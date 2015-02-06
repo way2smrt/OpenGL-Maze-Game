@@ -1,4 +1,6 @@
-package core;
+package com.battleslug.unitystrike;
+
+import com.battleslug.unitystrike.Item.CanUse;
 
 public class Weapon extends Item{
 	private int damage;

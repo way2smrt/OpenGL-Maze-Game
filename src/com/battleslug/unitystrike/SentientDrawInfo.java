@@ -1,4 +1,4 @@
-package core;
+package com.battleslug.unitystrike;
 
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.SpriteSheet;

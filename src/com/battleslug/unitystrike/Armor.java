@@ -1,4 +1,6 @@
-package core;
+package com.battleslug.unitystrike;
+
+import com.battleslug.unitystrike.Item.CanUse;
 
 public class Armor extends Item{
 	private int protection;

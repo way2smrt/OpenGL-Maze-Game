@@ -1,4 +1,4 @@
-package core;
+package com.battleslug.unitystrike;
 
 public class VectorColor {
 	private float r,g,b;

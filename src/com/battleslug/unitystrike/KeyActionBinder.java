@@ -1,14 +1,16 @@
-package core;
+package com.battleslug.unitystrike;
 
-import org.lwjgl.input.Keyboard;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class KeyActionBinder {
 	private int[] keys;
 	private String[] actions;
+	private long window;
 	
-	public KeyActionBinder(){
+	public KeyActionBinder(long _window){
 		actions = new String[0];
 		keys = new int[0];
+		window = _window;
 	}
 	
 	public void bind(String action, int key){
@@ -28,20 +30,19 @@ public class KeyActionBinder {
 		keys[actions.length - 1] = key;
 	}
 	
-	/**
-	 * Return true if the key binded to the action is currently being pressed. 
-	 * @param action
-	 */
 	public boolean getActionInput(String action){
 		for (int i = 0; i < actions.length; i++){
 			if (actions[i] == action){
-				return Keyboard.isKeyDown(keys[i]);
+				if (glfwGetKey(window, keys[i]) == GLFW_RELEASE){
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 	
 	public void removeBind(String action){
+		//remove a binded action
 		for (int i = 0; i < actions.length; i++){
 			if (actions[i] == action){
 				actions[i] = null;
@@ -51,6 +52,7 @@ public class KeyActionBinder {
 	}
 	
 	public void removeBind(int key){
+		//remove a binded key
 		for (int i = 0; i < actions.length; i++){
 			if (keys[i] == key){
 				actions[i] = null;

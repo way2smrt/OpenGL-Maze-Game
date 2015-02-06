@@ -1,4 +1,5 @@
-package core;
+package com.battleslug.unitystrike;
+
 
 public class Sentient {
 	private String name;

@@ -1,4 +1,4 @@
-package core;
+package com.battleslug.unitystrike;
 
 public class Item {
 	private String name;
