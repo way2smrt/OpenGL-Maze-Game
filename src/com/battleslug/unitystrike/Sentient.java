@@ -1,11 +1,9 @@
 package com.battleslug.unitystrike;
 
 
-public class Sentient {
+public class Sentient{
 	private String name;
 	private int x, y;
-	
-	private SentientDrawInfo drawInfo;
 	
 	private int health;
 	private int speed;
@@ -14,6 +12,8 @@ public class Sentient {
 	private Weapon weapon;
 	private Armor armor;
 	private Item item;
+	
+	private Team team;
 	
 	public Sentient(String _name, int _maxHealth, int _speed){
 		name = _name;
@@ -55,10 +55,6 @@ public class Sentient {
 		return item;
 	}
 	
-	public SentientDrawInfo getDrawInfo(){
-		return drawInfo;
-	}
-	
 	public int getHealth(){
 		return health;
 	}
@@ -82,6 +78,22 @@ public class Sentient {
 		return true;
 	}
 	
+	public void setTeam(Team _team){
+		team = _team;
+	}
+	
+	public Team getTeam(){
+		return team;
+	}
+	
+	public boolean isOnTeam(Team t){
+		if(t.getTeamNumber() == team.getTeamNumber()){
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public void damage(Weapon _weapon){
 		if (armor != null){
 			if (health - _weapon.getDamage()> 0){
@@ -98,6 +110,122 @@ public class Sentient {
 			}
 			else if((health - _weapon.getDamage() - armor.getProtection()) <= 0){
 				health = 0;
+			}
+		}
+	}
+	
+	public class Team{
+		private int num;
+		private String name;
+		
+		private int enemy[];
+		private final int ENEMIES = 5;
+		
+		private int friend[];
+		private final int FRIENDS = 5;
+		
+		public static final int FRIENDLY = 1;
+		public static final int NEUTRAL = 2;
+		public static final int AGGRESSIVE = 3;
+		
+		public Team(int _num, String _name){
+			num = _num;
+			name = _name;
+			
+			enemy = new int[ENEMIES];
+			friend = new int[FRIENDS];
+			
+			if(_num == 0){
+				System.out.println("Caution: Team number may not be 0!");
+			}
+		}
+		
+		public int getTeamNumber(){
+			return num;
+		}
+		
+		public String getTeamName(){
+			return name;
+		}
+		
+		public void addEnemy(int team, int slot){
+			if(slot > -1 && slot <= 5){
+				enemy[slot] = team;
+			}
+		}
+		
+		public void removeEnemy(int team){
+			for (int i = 0; i != ENEMIES; i++){
+				if(enemy[i] == team){
+					enemy[i] = 0;
+				}
+			}
+		}
+		
+		public void addFriend(int team, int slot){
+			if(slot > -1 && slot <= 5){
+				friend[slot] = team;
+			}
+		}
+		
+		public void removeFriend(int team){
+			for (int i = 0; i != FRIENDS; i++){
+				if(friend[i] == team){
+					friend[i] = 0;
+				}
+			}
+		}
+		
+		public int getRelationStatus(int team){
+			for (int i = 0; i != ENEMIES; i++){
+				if(enemy[i] == team){
+					return AGGRESSIVE;
+				}
+			}
+			
+			for (int i = 0; i != FRIENDS; i++){
+				if(friend[i] == team){
+					return FRIENDLY;
+				}
+			}
+			
+			return NEUTRAL;
+		}
+		
+		public int getFriendSlot(int team){
+			for (int i = 0; i != ENEMIES; i++){
+				if(enemy[i] == team){
+					return i;
+				}
+			}
+			
+			return -1;
+		}
+		
+		public int getEnemySlot(int team){
+			for (int i = 0; i != FRIENDS; i++){
+				if(friend[i] == team){
+					return i;
+				}
+			}
+			
+			return -1;
+		}
+		
+		public void changeRelationStatus(int team, int status){
+			if(status == NEUTRAL){
+				removeFriend(team);
+				removeEnemy(team);
+			}
+			
+			else if(status == AGGRESSIVE){
+				removeFriend(team);
+				addEnemy(team, getEnemySlot(team));
+			}
+			
+			else if(status == FRIENDLY){
+				removeEnemy(team);
+				addFriend(team, getEnemySlot(team));
 			}
 		}
 	}
