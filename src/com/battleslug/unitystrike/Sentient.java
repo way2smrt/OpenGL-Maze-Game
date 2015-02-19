@@ -1,7 +1,6 @@
 package com.battleslug.unitystrike;
-
-
-public class Sentient{
+	
+public class Sentient {
 	private String name;
 	private int x, y;
 	
