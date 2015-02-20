@@ -1,19 +1,29 @@
 package com.battleslug.unitystrike;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	
 =======
 
 
 >>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
+=======
+
+
+>>>>>>> master
 public class Sentient {
 	private String name;
 	private int x, y;
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	private SentientDrawInfo drawInfo;
 	
 >>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
+=======
+	private SentientDrawInfo drawInfo;
+	
+>>>>>>> master
 	private int health;
 	private int speed;
 	private int maxHealth;
@@ -23,10 +33,13 @@ public class Sentient {
 	private Item item;
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 	private Team team;
 	
 =======
 >>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
+=======
+>>>>>>> master
 	public Sentient(String _name, int _maxHealth, int _speed){
 		name = _name;
 		health = _maxHealth;
@@ -68,12 +81,18 @@ public class Sentient {
 	}
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 	public SentientDrawInfo getDrawInfo(){
 		return drawInfo;
 	}
 	
+<<<<<<< HEAD
 >>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
+=======
+>>>>>>> master
 	public int getHealth(){
 		return health;
 	}
@@ -98,6 +117,7 @@ public class Sentient {
 	}
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public void setTeam(Team _team){
 		team = _team;
 	}
@@ -116,6 +136,8 @@ public class Sentient {
 	
 =======
 >>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
+=======
+>>>>>>> master
 	public void damage(Weapon _weapon){
 		if (armor != null){
 			if (health - _weapon.getDamage()> 0){
@@ -135,6 +157,7 @@ public class Sentient {
 			}
 		}
 	}
+<<<<<<< HEAD
 <<<<<<< HEAD
 	
 	public class Team{
@@ -254,4 +277,6 @@ public class Sentient {
 	}
 =======
 >>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
+=======
+>>>>>>> master
 }
