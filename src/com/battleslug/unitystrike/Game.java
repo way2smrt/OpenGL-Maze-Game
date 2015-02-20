@@ -6,7 +6,11 @@ public class Game {
 	
 	public Game(){
 <<<<<<< HEAD
+<<<<<<< HEAD
 		displayMain = new Display("Swag", 640, 480);
+=======
+		displayMain = new Display("The swaggiest possible game", 640, 480);
+>>>>>>> master
 =======
 		displayMain = new Display("The swaggiest possible game", 640, 480);
 >>>>>>> master

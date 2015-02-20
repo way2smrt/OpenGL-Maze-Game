@@ -1,11 +1,16 @@
 package com.battleslug.unitystrike;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	
 =======
 
 
 >>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
+=======
+
+
+>>>>>>> master
 =======
 
 
@@ -16,10 +21,15 @@ public class Sentient {
 	
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	private SentientDrawInfo drawInfo;
 	
 >>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
+=======
+	private SentientDrawInfo drawInfo;
+	
+>>>>>>> master
 =======
 	private SentientDrawInfo drawInfo;
 	
@@ -34,10 +44,13 @@ public class Sentient {
 	
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	private Team team;
 	
 =======
 >>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
+=======
+>>>>>>> master
 =======
 >>>>>>> master
 	public Sentient(String _name, int _maxHealth, int _speed){
@@ -82,7 +95,10 @@ public class Sentient {
 	
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 =======
 >>>>>>> master
 	public SentientDrawInfo getDrawInfo(){
@@ -90,7 +106,10 @@ public class Sentient {
 	}
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
+=======
+>>>>>>> master
 =======
 >>>>>>> master
 	public int getHealth(){
@@ -118,6 +137,7 @@ public class Sentient {
 	
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public void setTeam(Team _team){
 		team = _team;
 	}
@@ -136,6 +156,8 @@ public class Sentient {
 	
 =======
 >>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
+=======
+>>>>>>> master
 =======
 >>>>>>> master
 	public void damage(Weapon _weapon){
@@ -157,6 +179,7 @@ public class Sentient {
 			}
 		}
 	}
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 	
@@ -277,6 +300,8 @@ public class Sentient {
 	}
 =======
 >>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
+=======
+>>>>>>> master
 =======
 >>>>>>> master
 }
