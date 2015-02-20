@@ -5,7 +5,7 @@ public class Game {
 	private KeyActionBinder displayMainKeyboard;
 	
 	public Game(){
-		displayMain = new Display("The swaggiest possible game", 640, 480);
+		displayMain = new Display("Swag", 640, 480);
 		displayMain.create();
 		
 		displayMainKeyboard = new KeyActionBinder(displayMain.getWindowID());

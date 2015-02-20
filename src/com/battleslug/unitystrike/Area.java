@@ -15,4 +15,8 @@ public class Area {
 		
 		return false;
 	}
+	
+	public void draw(){
+		//TODO
+	}
 }
