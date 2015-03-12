@@ -1,26 +1,21 @@
 package com.battleslug.unitystrike;
 
-public class Game {
+public class Game {	
 	private Display displayMain;
-	private KeyActionBinder displayMainKeyboard;
+	private Sentient player;
 	
 	public Game(){
-<<<<<<< HEAD
-<<<<<<< HEAD
-		displayMain = new Display("Swag", 640, 480);
-=======
-		displayMain = new Display("The swaggiest possible game", 640, 480);
->>>>>>> master
-=======
-		displayMain = new Display("The swaggiest possible game", 640, 480);
->>>>>>> master
+		displayMain = new Display("Test", 640, 480);
 		displayMain.create();
 		
-		displayMainKeyboard = new KeyActionBinder(displayMain.getWindowID());
+		player = new Sentient("Player", new Texture("res/misc/test.png", Texture.CLAMP_TO_EDGE, Texture.LINEAR), 200, 20);
+		player.setLocation(200, 200);
+		player.setHealth(125);
 		
 		while(true){
 			displayMain.update();
 			displayMain.clear();
+			displayMain.drawTexture(player.getTexture(), 200, 200);
 		}
 	}
 	

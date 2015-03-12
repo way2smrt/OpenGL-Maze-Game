@@ -2,9 +2,9 @@ package com.battleslug.unitystrike;
 
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
- 
+
 import java.nio.ByteBuffer;
- 
+
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -31,22 +31,25 @@ public class Display {
     public void create() {
         glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
         
-        if ( glfwInit() != GL11.GL_TRUE )
+        if ( glfwInit() != GL11.GL_TRUE ){
             throw new IllegalStateException("Unable to initialize GLFW");
+        }
  
         glfwDefaultWindowHints(); 
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); 
+        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); 
  
         window = glfwCreateWindow(width, height, name, NULL, NULL);
-        if ( window == NULL )
+        if(window == NULL){
             throw new RuntimeException("Failed to create the GLFW window");
+        }
  
-        glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
+        glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback(){
             @Override
-            public void invoke(long window, int key, int scancode, int action, int mods) {
-                if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-                    glfwSetWindowShouldClose(window, GL_TRUE);
+            public void invoke(long window, int key, int scancode, int action, int mods){
+            	  if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE){
+            		  glfwSetWindowShouldClose(window, GL_TRUE);
+            	  }
             }
         });
  
@@ -68,7 +71,19 @@ public class Display {
         
         GLContext.createFromCurrent();
         
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.2f, 0.6f, 0.8f, 0.0f);
+        
+        glMatrixMode(GL_PROJECTION);
+    	glLoadIdentity();
+    	glOrtho(0, width, height, 0, 1, -1);
+    	glMatrixMode(GL_MODELVIEW);
+        
+        glEnable(GL_TEXTURE_2D);
+        
+        glEnable (GL_BLEND);
+        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
+    	glLoadIdentity();
     }
     
     public void clear(){
@@ -82,6 +97,69 @@ public class Display {
         if (glfwWindowShouldClose(window) == GL_TRUE){
     		kill();
     	}
+    }
+    
+    /**
+     * @param tex The texture to draw
+     * @param x The x location to draw it at
+     * @param y The y location to draw it at
+     */
+    public void drawTexture(Texture tex, int x, int y){
+    	tex.bind();
+    	
+        float u = 0f;
+        float v = 0f;
+        float u2 = 1f;
+        float v2 = 1f;
+
+        glColor4f(1f, 1f, 1f, 1f);
+        glBegin(GL_QUADS);
+        
+        glTexCoord2f(u, v);
+        glVertex2f(x, y);
+        
+        glTexCoord2f(u, v2);
+        glVertex2f(x, y+tex.getHeight());
+        
+        glTexCoord2f(u2, v2);
+        glVertex2f(x+tex.getWidth(), y+tex.getHeight());
+        
+        glTexCoord2f(u2, v);
+        glVertex2f(x+tex.getWidth(), y);
+        glEnd();
+    }
+    
+    /**
+     * @param tex The texture to draw
+     * @param x The x location to draw it at
+     * @param y The y location to draw it at
+     * @param tX The x value of the texture on the spritesheet
+     * @param tY The x value of the texture on the spritesheet
+     * @param tSize The width/height of the textures on the spritesheet
+     */
+    public void drawSpriteSheet(Texture tex, int x, int y, int tX, int tY, int tSize){
+    	tex.bind();
+    	
+        float u = (tSize / tex.getWidth()) * tX;
+        float v = (tSize / tex.getWidth()) * tX;
+        float u2 = u+(tSize / tex.getWidth());
+        float v2 = v+(tSize / tex.getWidth());
+
+        glColor4f(1f, 1f, 1f, 1f);
+        glBegin(GL_QUADS);
+        
+        glTexCoord2f(u, v);
+        glVertex2f(x, y);
+        
+        glTexCoord2f(u, v2);
+        glVertex2f(x, y+tex.getHeight());
+        
+        glTexCoord2f(u2, v2);
+        glVertex2f(x+tex.getWidth(), y+tex.getHeight());
+        
+        glTexCoord2f(u2, v);
+        glVertex2f(x+tex.getWidth(), y);
+        glEnd();
     }
     
     public void kill(){
