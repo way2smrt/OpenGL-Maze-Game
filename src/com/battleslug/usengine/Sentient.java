@@ -1,39 +1,11 @@
-package com.battleslug.unitystrike;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	
-=======
+package com.battleslug.usengine;
 
+import com.battleslug.usengine.Item.Armor;
+import com.battleslug.usengine.Item.Weapon;
 
->>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
-=======
-
-
->>>>>>> master
-=======
-
-
->>>>>>> master
 public class Sentient {
 	private String name;
-	private int x, y;
-	
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-	private SentientDrawInfo drawInfo;
-	
->>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
-=======
-	private SentientDrawInfo drawInfo;
-	
->>>>>>> master
-=======
-	private SentientDrawInfo drawInfo;
-	
->>>>>>> master
+
 	private int health;
 	private int speed;
 	private int maxHealth;
@@ -41,44 +13,33 @@ public class Sentient {
 	private Weapon weapon;
 	private Armor armor;
 	private Item item;
+	private Inventory inventory;
 	
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+	private Texture texture;
+	
 	private Team team;
 	
-=======
->>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
-=======
->>>>>>> master
-=======
->>>>>>> master
-	public Sentient(String _name, int _maxHealth, int _speed){
-		name = _name;
-		health = _maxHealth;
-		maxHealth = _maxHealth;
-		speed = _speed;
+	public Sentient(String name, Texture texture, int maxHealth, int speed){
+		this.name = name;
+		this.texture = texture;
+		this.health = maxHealth;
+		this.maxHealth = maxHealth;
+		this.speed = speed;
 	}
 	
 	public void getAction(){
-		//AI code here sometime later
 	}
 	
 	public String getName(){
 		return name;
 	}
 	
-	public void setLocation(int _x, int _y){
-		x = _x;
-		y = _y;
+	public void setHealth(int health){
+		this.health = health;
 	}
 	
-	public int getX(){
-		return x;
-	}
-	
-	public int getY(){
-		return y;
+	public void setInventory(Inventory inventory){
+		this.inventory = inventory;
 	}
 	
 	public Weapon getWeapon(){
@@ -93,25 +54,6 @@ public class Sentient {
 		return item;
 	}
 	
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> master
-=======
->>>>>>> master
-	public SentientDrawInfo getDrawInfo(){
-		return drawInfo;
-	}
-	
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
-=======
->>>>>>> master
-=======
->>>>>>> master
 	public int getHealth(){
 		return health;
 	}
@@ -122,6 +64,14 @@ public class Sentient {
 	
 	public int getSpeed(){
 		return speed;
+	}
+	
+	public Inventory getInventory(){
+		return inventory;
+	}
+	
+	public Texture getTexture(){
+		return texture;
 	}
 	
 	public boolean isAlive(){
@@ -135,31 +85,22 @@ public class Sentient {
 		return true;
 	}
 	
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	public void setTeam(Team _team){
-		team = _team;
+	public void setTeam(Team team){
+		this.team = team;
 	}
 	
 	public Team getTeam(){
 		return team;
 	}
 	
-	public boolean isOnTeam(Team t){
-		if(t.getTeamNumber() == team.getTeamNumber()){
+	public boolean isOnTeam(Team team){
+		if(team.getTeamNumber() == this.team.getTeamNumber()){
 			return true;
 		}
 		
 		return false;
 	}
 	
-=======
->>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
-=======
->>>>>>> master
-=======
->>>>>>> master
 	public void damage(Weapon _weapon){
 		if (armor != null){
 			if (health - _weapon.getDamage()> 0){
@@ -179,11 +120,8 @@ public class Sentient {
 			}
 		}
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 	
-	public class Team{
+	public class Team {
 		private int num;
 		private String name;
 		
@@ -298,10 +236,4 @@ public class Sentient {
 			}
 		}
 	}
-=======
->>>>>>> d4a22ec0feeed901c3c6d5a35988886e27ca3fdb
-=======
->>>>>>> master
-=======
->>>>>>> master
 }
