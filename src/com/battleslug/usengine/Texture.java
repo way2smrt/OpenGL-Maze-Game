@@ -17,6 +17,7 @@ public class Texture {
     public int id;
     public int width;
     public int height;
+    public int rotation;
 
     public static final int LINEAR = GL_LINEAR;
     public static final int NEAREST = GL_NEAREST;
@@ -86,10 +87,16 @@ public class Texture {
                 }
             }
         }
+        
+        rotation = 0;
     }
 
     public void bind() {
         glBindTexture(GL_TEXTURE_2D, id);
+    }
+    
+    public void setRotation(int degrees){
+    	rotation = degrees;
     }
     
     public int getWidth(){
@@ -99,4 +106,9 @@ public class Texture {
     public int getHeight(){
     	return height;
     }
+    
+    public int getRotation(){
+    	return rotation;
+    }
+    
 }

@@ -10,6 +10,8 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import java.awt.geom.Ellipse2D;
+
 public class Display {	
 	private GLFWKeyCallback keyCallback;
 	private GLFWErrorCallback errorCallback;
@@ -74,12 +76,13 @@ public class Display {
         
         glMatrixMode(GL_PROJECTION);
     	glLoadIdentity();
-    	glOrtho(0, width, height, 0, 1, -1);
+    	glOrtho(0, width, height, 0, 10, -10);
     	glMatrixMode(GL_MODELVIEW);
         
         glEnable(GL_TEXTURE_2D);
-        
+        glEnable(GL_DEPTH_TEST);
         glEnable (GL_BLEND);
+        
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
     	glLoadIdentity();
@@ -110,7 +113,7 @@ public class Display {
         glEnd();
     }
     
-    public void drawTexturedQuad(TexturedQuad quad){
+    public void drawTexturedQuad(TexturedQuad quad){	
     	quad.getTexture().bind();
     	
         float u = 0f;
@@ -146,29 +149,56 @@ public class Display {
      * @param x The x location to draw it at
      * @param y The y location to draw it at
      */
-    public void drawTexture(Texture tex, int x, int y){
-    	tex.bind();
-    	
-        float u = 0f;
-        float v = 0f;
-        float u2 = 1f;
-        float v2 = 1f;
+    public void drawTexture(Texture tex, int x, int y){  	  	
+    	if (tex.getRotation() == 0){
+    		tex.bind();
+    		
+    		float u = 0f;
+    		float v = 0f;
+            float u2 = 1f;
+            float v2 = 1f;
 
-        glColor4f(1f, 1f, 1f, 1f);
-        glBegin(GL_QUADS);
-        
-        glTexCoord2f(u, v);
-        glVertex2f(x, y);
-        
-        glTexCoord2f(u, v2);
-        glVertex2f(x, y+tex.getHeight());
-        
-        glTexCoord2f(u2, v2);
-        glVertex2f(x+tex.getWidth(), y+tex.getHeight());
-        
-        glTexCoord2f(u2, v);
-        glVertex2f(x+tex.getWidth(), y);
-        glEnd();
+            glColor4f(1f, 1f, 1f, 1f);
+            glBegin(GL_QUADS);
+            
+            glTexCoord2f(u, v);
+            glVertex2f(x, y);
+            
+            glTexCoord2f(u, v2);
+            glVertex2f(x, y+tex.getHeight());
+            
+            glTexCoord2f(u2, v2);
+            glVertex2f(x+tex.getWidth(), y+tex.getHeight());
+            
+            glTexCoord2f(u2, v);
+            glVertex2f(x+tex.getWidth(), y);
+            glEnd();
+    	}
+    	else {
+    		//find the center, then the radius using pythagorean theorem
+    		Circle circle = new Circle((tex.getWidth()/2)+x, (tex.getHeight()/2)+y, new Double(Math.sqrt(Math.pow((tex.getWidth()/2), 2)+Math.pow((tex.getHeight()/2), 2))).intValue());
+    		
+    		int x1, y1;
+    		int x2, y2;
+    		
+    		int r2 = circle.getRotation(x+tex.getWidth(), y+tex.getWidth());
+    
+    		System.out.println(r2);
+    		
+    		x1 = circle.getX(tex.getRotation());
+    		y1 = circle.getY(tex.getRotation());
+    		
+    		x2 = circle.getX(180+tex.getRotation());
+    		y2 = circle.getY(180+tex.getRotation());
+    		
+    		System.out.println(x1);
+    		System.out.println(y1);
+    		
+    		System.out.println(x2);
+    		System.out.println(y2);
+    		
+    		drawTexturedQuad(new TexturedQuad(x1, y1, x1, y2, x2, y2, x2, y1, tex, null));
+    	}
     }
     
     /**
@@ -179,7 +209,7 @@ public class Display {
      * @param tY The x value of the texture on the spritesheet
      * @param tSize The width/height of the textures on the spritesheet
      */
-    public void drawSpriteSheet(Texture tex, int x, int y, int tX, int tY, int tSize){
+    public void drawSpriteSheet(Texture tex, int x, int y, int tX, int tY, int tSize){  	
     	tex.bind();
     	
         float u = (tSize / tex.getWidth()) * tX;

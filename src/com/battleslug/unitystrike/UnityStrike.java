@@ -1,12 +1,6 @@
 package com.battleslug.unitystrike;
 
-import com.battleslug.usengine.Display;
-import com.battleslug.usengine.Game;
-import com.battleslug.usengine.Sentient;
-import com.battleslug.usengine.Texture;
-import com.battleslug.usengine.TexturedQuad;
-import com.battleslug.usengine.Timer;
-import com.battleslug.usengine.World;
+import com.battleslug.usengine.*;
 
 public class UnityStrike extends Game {
 	private Display display;
@@ -17,7 +11,7 @@ public class UnityStrike extends Game {
 	
 	private World world;
 	
-	private Texture tex_test1;
+	private Texture tex_test1, tex_doge;
 	
 	public UnityStrike(){
 		super("Unity-Strike");
@@ -31,6 +25,7 @@ public class UnityStrike extends Game {
 		display.create();
 		
 		tex_test1 = loadTexture("misc/test.png");
+		tex_doge = loadTexture("misc/doge.png");
 		
 		player = new Sentient("Player", tex_test1, 200, 20);
 		player.setHealth(125);
@@ -39,14 +34,17 @@ public class UnityStrike extends Game {
 		world.bind(display);
 		
 		
+		int rot = 0;
 		while(true){
 			timer.update();
 			
-			display.drawTexturedQuad(new TexturedQuad(0, 0, 25, 450, 470, 510, 530, 120, tex_test1, null));
+			tex_doge.setRotation(rot);
+
+			rot += 3; 
 			
+			display.drawTexture(tex_doge, 100, 100);
 			display.update();
 			display.clear();
-			
 		}
 	}
 
