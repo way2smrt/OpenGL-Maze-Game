@@ -15,8 +15,14 @@ import java.nio.ByteBuffer;
 
 public class Texture {
     public int id;
+    
     public int width;
     public int height;
+    
+    public float xScale;
+    public float yScale;
+    
+    public int rotation;
 
     public static final int LINEAR = GL_LINEAR;
     public static final int NEAREST = GL_NEAREST;
@@ -86,10 +92,19 @@ public class Texture {
                 }
             }
         }
+        
+        rotation = 0;
+        
+        xScale = 1;
+        yScale = 1;
     }
 
     public void bind() {
         glBindTexture(GL_TEXTURE_2D, id);
+    }
+    
+    public void setRotation(int degrees){
+    	rotation = degrees;
     }
     
     public int getWidth(){
@@ -99,4 +114,22 @@ public class Texture {
     public int getHeight(){
     	return height;
     }
+    
+    public int getRotation(){
+    	return rotation;
+    }
+    
+    public void setScale(float xScale, float yScale){
+    	this.xScale = xScale;
+    	this.yScale = yScale;
+    }
+    
+    public float getXScale(){
+    	return xScale;
+    }
+    
+    public float getYScale(){
+    	return yScale;
+    }
+    
 }
