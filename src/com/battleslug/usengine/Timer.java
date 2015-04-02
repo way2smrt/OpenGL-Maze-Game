@@ -31,6 +31,10 @@ public class Timer {
 		return System.nanoTime() - lastUpdate;
 	}
 	
+	public long getTimeNanos(){
+		return System.nanoTime();
+	}
+	
 	public long getFPS(){
 		long timePassed = getTimePassedNanos();
 		
