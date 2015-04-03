@@ -18,13 +18,9 @@ public class Texture {
     
     public int width;
     public int height;
-<<<<<<< HEAD
     
     public float xScale;
     public float yScale;
-    
-=======
->>>>>>> 5b7bde91c14779b396e7237316a61bc03e662d20
     public int rotation;
 
     public static final int LINEAR = GL_LINEAR;
@@ -97,12 +93,9 @@ public class Texture {
         }
         
         rotation = 0;
-<<<<<<< HEAD
         
         xScale = 1;
         yScale = 1;
-=======
->>>>>>> 5b7bde91c14779b396e7237316a61bc03e662d20
     }
 
     public void bind() {
@@ -125,7 +118,6 @@ public class Texture {
     	return rotation;
     }
     
-<<<<<<< HEAD
     public void setScale(float xScale, float yScale){
     	this.xScale = xScale;
     	this.yScale = yScale;
@@ -138,7 +130,4 @@ public class Texture {
     public float getYScale(){
     	return yScale;
     }
-    
-=======
->>>>>>> 5b7bde91c14779b396e7237316a61bc03e662d20
 }
