@@ -80,14 +80,10 @@ public class Display {
     	glMatrixMode(GL_MODELVIEW);
         
         glEnable(GL_TEXTURE_2D);
-<<<<<<< HEAD
+        
+        glEnable(GL_DEPTH_TEST);
         
         glEnable(GL_BLEND);
-=======
-        glEnable(GL_DEPTH_TEST);
-        glEnable (GL_BLEND);
-        
->>>>>>> 5b7bde91c14779b396e7237316a61bc03e662d20
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         glEnable(GL_DEPTH_TEST);
@@ -185,28 +181,18 @@ public class Display {
     	}
     	else {
     		//find the center, then the radius using pythagorean theorem
-<<<<<<< HEAD
-    		Circle circle = new Circle((new Float(tex.getWidth()*tex.getXScale()).intValue()/2)+x, (new Float(tex.getHeight()*tex.getYScale()).intValue()/2)+y, new Double(Math.sqrt(Math.pow((new Float(tex.getWidth()*tex.getXScale()).intValue()/2), 2)+Math.pow((new Float(tex.getHeight()*tex.getYScale()).intValue()/2), 2))).intValue());
+    		Circle circle = new Circle((tex.getWidth()/2)+x, (tex.getHeight()/2)+y, new Double(Math.sqrt(Math.pow((tex.getWidth()/2), 2)+Math.pow((tex.getHeight()/2), 2))).intValue());
     		
     		int x1, y1;
     		int x2, y2;
     		int x3, y3;
     		int x4, y4;
-=======
-    		Circle circle = new Circle((tex.getWidth()/2)+x, (tex.getHeight()/2)+y, new Double(Math.sqrt(Math.pow((tex.getWidth()/2), 2)+Math.pow((tex.getHeight()/2), 2))).intValue());
-    		
-    		int x1, y1;
-    		int x2, y2;
-    		
+
     		int r2 = circle.getRotation(x+tex.getWidth(), y+tex.getWidth());
-    
-    		System.out.println(r2);
->>>>>>> 5b7bde91c14779b396e7237316a61bc03e662d20
     		
     		x1 = circle.getX(tex.getRotation());
     		y1 = circle.getY(tex.getRotation());
     		
-<<<<<<< HEAD
     		x2 = circle.getX(90+tex.getRotation());
     		y2 = circle.getY(90+tex.getRotation());
     		
@@ -216,19 +202,7 @@ public class Display {
     		x4 = circle.getX(270+tex.getRotation());
     		y4 = circle.getY(270+tex.getRotation());
     		
-    		drawTexturedQuad(new TexturedQuad(x1, y1, x2, y2, x3, y3, x4, y4, tex, null));
-=======
-    		x2 = circle.getX(180+tex.getRotation());
-    		y2 = circle.getY(180+tex.getRotation());
-    		
-    		System.out.println(x1);
-    		System.out.println(y1);
-    		
-    		System.out.println(x2);
-    		System.out.println(y2);
-    		
-    		drawTexturedQuad(new TexturedQuad(x1, y1, x1, y2, x2, y2, x2, y1, tex, null));
->>>>>>> 5b7bde91c14779b396e7237316a61bc03e662d20
+    		drawTexturedQuad(new TexturedQuad(x1, y1, x2, y2, x3, y3, x4, y4, tex, null));  		
     	}
     }
     
