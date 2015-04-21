@@ -1,4 +1,4 @@
-package com.battleslug.usengine;
+package com.battleslug.logl2d;
 
 import org.lwjgl.BufferUtils;
 
@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public class Texture {
+<<<<<<< HEAD:src/com/battleslug/usengine/Texture.java
     public int id;
     
     public int width;
@@ -24,6 +25,12 @@ public class Texture {
     
     public int rotation;
 
+=======
+	private int id;
+	
+	private int width, height;
+	
+>>>>>>> 08a186fe0bb31795077213569da8f09853c7a8f0:src/com/battleslug/logl2d/Texture.java
     public static final int LINEAR = GL_LINEAR;
     public static final int NEAREST = GL_NEAREST;
 
@@ -92,21 +99,26 @@ public class Texture {
                 }
             }
         }
+<<<<<<< HEAD:src/com/battleslug/usengine/Texture.java
         
         rotation = 0;
         
         xScale = 1;
         yScale = 1;
     }
+=======
+>>>>>>> 08a186fe0bb31795077213569da8f09853c7a8f0:src/com/battleslug/logl2d/Texture.java
 
-    public void bind() {
-        glBindTexture(GL_TEXTURE_2D, id);
     }
+<<<<<<< HEAD:src/com/battleslug/usengine/Texture.java
     
     public void setRotation(int degrees){
     	rotation = degrees;
     }
     
+=======
+
+>>>>>>> 08a186fe0bb31795077213569da8f09853c7a8f0:src/com/battleslug/logl2d/Texture.java
     public int getWidth(){
     	return new Float(width*xScale).intValue();
     }
@@ -123,6 +135,7 @@ public class Texture {
     	return height;
     }
     
+<<<<<<< HEAD:src/com/battleslug/usengine/Texture.java
     public int getRotation(){
     	return rotation;
     }
@@ -140,4 +153,9 @@ public class Texture {
     	return yScale;
     }
     
+=======
+    public void bind() {
+        glBindTexture(GL_TEXTURE_2D, id);
+    }
+>>>>>>> 08a186fe0bb31795077213569da8f09853c7a8f0:src/com/battleslug/logl2d/Texture.java
 }

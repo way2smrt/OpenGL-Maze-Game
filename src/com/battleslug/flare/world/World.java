@@ -1,11 +1,17 @@
-package com.battleslug.usengine;
+package com.battleslug.flare.world;
+
+import com.battleslug.logl2d.Display;
+import com.battleslug.logl2d.TexturedQuad;
+
 
 public class World {
 	private Display display;
 	
-	private StaticArea background;
-	private DynamicArea midground;
-	private StaticArea foreground;
+	private Bullet[] bullet;
+	private TexturedQuad[] foreground;
+	private TexturedQuad[] background;
+	private PhysicalQuad[] stage;
+	
 	
 	private int camX, camY;
 	
@@ -31,17 +37,5 @@ public class World {
 	
 	public int getCamY(){
 		return camY;
-	}
-	
-	public StaticArea getBackground(){
-		return background;
-	}
-	
-	public DynamicArea getMidground(){
-		return midground;
-	}
-	
-	public StaticArea getForeground(){
-		return foreground;
 	}
 }

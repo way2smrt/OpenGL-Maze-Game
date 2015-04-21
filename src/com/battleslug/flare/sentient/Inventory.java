@@ -1,4 +1,9 @@
-package com.battleslug.usengine;
+package com.battleslug.flare.sentient;
+
+import com.battleslug.flare.item.Item;
+import com.battleslug.logl2d.Display;
+import com.battleslug.logl2d.Texture;
+
 
 
 public class Inventory {

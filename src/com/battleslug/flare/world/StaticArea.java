@@ -1,8 +1,8 @@
-package com.battleslug.usengine;
+package com.battleslug.flare.world;
 
 import static java.lang.Math.*;
 
-import com.battleslug.usengine.Sentient;
+import com.battleslug.logl2d.TexturedQuad;
 
 public class StaticArea {
 	

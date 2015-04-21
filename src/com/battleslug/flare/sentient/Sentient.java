@@ -1,7 +1,7 @@
-package com.battleslug.usengine;
+package com.battleslug.flare.sentient;
 
-import com.battleslug.usengine.Item.Armor;
-import com.battleslug.usengine.Item.Weapon;
+import com.battleslug.flare.item.*;
+import com.battleslug.logl2d.Texture;
 
 public class Sentient {
 	private String name;
@@ -101,24 +101,8 @@ public class Sentient {
 		return false;
 	}
 	
-	public void damage(Weapon _weapon){
-		if (armor != null){
-			if (health - _weapon.getDamage()> 0){
-				health -= _weapon.getDamage();
-			}
-			else if(health - _weapon.getDamage() <= 0){
-				health = 0;
-			}
-		}
-		else if (armor == null){
-			//check how much damage it does, don't want to heal the sentient due to a high armor value!
-			if (health - (_weapon.getDamage() - armor.getProtection()) > 0){
-				health -= _weapon.getDamage() - armor.getProtection();
-			}
-			else if((health - _weapon.getDamage() - armor.getProtection()) <= 0){
-				health = 0;
-			}
-		}
+	public void damage(Weapon weapon){
+		//TODO, add bullet collisions
 	}
 	
 	public class Team {
@@ -135,14 +119,14 @@ public class Sentient {
 		public static final int NEUTRAL = 2;
 		public static final int AGGRESSIVE = 3;
 		
-		public Team(int _num, String _name){
-			num = _num;
-			name = _name;
+		public Team(int num, String name){
+			this.num = num;
+			this.name = name;
 			
 			enemy = new int[ENEMIES];
 			friend = new int[FRIENDS];
 			
-			if(_num == 0){
+			if(num == 0){
 				System.out.println("Caution: Team number may not be 0!");
 			}
 		}

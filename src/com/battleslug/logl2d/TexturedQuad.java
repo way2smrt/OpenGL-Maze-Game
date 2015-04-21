@@ -1,6 +1,6 @@
-package com.battleslug.usengine;
+package com.battleslug.logl2d;
 
-import com.battleslug.usengine.Display.VectorColor;
+
 
 public class TexturedQuad {
 	private int x1, x2, x3, x4;

@@ -1,4 +1,4 @@
-package com.battleslug.usengine;
+package com.battleslug.flare.event;
 
 public class Timer {
 	public long lastUpdate;
