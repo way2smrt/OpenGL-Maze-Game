@@ -41,6 +41,10 @@ public class Circle {
 		return rotation;
 	}
 	
+	public void setRadius(int radius){
+		r = radius;
+	}
+	
 	public float getRadius(){
 		return r;
 	}

@@ -1,5 +1,8 @@
 package com.battleslug.opsf;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.battleslug.flare.*;
@@ -16,11 +19,13 @@ public class OPSF extends Game {
 	private Image img_doge;
 	
 	public OPSF(){
-		super("Unity-Strike");
+		super("OPSF");
 	}
 	
 	@Override 
 	public void play(){	
+		display.setTitle("Operation Solar Flare");
+		
 		tex_test1 = loadTexture("misc/test.png");
 		tex_doge = loadTexture("misc/doge.png");
 		
@@ -33,20 +38,24 @@ public class OPSF extends Game {
 		keyboard.bind(display);
 		
 		img_doge = new Image(tex_doge);
+		img_doge.setDimensions(50, 50);
 		
 		int rotation = 100;
 		while(true){
+			final int LOCX = 100;
+			final int LOCY = 100;
+			
 			keyboard.update();
 			
 			if(keyboard.isDown(GLFW_KEY_A)){
 				display.drawTexturedQuad(new TexturedQuad(0, 0, 0, 100, 100, 100, 100, 0, tex_doge, null));
-				img_doge.draw(display, 100, 100, rotation);
+				img_doge.draw(display, LOCX, LOCY, rotation);
+				img_doge.setLocal(img_doge.getWidth()/2, img_doge.getHeight()/2);
 			}
-			if(keyboard.wasReleased(GLFW_KEY_D)){
-				rotation += 30;
+			if(keyboard.isDown(GLFW_KEY_D)){
+				rotation += 2;
 			}
 			
-			System.out.println(rotation);
 			display.drawRectangle(0, 0, 500, 500, new VectorColor(0.5f, 0.3f, 0.8f));
 			display.update();
 			display.clear();

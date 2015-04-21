@@ -21,6 +21,8 @@ public class Display {
 	private String name;
 	private int width, height;
 	
+	private long xMouse, yMouse;
+	
 	public Display(String _name, int _w, int _h){
 		name = _name;
 		width = _w;
@@ -91,7 +93,18 @@ public class Display {
 		glfwSwapBuffers(window);
 		checkClose();
 	}
-
+	
+	public void drawPixel(int x, int y, VectorColor c){
+		glDisable(GL_TEXTURE_2D);
+		
+		glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+		
+		glBegin(GL_POINTS);
+		glVertex2f(x, y);
+		glEnd();
+		
+	}
+	
 	public void drawRectangle(int x1, int y1, int x2, int y2, VectorColor c){
 		glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 		
@@ -152,6 +165,10 @@ public class Display {
 
 	public GLFWKeyCallback getKeyCallback(){
 		return keyCallback;
+	}
+	
+	public void setTitle(String title){
+		glfwSetWindowTitle(window, title);
 	}
 
 	public void kill(){
