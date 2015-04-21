@@ -25,10 +25,13 @@ public class Timer {
 	/**
 	 * Returns the time passed since wait or update was called.
 	 * Caution: Can return 0 at times.
-	 * @return
 	 */
 	public long getTimePassedNanos(){
 		return System.nanoTime() - lastUpdate;
+	}
+	
+	public long getTimeNanos(){
+		return System.nanoTime();
 	}
 	
 	public long getFPS(){

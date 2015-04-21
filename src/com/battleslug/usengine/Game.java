@@ -1,5 +1,11 @@
 package com.battleslug.usengine;
 
+import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+
+import org.lwjgl.opengl.GL11;
+
 
 public class Game {	
 	private String FOLDER_NAME;
