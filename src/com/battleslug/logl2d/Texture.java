@@ -14,23 +14,10 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public class Texture {
-<<<<<<< HEAD:src/com/battleslug/usengine/Texture.java
-    public int id;
-    
-    public int width;
-    public int height;
-    
-    public float xScale;
-    public float yScale;
-    
-    public int rotation;
-
-=======
 	private int id;
 	
 	private int width, height;
 	
->>>>>>> 08a186fe0bb31795077213569da8f09853c7a8f0:src/com/battleslug/logl2d/Texture.java
     public static final int LINEAR = GL_LINEAR;
     public static final int NEAREST = GL_NEAREST;
 
@@ -99,63 +86,17 @@ public class Texture {
                 }
             }
         }
-<<<<<<< HEAD:src/com/battleslug/usengine/Texture.java
-        
-        rotation = 0;
-        
-        xScale = 1;
-        yScale = 1;
-    }
-=======
->>>>>>> 08a186fe0bb31795077213569da8f09853c7a8f0:src/com/battleslug/logl2d/Texture.java
-
-    }
-<<<<<<< HEAD:src/com/battleslug/usengine/Texture.java
-    
-    public void setRotation(int degrees){
-    	rotation = degrees;
     }
     
-=======
-
->>>>>>> 08a186fe0bb31795077213569da8f09853c7a8f0:src/com/battleslug/logl2d/Texture.java
     public int getWidth(){
-    	return new Float(width*xScale).intValue();
-    }
-    
-    public int getHeight(){
-    	return new Float(height*yScale).intValue();
-    }
-    
-    public int getWidthSource(){
     	return width;
     }
     
-    public int getHeightSource(){
+    public int getHeight(){
     	return height;
     }
     
-<<<<<<< HEAD:src/com/battleslug/usengine/Texture.java
-    public int getRotation(){
-    	return rotation;
-    }
-    
-    public void setScale(float xScale, float yScale){
-    	this.xScale = xScale;
-    	this.yScale = yScale;
-    }
-    
-    public float getXScale(){
-    	return xScale;
-    }
-    
-    public float getYScale(){
-    	return yScale;
-    }
-    
-=======
     public void bind() {
         glBindTexture(GL_TEXTURE_2D, id);
     }
->>>>>>> 08a186fe0bb31795077213569da8f09853c7a8f0:src/com/battleslug/logl2d/Texture.java
 }
