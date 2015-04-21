@@ -1,4 +1,4 @@
-package com.battleslug.unitystrike;
+package com.battleslug.opsf;
 
 import static org.lwjgl.glfw.GLFW.*;
 
