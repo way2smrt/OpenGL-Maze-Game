@@ -1,6 +1,12 @@
-# Unity-Strike
-A simple game made in Java, with LWJGL3. First time making an actual project with Java and GitHub, doing my best!
+#Operation Solar Fury
 
-Unity-Strike is going to be a 2d, side scrolling sci-fi action game.
+###About
+Operation Solar Fury is going to be a 2D, side scrolling sci-fi shooter like game, built in Java with OpenGl/LWJGL3.
 
-Currently there have been no releases yet, as I have just started working on it and I am not the fastest programmer! :)
+I am going to be using Operation Solar Fury as my grade 11 programming summative.
+
+###Current Progress
+Currently there are no releases. I am not the fastest programmer, and I am still working on the framework and engine as of now. I remain confident that there will be a release soon in the future however.
+
+###Contact me
+Send any feedback to opsf.game@gmail.com
