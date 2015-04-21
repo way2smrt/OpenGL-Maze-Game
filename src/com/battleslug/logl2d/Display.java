@@ -18,29 +18,31 @@ public class Display {
 	
 	public static int texWidth = 32;
 	
-	private String name;
+	private String title;
 	private int width, height;
 	
 	private long xMouse, yMouse;
 	
-	public Display(String _name, int _w, int _h){
-		name = _name;
-		width = _w;
-		height = _h;
-	}
+	public static final int HINT_RESIZABLE = GLFW_RESIZABLE;
+	public static final int HINT_VISIBLE = GLFW_VISIBLE;
+	public static final int HINT_DECORATED = GLFW_DECORATED;
+	public static final int HINT_FLOATING = GLFW_FLOATING;
 	
-	public void create() {
-		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
-
+	public Display(String title, int width, int height){
+		this.title = title;
+		this.width = width;
+		this.height = height;
+		
 		if (glfwInit() != GL11.GL_TRUE){
 			throw new IllegalStateException("Unable to initialize GLFW");
 		}
- 
-		glfwDefaultWindowHints(); 
-		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
-		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); 
-
-		window = glfwCreateWindow(width, height, name, NULL, NULL);
+		
+		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
+	}
+	
+	public void create() {
+		window = glfwCreateWindow(width, height, title, NULL, NULL);
+		
 		if(window == NULL){
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
@@ -55,8 +57,6 @@ public class Display {
 		//v-sync
 		glfwSwapInterval(1);
  
-		glfwShowWindow(window);
-
 		GLContext.createFromCurrent();
 
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -78,6 +78,15 @@ public class Display {
 
 		glLoadIdentity();
 	}
+	
+	public void setHint(int hint, boolean state){
+		if(state){
+			glfwWindowHint(hint, GL_TRUE);
+		}
+		else {
+			glfwWindowHint(hint, GL_FALSE);
+		}
+	}
 
 	public void clear(){
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -92,6 +101,14 @@ public class Display {
 	public void update(){
 		glfwSwapBuffers(window);
 		checkClose();
+	}
+	
+	public void hide(){
+		glfwHideWindow(window);
+	}
+	
+	public void show(){
+		glfwShowWindow(window);
 	}
 	
 	public void drawPixel(int x, int y, VectorColor c){
@@ -165,10 +182,6 @@ public class Display {
 
 	public GLFWKeyCallback getKeyCallback(){
 		return keyCallback;
-	}
-	
-	public void setTitle(String title){
-		glfwSetWindowTitle(window, title);
 	}
 
 	public void kill(){

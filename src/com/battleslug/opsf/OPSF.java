@@ -15,30 +15,32 @@ public class OPSF extends Game {
 	
 	private World world;
 	
-	private Texture tex_test1, tex_doge;
+	private Texture tex_test1;
 	private Image img_doge;
 	
+	private static final String GAME_FOLDER = "game/OPSF";
+	
 	public OPSF(){
-		super("OPSF");
 	}
 	
 	@Override 
-	public void play(){	
-		display.setTitle("Operation Solar Flare");
-		
-		tex_test1 = loadTexture("misc/test.png");
-		tex_doge = loadTexture("misc/doge.png");
-		
-		player = new Sentient("Player", tex_test1, 200, 20);
-		player.setHealth(125);
+	public void play(){
+		display = new Display("Operation Solar Flare", 640, 640);
+		display.create();
+		//display.show();
 		
 		world = new World();
 		world.bind(display);
 		
 		keyboard.bind(display);
 		
-		img_doge = new Image(tex_doge);
+		loadTextures();
+		tex_test1 = new Texture(GAME_FOLDER+"/res/tex/rocksFine1.png");
+		img_doge = new Image(new Texture(GAME_FOLDER+"/res/img/misc/doge.png"));
 		img_doge.setDimensions(50, 50);
+		
+		player = new Sentient("Player", tex_test1, 200, 20);
+		player.setHealth(125);
 		
 		int rotation = 100;
 		while(true){
@@ -48,8 +50,8 @@ public class OPSF extends Game {
 			keyboard.update();
 			
 			if(keyboard.isDown(GLFW_KEY_A)){
-				display.drawTexturedQuad(new TexturedQuad(0, 0, 0, 100, 100, 100, 100, 0, tex_doge, null));
 				img_doge.draw(display, LOCX, LOCY, rotation);
+				display.drawTexturedQuad(new TexturedQuad(0, 0, 0, 500, 500, 500, 500, 0, tex_test1, null));
 				img_doge.setLocal(img_doge.getWidth()/2, img_doge.getHeight()/2);
 			}
 			if(keyboard.isDown(GLFW_KEY_D)){
@@ -64,6 +66,6 @@ public class OPSF extends Game {
 	}
 	
 	public static void main(String[] args) {
-        new OPSF();
+        new OPSF().init();
     }
 }
