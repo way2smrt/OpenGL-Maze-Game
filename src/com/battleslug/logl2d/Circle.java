@@ -38,6 +38,9 @@ public class Circle {
 			rotation = 270;
 			rotation += new Float(toRadians(asin((this.yLocal-yLocal)/r))).intValue();
 		}
+		//TODO for some reason rotation is off by 45 degrees. Figure out why and fix if needed.
+		rotation -= 45;
+		
 		return rotation;
 	}
 	

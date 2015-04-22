@@ -22,7 +22,7 @@ public class OPSF extends Game {
 	
 	@Override 
 	public void play(){
-		display = new Display("Operation Solar Flare", 640, 640);
+		display = new Display("Operation Solar Flare", 1024, 1024);
 		display.create();
 		//display.show();
 		
@@ -32,7 +32,7 @@ public class OPSF extends Game {
 		keyboard.bind(display);
 		
 		loadTextures();
-		tex_test1 = new Texture(GAME_FOLDER+"/res/tex/deadwood1.png");
+		tex_test1 = new Texture(GAME_FOLDER+"/res/tex/brick1.png");
 		img_doge = new Image(new Texture(GAME_FOLDER+"/res/img/misc/doge.png"));
 		img_doge.setDimensions(50, 50);
 		
@@ -51,11 +51,16 @@ public class OPSF extends Game {
 			
 			keyboard.update();
 			
+			display.coolTestShit(tex_test1);
+			
 			if(keyboard.isDown(GLFW_KEY_A)){
 				img_doge.draw(display, LOCX, LOCY, pivot_doge.getRotation());
 				img_doge.draw(display, LOCX+100, LOCY, pivot_doge.getChild(MUCH_DOGE).getRotation());
-				display.drawTexturedQuad(new TexturedQuad(0, 0, 150, 750, 650, 370, 400, -200, tex_test1, null));
+				//display.drawTexturedQuad(new TexturedQuad(0, 0, 150, 750, 650, 370, 400, -200, tex_test1, null));
 				img_doge.setLocal(img_doge.getWidth()/2, img_doge.getHeight()/2);
+				
+				display.drawTexturedQuad(new TexturedQuad(0, 0, 200, 200, tex_test1, null));
+				display.drawTexturedQuad(new TexturedQuad(200, 200, 400, 0, tex_test1, null));
 			}
 			if(keyboard.isDown(GLFW_KEY_D)){
 				//1 rotation per second
@@ -63,7 +68,7 @@ public class OPSF extends Game {
 				System.out.println(pivot_doge.getRotation());
 			}
 			
-			display.drawRectangle(0, 0, 500, 500, new VectorColor(0.5f, 0.3f, 0.8f));
+			//display.drawRectangle(0, 0, 500, 500, new VectorColor(0.5f, 0.3f, 0.8f));
 			display.update();
 			display.clear();
 			updateTimer();

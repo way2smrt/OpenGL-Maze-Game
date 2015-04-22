@@ -23,10 +23,14 @@ public class Display {
 	
 	private long xMouse, yMouse;
 	
+	private int x=0;
+	
 	public static final int HINT_RESIZABLE = GLFW_RESIZABLE;
 	public static final int HINT_VISIBLE = GLFW_VISIBLE;
 	public static final int HINT_DECORATED = GLFW_DECORATED;
 	public static final int HINT_FLOATING = GLFW_FLOATING;
+	
+	private enum DrawMode{MODE_2D, MODE_3D};
 	
 	public Display(String title, int width, int height){
 		this.title = title;
@@ -55,15 +59,14 @@ public class Display {
  
 		GLContext.createFromCurrent();
 
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
 		glOrtho(0, width, height, 0, 1, -1);
+		
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		
+		glMatrixMode(GL_PROJECTION);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_TEXTURE_2D);
-
 		glEnable(GL_DEPTH_TEST);
 
 		glEnable(GL_BLEND);
@@ -71,6 +74,9 @@ public class Display {
 
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.0f);
+		
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_DEPTH_TEST);
 
 		glLoadIdentity();
 	}
@@ -108,6 +114,8 @@ public class Display {
 	}
 	
 	public void drawPixel(int x, int y, VectorColor c){
+		setMode(DrawMode.MODE_2D);
+		
 		glDisable(GL_TEXTURE_2D);
 		
 		glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
@@ -125,6 +133,8 @@ public class Display {
 	}
 
 	public void drawColoredQuad(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, VectorColor c){
+		setMode(DrawMode.MODE_2D);
+		
 		glDisable(GL_TEXTURE_2D);
 		
 		glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
@@ -138,6 +148,8 @@ public class Display {
 	}
 
 	public void drawTexturedQuad(TexturedQuad quad){
+		setMode(DrawMode.MODE_2D);
+		
 		glEnable(GL_TEXTURE_2D);
 		
 		quad.getTexture().bind();
@@ -187,7 +199,98 @@ public class Display {
 		errorCallback.release();
 		System.exit(0);
 	}
+	
+	public void coolTestShit(Texture tex){
+		setMode(DrawMode.MODE_3D);
+		
+		glEnable(GL_TEXTURE_2D);
+	
+		tex.bind();
+		
+		float u = 0f;
+		float v = 0f;
+		float u2 = 1f;
+		float v2 = 1f;
+		
+        glRotatef(x++, 1, 1, 1);
+        glBegin(GL_QUADS);
+        glColor4f(1f, 1f, 1f, 1f);
+        
+        glTexCoord2f(u, v);
+        glVertex3f( 1.0f, 1.0f,-1.0f);          // Top Right Of The Quad (Top)
+		glTexCoord2f(u, v2);
+        glVertex3f(-1.0f, 1.0f,-1.0f);          // Top Left Of The Quad (Top)
+        glTexCoord2f(u2, v2);
+        glVertex3f(-1.0f, 1.0f, 1.0f);          // Bottom Left Of The Quad (Top)
+        glTexCoord2f(u2, v);
+        glVertex3f( 1.0f, 1.0f, 1.0f);    // Bottom Right Of The Quad (Top)
+        
+        tex.bind();
+        glTexCoord2f(u, v);
+        glVertex3f( 1.0f,-1.0f, 1.0f);          // Top Right Of The Quad (Bottom)
+        glTexCoord2f(u, v2);
+        glVertex3f(-1.0f,-1.0f, 1.0f);          // Top Left Of The Quad (Bottom)
+        glTexCoord2f(u2, v2);
+        glVertex3f(-1.0f,-1.0f,-1.0f);          // Bottom Left Of The Quad (Bottom)
+        glTexCoord2f(u2, v);
+        glVertex3f( 1.0f,-1.0f,-1.0f);  		// Bottom Right Of The Quad (Bottom)
+        
+        tex.bind();
+        glTexCoord2f(u, v);
+        glVertex3f( 1.0f, 1.0f, 1.0f);          // Top Right Of The Quad (Front)
+        glTexCoord2f(u, v2);
+        glVertex3f(-1.0f, 1.0f, 1.0f);          // Top Left Of The Quad (Front)
+        glTexCoord2f(u2, v2);
+        glVertex3f(-1.0f,-1.0f, 1.0f);          // Bottom Left Of The Quad (Front)
+        glTexCoord2f(u2, v);
+        glVertex3f( 1.0f,-1.0f, 1.0f);          // Bottom Right Of The Quad (Front)         // Set The Color To Yellow
+       
+        tex.bind();
+        glTexCoord2f(u, v);
+        glVertex3f( 1.0f,-1.0f,-1.0f);          // Bottom Left Of The Quad (Back)
+        glTexCoord2f(u, v2);
+        glVertex3f(-1.0f,-1.0f,-1.0f);          // Bottom Right Of The Quad (Back)
+        glTexCoord2f(u2, v2);
+        glVertex3f(-1.0f, 1.0f,-1.0f);          // Top Right Of The Quad (Back)
+        glTexCoord2f(u2, v);
+        glVertex3f( 1.0f, 1.0f,-1.0f);          // Top Left Of The Quad (Back)
+        
+        tex.bind();
+        glTexCoord2f(u, v);
+        glVertex3f(-1.0f, 1.0f, 1.0f);          // Top Right Of The Quad (Left)
+        glTexCoord2f(u, v2);
+        glVertex3f(-1.0f, 1.0f,-1.0f);          // Top Left Of The Quad (Left)
+        glTexCoord2f(u2, v2);
+        glVertex3f(-1.0f,-1.0f,-1.0f);          // Bottom Left Of The Quad (Left)
+        glTexCoord2f(u2, v);
+        glVertex3f(-1.0f,-1.0f, 1.0f);          // Bottom Right Of The Quad (Left)
+        
+        tex.bind();
+        glTexCoord2f(u, v);
+        glVertex3f( 1.0f, 1.0f,-1.0f);          // Top Right Of The Quad (Right)
+        glTexCoord2f(u, v2);
+        glVertex3f( 1.0f, 1.0f, 1.0f);          // Top Left Of The Quad (Right)
+        glTexCoord2f(u2, v2);
+        glVertex3f( 1.0f,-1.0f, 1.0f);          // Bottom Left Of The Quad (Right)
+        glTexCoord2f(u2, v);
+        glVertex3f( 1.0f,-1.0f,-1.0f);          // Bottom Right Of The Quad (Right)
+        
+        glEnd();
+        glLoadIdentity();
+	}
 
+	private void setMode(DrawMode mode){
+		glLoadIdentity();
+		switch(mode){
+			case MODE_2D:
+				glOrtho(0, width, height, 0, 1, -1);
+				break;
+			case MODE_3D:
+				glOrtho(-2, 2, 2, -2, -2, 2);
+				break;
+		}
+	}
+	
 	public long getID(){
 		return window;
 	}

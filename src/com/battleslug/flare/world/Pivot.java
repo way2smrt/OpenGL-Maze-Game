@@ -2,6 +2,8 @@ package com.battleslug.flare.world;
 
 import java.util.Arrays;
 
+import com.battleslug.logl2d.Circle;
+
 public class Pivot {
 	private int rotation;
 	private int rotMin = 0;
@@ -61,6 +63,13 @@ public class Pivot {
 	}
 	
 	public void setRotation(int rotation){
+		while(rotation >= Circle.DEGREES){
+			rotation -= Circle.DEGREES;
+		}
+		while(rotation < 0){
+			rotation += Circle.DEGREES;
+		}
+		
 		if(rotation < rotMin){
 			this.rotation = rotMin;
 		}
