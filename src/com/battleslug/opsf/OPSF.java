@@ -1,13 +1,10 @@
 package com.battleslug.opsf;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.battleslug.flare.*;
-import com.battleslug.flare.sentient.Sentient;
-import com.battleslug.flare.world.World;
+import com.battleslug.flare.sentient.*;
+import com.battleslug.flare.world.*;
 import com.battleslug.logl2d.*;
 
 public class OPSF extends Game {
@@ -35,14 +32,19 @@ public class OPSF extends Game {
 		keyboard.bind(display);
 		
 		loadTextures();
-		tex_test1 = new Texture(GAME_FOLDER+"/res/tex/rocksFine1.png");
+		tex_test1 = new Texture(GAME_FOLDER+"/res/tex/deadwood1.png");
 		img_doge = new Image(new Texture(GAME_FOLDER+"/res/img/misc/doge.png"));
 		img_doge.setDimensions(50, 50);
 		
 		player = new Sentient("Player", tex_test1, 200, 20);
 		player.setHealth(125);
 		
-		int rotation = 100;
+		final int MUCH_DOGE = 1;
+		
+		Pivot pivot_doge = new Pivot();
+		pivot_doge.addChild(new Pivot());
+		pivot_doge.getChild(MUCH_DOGE).setRotation(90);
+		
 		while(true){
 			final int LOCX = 100;
 			final int LOCY = 100;
@@ -50,22 +52,26 @@ public class OPSF extends Game {
 			keyboard.update();
 			
 			if(keyboard.isDown(GLFW_KEY_A)){
-				img_doge.draw(display, LOCX, LOCY, rotation);
-				display.drawTexturedQuad(new TexturedQuad(0, 0, 0, 500, 500, 500, 500, 0, tex_test1, null));
+				img_doge.draw(display, LOCX, LOCY, pivot_doge.getRotation());
+				img_doge.draw(display, LOCX+100, LOCY, pivot_doge.getChild(MUCH_DOGE).getRotation());
+				display.drawTexturedQuad(new TexturedQuad(0, 0, 150, 750, 650, 370, 400, -200, tex_test1, null));
 				img_doge.setLocal(img_doge.getWidth()/2, img_doge.getHeight()/2);
 			}
 			if(keyboard.isDown(GLFW_KEY_D)){
-				rotation += 2;
+				//1 rotation per second
+				pivot_doge.setRotation(pivot_doge.getRotation()+new Double(timePassed*Circle.DEGREES).intValue());
+				System.out.println(pivot_doge.getRotation());
 			}
 			
 			display.drawRectangle(0, 0, 500, 500, new VectorColor(0.5f, 0.3f, 0.8f));
 			display.update();
 			display.clear();
+			updateTimer();
 		}
 
 	}
 	
 	public static void main(String[] args) {
-        new OPSF().init();
+        new OPSF();
     }
 }

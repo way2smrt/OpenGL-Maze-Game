@@ -3,17 +3,16 @@ package com.battleslug.flare;
 import static org.lwjgl.glfw.GLFW.*;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLContext;
 
 import com.battleslug.flare.event.Keyboard;
-import com.battleslug.flare.event.Timer;
 import com.battleslug.flare.world.World;
 import com.battleslug.logl2d.Display;
 import com.battleslug.logl2d.Texture;
 
 
 public class Game {	
-	protected Timer timer;
+	private double timeLast = 0;
+	protected double timePassed = 0;
 	protected Keyboard keyboard;
 	protected World world;
 	protected Display display;
@@ -23,10 +22,10 @@ public class Game {
 	private final static boolean DEBUG_ENABLED = true;
 	
 	public Game(){
-	}
-	
-	public void init(){
-		timer = new Timer();
+		if (glfwInit() != GL11.GL_TRUE){
+			throw new IllegalStateException("Unable to initialize GLFW");
+		}
+		
 		keyboard = new Keyboard();
 		
 		play();
@@ -45,5 +44,10 @@ public class Game {
 		if (DEBUG_ENABLED){
 			//TODO, debug information on keypress
 		}
+	}
+	
+	protected void updateTimer(){
+		timePassed = glfwGetTime()-timeLast;
+		timeLast = glfwGetTime();
 	}
 }

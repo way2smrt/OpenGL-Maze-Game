@@ -1,5 +1,6 @@
 package com.battleslug.flare.event;
 
+@Deprecated
 public class Timer {
 	public long lastUpdate;
 	

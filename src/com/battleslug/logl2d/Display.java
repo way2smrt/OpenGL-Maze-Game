@@ -33,10 +33,6 @@ public class Display {
 		this.width = width;
 		this.height = height;
 		
-		if (glfwInit() != GL11.GL_TRUE){
-			throw new IllegalStateException("Unable to initialize GLFW");
-		}
-		
 		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
 	}
 	
@@ -125,10 +121,10 @@ public class Display {
 	public void drawRectangle(int x1, int y1, int x2, int y2, VectorColor c){
 		glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 		
-		drawRectangle(x1, y1, x1, y2, x2, y2, x2, y1, c);
+		drawColoredQuad(x1, y1, x1, y2, x2, y2, x2, y1, c);
 	}
 
-	public void drawRectangle(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, VectorColor c){
+	public void drawColoredQuad(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, VectorColor c){
 		glDisable(GL_TEXTURE_2D);
 		
 		glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
