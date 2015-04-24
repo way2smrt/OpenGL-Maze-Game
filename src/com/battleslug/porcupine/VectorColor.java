@@ -1,4 +1,4 @@
-package com.battleslug.logl2d;
+package com.battleslug.porcupine;
 
 public class VectorColor {
 	private float r, g, b, a;

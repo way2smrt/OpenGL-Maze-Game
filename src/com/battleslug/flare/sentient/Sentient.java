@@ -1,7 +1,7 @@
 package com.battleslug.flare.sentient;
 
 import com.battleslug.flare.item.*;
-import com.battleslug.logl2d.Texture;
+import com.battleslug.porcupine.Texture;
 
 public class Sentient {
 	private String name;

@@ -1,4 +1,4 @@
-package com.battleslug.logl2d;
+package com.battleslug.porcupine;
 
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -9,6 +9,7 @@ import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 public class Display {	
 	private GLFWKeyCallback keyCallback;
@@ -23,26 +24,43 @@ public class Display {
 	
 	private long xMouse, yMouse;
 	
-	private int x=0;
+	private int x = 0;
+	
+	private boolean fullscreen;
 	
 	public static final int HINT_RESIZABLE = GLFW_RESIZABLE;
 	public static final int HINT_VISIBLE = GLFW_VISIBLE;
 	public static final int HINT_DECORATED = GLFW_DECORATED;
 	public static final int HINT_FLOATING = GLFW_FLOATING;
 	
+	public enum RotationMode{AXIS_X, AXIS_Y, AXIS_Z, AXIS_XY, AXIS_YZ, AXIS_ZX, AXIS_XYZ};
+	
 	private enum DrawMode{MODE_2D, MODE_3D};
 	
+	private int aspectRatio;
+	
 	public Display(String title, int width, int height){
+		this(title, width, height, false);
+	}
+	
+	public Display(String title, int width, int height, boolean fullscreen){
 		this.title = title;
 		this.width = width;
 		this.height = height;
+		this.fullscreen = fullscreen;
 		
 		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
 	}
 	
 	public void create() {
-		window = glfwCreateWindow(width, height, title, NULL, NULL);
-		
+		if(fullscreen){
+			window = glfwCreateWindow(width, height, title,glfwGetPrimaryMonitor(), NULL);
+		}
+		else {
+			window = glfwCreateWindow(width, height, title, NULL, NULL);
+		}
+			
+			
 		if(window == NULL){
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
@@ -53,21 +71,26 @@ public class Display {
 		glfwSetWindowPos(window, (GLFWvidmode.width(vidmode) - width) / 2, (GLFWvidmode.height(vidmode) - height) / 2);
  
 		glfwMakeContextCurrent(window);
-
+		
 		//v-sync
 		glfwSwapInterval(1);
  
 		GLContext.createFromCurrent();
 
+		glViewport(0, 0, width, height);
 		glOrtho(0, width, height, 0, 1, -1);
 		
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		//manual resizing callback
+		glfwSetFramebufferSizeCallback(window, new GLFWFramebufferSizeCallback(){
+			@Override
+			public void invoke(long window, int width, int height){
+				glViewport(0, 0, width, height);
+			}
+		});
 		
-		glMatrixMode(GL_PROJECTION);
-		glMatrixMode(GL_MODELVIEW);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_DEPTH_TEST);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -79,6 +102,8 @@ public class Display {
 		glEnable(GL_DEPTH_TEST);
 
 		glLoadIdentity();
+		
+		aspectRatio = width/height;
 	}
 	
 	public void setHint(int hint, boolean state){
@@ -200,7 +225,11 @@ public class Display {
 		System.exit(0);
 	}
 	
-	public void coolTestShit(Texture tex){
+	private void drawTexturedQuad3D(int x, int y, int z, int width, int height){
+		
+	}
+	
+	public void coolTestShit(Texture tex, float angle, float xRot, float yRot, float zRot){
 		setMode(DrawMode.MODE_3D);
 		
 		glEnable(GL_TEXTURE_2D);
@@ -212,83 +241,102 @@ public class Display {
 		float u2 = 1f;
 		float v2 = 1f;
 		
-        glRotatef(x++, 1, 1, 1);
+		glTranslatef(xRot, yRot, zRot);
+		glRotatef(x+=1, 0.5f, 0.5f, 0.5f);
         glBegin(GL_QUADS);
         glColor4f(1f, 1f, 1f, 1f);
         
         glTexCoord2f(u, v);
-        glVertex3f( 1.0f, 1.0f,-1.0f);          // Top Right Of The Quad (Top)
+        glVertex3f( 0.5f, 0.5f,-0.5f);          // Top Right Of The Quad (Top)
 		glTexCoord2f(u, v2);
-        glVertex3f(-1.0f, 1.0f,-1.0f);          // Top Left Of The Quad (Top)
+        glVertex3f(-0.5f, 0.5f,-0.5f);          // Top Left Of The Quad (Top)
         glTexCoord2f(u2, v2);
-        glVertex3f(-1.0f, 1.0f, 1.0f);          // Bottom Left Of The Quad (Top)
+        glVertex3f(-0.5f, 0.5f, 0.5f);          // Bottom Left Of The Quad (Top)
         glTexCoord2f(u2, v);
-        glVertex3f( 1.0f, 1.0f, 1.0f);    // Bottom Right Of The Quad (Top)
+        glVertex3f( 0.5f, 0.5f, 0.5f);    // Bottom Right Of The Quad (Top)
         
         tex.bind();
         glTexCoord2f(u, v);
-        glVertex3f( 1.0f,-1.0f, 1.0f);          // Top Right Of The Quad (Bottom)
+        glVertex3f( 0.5f,-0.5f, 0.5f);          // Top Right Of The Quad (Bottom)
         glTexCoord2f(u, v2);
-        glVertex3f(-1.0f,-1.0f, 1.0f);          // Top Left Of The Quad (Bottom)
+        glVertex3f(-0.5f,-0.5f, 0.5f);          // Top Left Of The Quad (Bottom)
         glTexCoord2f(u2, v2);
-        glVertex3f(-1.0f,-1.0f,-1.0f);          // Bottom Left Of The Quad (Bottom)
+        glVertex3f(-0.5f,-0.5f,-0.5f);          // Bottom Left Of The Quad (Bottom)
         glTexCoord2f(u2, v);
-        glVertex3f( 1.0f,-1.0f,-1.0f);  		// Bottom Right Of The Quad (Bottom)
+        glVertex3f( 0.5f,-0.5f,-0.5f);  		// Bottom Right Of The Quad (Bottom)
         
         tex.bind();
         glTexCoord2f(u, v);
-        glVertex3f( 1.0f, 1.0f, 1.0f);          // Top Right Of The Quad (Front)
+        glVertex3f( 0.5f, 0.5f, 0.5f);          // Top Right Of The Quad (Front)
         glTexCoord2f(u, v2);
-        glVertex3f(-1.0f, 1.0f, 1.0f);          // Top Left Of The Quad (Front)
+        glVertex3f(-0.5f, 0.5f, 0.5f);          // Top Left Of The Quad (Front)
         glTexCoord2f(u2, v2);
-        glVertex3f(-1.0f,-1.0f, 1.0f);          // Bottom Left Of The Quad (Front)
+        glVertex3f(-0.5f,-0.5f, 0.5f);          // Bottom Left Of The Quad (Front)
         glTexCoord2f(u2, v);
-        glVertex3f( 1.0f,-1.0f, 1.0f);          // Bottom Right Of The Quad (Front)         // Set The Color To Yellow
+        glVertex3f( 0.5f,-0.5f, 0.5f);          // Bottom Right Of The Quad (Front)         // Set The Color To Yellow
        
         tex.bind();
         glTexCoord2f(u, v);
-        glVertex3f( 1.0f,-1.0f,-1.0f);          // Bottom Left Of The Quad (Back)
+        glVertex3f( 0.5f,-0.5f,-0.5f);          // Bottom Left Of The Quad (Back)
         glTexCoord2f(u, v2);
-        glVertex3f(-1.0f,-1.0f,-1.0f);          // Bottom Right Of The Quad (Back)
+        glVertex3f(-0.5f,-0.5f,-0.5f);          // Bottom Right Of The Quad (Back)
         glTexCoord2f(u2, v2);
-        glVertex3f(-1.0f, 1.0f,-1.0f);          // Top Right Of The Quad (Back)
+        glVertex3f(-0.5f, 0.5f,-0.5f);          // Top Right Of The Quad (Back)
         glTexCoord2f(u2, v);
-        glVertex3f( 1.0f, 1.0f,-1.0f);          // Top Left Of The Quad (Back)
+        glVertex3f( 0.5f, 0.5f,-0.5f);          // Top Left Of The Quad (Back)
         
         tex.bind();
         glTexCoord2f(u, v);
-        glVertex3f(-1.0f, 1.0f, 1.0f);          // Top Right Of The Quad (Left)
+        glVertex3f(-0.5f, 0.5f, 0.5f);          // Top Right Of The Quad (Left)
         glTexCoord2f(u, v2);
-        glVertex3f(-1.0f, 1.0f,-1.0f);          // Top Left Of The Quad (Left)
+        glVertex3f(-0.5f, 0.5f,-0.5f);          // Top Left Of The Quad (Left)
         glTexCoord2f(u2, v2);
-        glVertex3f(-1.0f,-1.0f,-1.0f);          // Bottom Left Of The Quad (Left)
+        glVertex3f(-0.5f,-0.5f,-0.5f);          // Bottom Left Of The Quad (Left)
         glTexCoord2f(u2, v);
-        glVertex3f(-1.0f,-1.0f, 1.0f);          // Bottom Right Of The Quad (Left)
+        glVertex3f(-0.5f,-0.5f, 0.5f);          // Bottom Right Of The Quad (Left)
         
         tex.bind();
         glTexCoord2f(u, v);
-        glVertex3f( 1.0f, 1.0f,-1.0f);          // Top Right Of The Quad (Right)
+        glVertex3f( 0.5f, 0.5f,-0.5f);          // Top Right Of The Quad (Right)
         glTexCoord2f(u, v2);
-        glVertex3f( 1.0f, 1.0f, 1.0f);          // Top Left Of The Quad (Right)
+        glVertex3f( 0.5f, 0.5f, 0.5f);          // Top Left Of The Quad (Right)
         glTexCoord2f(u2, v2);
-        glVertex3f( 1.0f,-1.0f, 1.0f);          // Bottom Left Of The Quad (Right)
+        glVertex3f( 0.5f,-0.5f, 0.5f);          // Bottom Left Of The Quad (Right)
         glTexCoord2f(u2, v);
-        glVertex3f( 1.0f,-1.0f,-1.0f);          // Bottom Right Of The Quad (Right)
+        glVertex3f( 0.5f,-0.5f,-0.5f);          // Bottom Right Of The Quad (Right)
         
         glEnd();
         glLoadIdentity();
 	}
 
 	private void setMode(DrawMode mode){
+		final float near = -1.0f;
+		final float far = 100.0f;
+		
+		final float top = -1.0f;
+		final float bottom = 1.0f;
+		
+		final float left = -1.0f;
+		final float right = 1.0f;
+		
 		glLoadIdentity();
 		switch(mode){
 			case MODE_2D:
+				glMatrixMode(GL_MODELVIEW);
+				glLoadIdentity();
 				glOrtho(0, width, height, 0, 1, -1);
 				break;
 			case MODE_3D:
-				glOrtho(-2, 2, 2, -2, -2, 2);
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+				glOrtho(left, right*aspectRatio, bottom*aspectRatio, top, near, far);
+				gluPerspective(60, aspectRatio, -near, far);
 				break;
 		}
+	}
+	
+	public int getAspectRatio(){
+		return aspectRatio;
 	}
 	
 	public long getID(){

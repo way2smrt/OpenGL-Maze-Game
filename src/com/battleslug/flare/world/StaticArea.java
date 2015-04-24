@@ -2,7 +2,7 @@ package com.battleslug.flare.world;
 
 import static java.lang.Math.*;
 
-import com.battleslug.logl2d.TexturedQuad;
+import com.battleslug.porcupine.TexturedQuad;
 
 public class StaticArea {
 	

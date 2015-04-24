@@ -2,7 +2,7 @@ package com.battleslug.flare.world;
 
 import java.util.Arrays;
 
-import com.battleslug.logl2d.Circle;
+import com.battleslug.porcupine.Circle;
 
 public class Pivot {
 	private int rotation;

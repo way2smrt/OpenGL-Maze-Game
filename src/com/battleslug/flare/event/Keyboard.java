@@ -4,7 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import org.lwjgl.glfw.GLFWKeyCallback;
 
-import com.battleslug.logl2d.Display;
+import com.battleslug.porcupine.Display;
 
 public class Keyboard {
 	//any key higher than this value would be very odd

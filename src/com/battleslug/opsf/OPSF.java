@@ -5,7 +5,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import com.battleslug.flare.*;
 import com.battleslug.flare.sentient.*;
 import com.battleslug.flare.world.*;
-import com.battleslug.logl2d.*;
+import com.battleslug.porcupine.*;
 
 public class OPSF extends Game {
 	private Sentient player;
@@ -22,7 +22,7 @@ public class OPSF extends Game {
 	
 	@Override 
 	public void play(){
-		display = new Display("Operation Solar Flare", 1024, 1024);
+		display = new Display("Operation Solar Fury", 1024, 900, true);
 		display.create();
 		//display.show();
 		
@@ -45,15 +45,20 @@ public class OPSF extends Game {
 		pivot_doge.addChild(new Pivot());
 		pivot_doge.getChild(MUCH_DOGE).setRotation(90);
 		
+		float angle = 0;
+		float xLoc = 0;
+		float yLoc = 0;
+		float zLoc = 0;
+		
 		while(true){
 			final int LOCX = 100;
 			final int LOCY = 100;
 			
 			keyboard.update();
 			
-			display.coolTestShit(tex_test1);
+			display.coolTestShit(tex_test1, 30, xLoc, yLoc, zLoc);
 			
-			if(keyboard.isDown(GLFW_KEY_A)){
+			if(keyboard.isDown(GLFW_KEY_Z)){
 				img_doge.draw(display, LOCX, LOCY, pivot_doge.getRotation());
 				img_doge.draw(display, LOCX+100, LOCY, pivot_doge.getChild(MUCH_DOGE).getRotation());
 				//display.drawTexturedQuad(new TexturedQuad(0, 0, 150, 750, 650, 370, 400, -200, tex_test1, null));
@@ -62,10 +67,30 @@ public class OPSF extends Game {
 				display.drawTexturedQuad(new TexturedQuad(0, 0, 200, 200, tex_test1, null));
 				display.drawTexturedQuad(new TexturedQuad(200, 200, 400, 0, tex_test1, null));
 			}
-			if(keyboard.isDown(GLFW_KEY_D)){
+			if(keyboard.isDown(GLFW_KEY_X)){
 				//1 rotation per second
 				pivot_doge.setRotation(pivot_doge.getRotation()+new Double(timePassed*Circle.DEGREES).intValue());
 				System.out.println(pivot_doge.getRotation());
+			}
+			
+			
+			if(keyboard.isDown(GLFW_KEY_W)){
+				xLoc += 1*timePassed;
+			}
+			if(keyboard.isDown(GLFW_KEY_S)){
+				xLoc -= 1*timePassed;
+			}
+			if(keyboard.isDown(GLFW_KEY_A)){
+				yLoc += 1*timePassed;
+			}
+			if(keyboard.isDown(GLFW_KEY_D)){
+				yLoc -= 1*timePassed;
+			}
+			if(keyboard.isDown(GLFW_KEY_Q)){
+				zLoc += 10*timePassed;
+			}
+			if(keyboard.isDown(GLFW_KEY_E)){
+				zLoc -= 10*timePassed;
 			}
 			
 			//display.drawRectangle(0, 0, 500, 500, new VectorColor(0.5f, 0.3f, 0.8f));

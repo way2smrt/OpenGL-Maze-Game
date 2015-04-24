@@ -6,8 +6,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.battleslug.flare.event.Keyboard;
 import com.battleslug.flare.world.World;
-import com.battleslug.logl2d.Display;
-import com.battleslug.logl2d.Texture;
+import com.battleslug.porcupine.Display;
+import com.battleslug.porcupine.Texture;
 
 
 public class Game {	
