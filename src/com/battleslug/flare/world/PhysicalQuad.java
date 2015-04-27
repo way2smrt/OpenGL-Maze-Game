@@ -1,11 +1,11 @@
 package com.battleslug.flare.world;
 
 import com.battleslug.porcupine.Texture;
-import com.battleslug.porcupine.TexturedQuad;
+import com.battleslug.porcupine.QuadTextured2D;
 import com.battleslug.porcupine.VectorColor;
 
 
-public class PhysicalQuad extends TexturedQuad{
+public class PhysicalQuad extends QuadTextured2D{
 	public static final int BULLET_PROOF = 0;
 	public static final int BULLET_REFLECTIVE = 1;
 	public static final int BULLET_PENETRABLE = 2;

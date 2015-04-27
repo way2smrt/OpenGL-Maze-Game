@@ -1,15 +1,15 @@
 package com.battleslug.flare.world;
 
 import com.battleslug.porcupine.Display;
-import com.battleslug.porcupine.TexturedQuad;
+import com.battleslug.porcupine.QuadTextured2D;
 
 
 public class World {
 	private Display display;
 	
 	private Bullet[] bullet;
-	private TexturedQuad[] foreground;
-	private TexturedQuad[] background;
+	private QuadTextured2D[] foreground;
+	private QuadTextured2D[] background;
 	private PhysicalQuad[] stage;
 	
 	

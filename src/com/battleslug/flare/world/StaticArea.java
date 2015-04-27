@@ -2,17 +2,17 @@ package com.battleslug.flare.world;
 
 import static java.lang.Math.*;
 
-import com.battleslug.porcupine.TexturedQuad;
+import com.battleslug.porcupine.QuadTextured2D;
 
 public class StaticArea {
 	
-	private TexturedQuad quad[] = new TexturedQuad[1];
+	private QuadTextured2D quad[] = new QuadTextured2D[1];
 	private int quads;
 	
 	public StaticArea(){
 	}
 	
-	public void addTexturedQuad(TexturedQuad quad){
+	public void addTexturedQuad(QuadTextured2D quad){
 		for(int i = 0; i != quads; i++){
 			if(this.quad[i] == null){
 				this.quad[i] = quad;
@@ -21,13 +21,13 @@ public class StaticArea {
 		}
 		
 		//resize our array for the new quad
-		TexturedQuad temp[] = new TexturedQuad[quads];
+		QuadTextured2D temp[] = new QuadTextured2D[quads];
 		for(int i = 0; i != quads; i++){
 			temp[i] = this.quad[i];
 		}
 		
 		//resize the array
-		this.quad = new TexturedQuad[quads+1];
+		this.quad = new QuadTextured2D[quads+1];
 		
 		for(int i = 0; i != quads; i++){
 			this.quad[i] = temp[i];

@@ -64,8 +64,8 @@ public class OPSF extends Game {
 				//display.drawTexturedQuad(new TexturedQuad(0, 0, 150, 750, 650, 370, 400, -200, tex_test1, null));
 				img_doge.setLocal(img_doge.getWidth()/2, img_doge.getHeight()/2);
 				
-				display.drawTexturedQuad(new TexturedQuad(0, 0, 200, 200, tex_test1, null));
-				display.drawTexturedQuad(new TexturedQuad(200, 200, 400, 0, tex_test1, null));
+				display.drawQuadTextured2D(new QuadTextured2D(0, 0, 200, 200, tex_test1, null));
+				display.drawQuadTextured2D(new QuadTextured2D(200, 200, 400, 0, tex_test1, null));
 			}
 			if(keyboard.isDown(GLFW_KEY_X)){
 				//1 rotation per second
