@@ -143,6 +143,6 @@ public class Image {
 		xG4 = x+c4.getX(rotation+c4.getRotation(xL4, yL4));
 		yG4 = y+c4.getY(rotation+c4.getRotation(xL4, yL4));
 		
-		display.drawTexturedQuad(new QuadTextured2D(xG1, yG1, xG2, yG2, xG3, yG3, xG4, yG4, this.tex, null));   
+		display.drawQuadTextured2D(new QuadTextured2D(xG1, yG1, xG2, yG2, xG3, yG3, xG4, yG4, this.tex, null));   
 	}
 }

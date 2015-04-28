@@ -4,18 +4,18 @@ import static java.lang.Math.*;
 
 public class Circle {
 	private float r;
-	private int xLocal, yLocal;
+	private float xLocal, yLocal;
 	
-	public final static int DEGREES = 360;
+	public final static float DEGREES = 360;
 	
-	public Circle(int xLocal, int yLocal, float radius){
+	public Circle(float xLocal, float yLocal, float radius){
 		this.xLocal = xLocal;
 		this.yLocal = yLocal;
 		r = radius;
 	}
 	
-	public int getRotation(int xLocal, int yLocal){
-		int rotation = 0;
+	public float getRotation(float xLocal, float yLocal){
+		float rotation = 0;
 		
 		/*
 		 * Calculate which part of circle the point is located in.
@@ -24,19 +24,19 @@ public class Circle {
 		 */
 		if (xLocal >= this.xLocal && yLocal < this.yLocal){
 			rotation = 0;
-			rotation += new Float(toRadians(asin((xLocal-this.xLocal)/r))).intValue();
+			rotation += toRadians(asin((xLocal-this.xLocal)/r));
 		}
 		else if(xLocal >= this.xLocal && yLocal >= this.yLocal){
 			rotation = 90;
-			rotation += new Float(toRadians(asin((yLocal-this.yLocal)/r))).intValue();
+			rotation += toRadians(asin((yLocal-this.yLocal)/r));
 		}
 		else if(xLocal < this.xLocal && yLocal >= this.yLocal){
 			rotation = 180;
-			rotation += new Float(toRadians(asin((this.xLocal-xLocal)/r))).intValue();
+			rotation += toRadians(asin((this.xLocal-xLocal)/r));
 		}
 		else if(xLocal < this.xLocal && yLocal < this.yLocal){
 			rotation = 270;
-			rotation += new Float(toRadians(asin((this.yLocal-yLocal)/r))).intValue();
+			rotation += toRadians(asin((this.yLocal-yLocal)/r));
 		}
 		//TODO for some reason rotation is off by 45 degrees. Figure out why and fix if needed.
 		rotation -= 45;
@@ -44,7 +44,7 @@ public class Circle {
 		return rotation;
 	}
 	
-	public void setRadius(int radius){
+	public void setRadius(float radius){
 		r = radius;
 	}
 	
@@ -52,11 +52,11 @@ public class Circle {
 		return r;
 	}
 	
-	public int getX(int degrees){
-		return new Double(yLocal+(r*cos(toRadians(degrees)))).intValue();
+	public float getX(float degrees){
+		return new Double(yLocal+(r*cos(toRadians(degrees)))).floatValue();
 	}
 	
-	public int getY(int degrees){
-		return new Double(xLocal+(r*sin(toRadians(degrees)))).intValue();
+	public float getY(float degrees){
+		return new Double(xLocal+(r*sin(toRadians(degrees)))).floatValue();
 	}
 }

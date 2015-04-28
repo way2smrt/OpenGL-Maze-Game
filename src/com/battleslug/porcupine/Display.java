@@ -38,8 +38,22 @@ public class Display {
 	public enum RotationMode{AXIS_X, AXIS_Y, AXIS_Z, AXIS_XY, AXIS_YZ, AXIS_ZX, AXIS_XYZ};
 	
 	public enum DrawMode{MODE_2D, MODE_3D};
+	public enum ColorMode{MODE_COLOR, MODE_TEXTURE};
 	
 	private int aspectRatio;
+	
+	private float camX, camY, camZ;
+	private float camHoriRot;
+	private float camVertRot;
+	
+	private static final float near = -1.0f;
+	public static final float far = 100.0f;
+	
+	private static final float top = -1.0f;
+	private static final float bottom = 1.0f;
+	
+	private static final float left = -1.0f;
+	private static final float right = 1.0f;
 	
 	public Display(String title, int width, int height){
 		this(title, width, height, false);
@@ -152,32 +166,9 @@ public class Display {
 		glEnd();
 		
 	}
-	
-	public void drawRectangle(int x1, int y1, int x2, int y2, VectorColor c){
-		glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
-		
-		drawColoredQuad(x1, y1, x1, y2, x2, y2, x2, y1, c);
-	}
-
-	public void drawColoredQuad(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, VectorColor c){
-		setMode(DrawMode.MODE_2D);
-		
-		glDisable(GL_TEXTURE_2D);
-		
-		glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
-
-		glBegin(GL_QUADS);
-		glVertex2f(x1, y1);
-		glVertex2f(x2, y2);
-		glVertex2f(x3, y3);
-		glVertex2f(x4, y4);
-		glEnd();
-	}
 
 	public void drawQuadTextured2D(QuadTextured2D quad){
 		setMode(DrawMode.MODE_2D);
-		
-		glEnable(GL_TEXTURE_2D);
 		
 		quad.getTexture().bind();
 		
@@ -187,14 +178,15 @@ public class Display {
 		float v2 = 1f;
 
 		if(quad.getColor() == null){
+			setColorMode(ColorMode.MODE_TEXTURE);
 			glColor4f(1f, 1f, 1f, 1f);
 		}
 		else {
+			setColorMode(ColorMode.MODE_COLOR);
 			glColor4f(quad.getColor().getRed(), quad.getColor().getGreen(), quad.getColor().getBlue(), quad.getColor().getAlpha());
 		}
 
 		glBegin(GL_QUADS);
-
 		glTexCoord2f(u, v);
 		glVertex2f(quad.getX1(), quad.getY1());
 
@@ -210,13 +202,25 @@ public class Display {
 	}
 	
 	public void drawQuadTextured3D(QuadTextured3D quad){
+		setMode(DrawMode.MODE_3D);
+		
 		quad.getTexture().bind();
 		
 		float u = 0f;
 		float v = 0f;
 		float u2 = 1f;
 		float v2 = 1f;
-
+		
+		if(quad.getColor() == null){
+			setColorMode(ColorMode.MODE_TEXTURE);
+			glColor4f(1f, 1f, 1f, 1f);
+		}
+		else {
+			setColorMode(ColorMode.MODE_COLOR);
+			glColor4f(quad.getColor().getRed(), quad.getColor().getGreen(), quad.getColor().getBlue(), quad.getColor().getAlpha());
+		}
+		
+		glBegin(GL_QUADS);
 		glTexCoord2f(u, v);
 		glVertex3f(quad.getX1(), quad.getY1(), quad.getZ1());
 
@@ -228,6 +232,7 @@ public class Display {
 		
 		glTexCoord2f(u2, v);
 		glVertex3f(quad.getX4(), quad.getY4(), quad.getZ4());
+		glEnd();
 	}
 	
 	public void setKeyCallback(GLFWKeyCallback keyCallback){
@@ -247,13 +252,9 @@ public class Display {
 		System.exit(0);
 	}
 		
-	public void coolTestShit(Texture tex, float angle, float xRot, float yRot, float zRot){
+	public void coolTestShit(Texture tex){
+		setColorMode(ColorMode.MODE_TEXTURE);
 		setMode(DrawMode.MODE_3D);
-		
-		glEnable(GL_TEXTURE_2D);
-        
-		glTranslatef(xRot, yRot, zRot);
-		glRotatef(x+=1, 0.5f, 0.5f, 0.5f);
 		
 		glBegin(GL_QUADS);
         drawQuadTextured3D(new QuadTextured3D(0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, tex, null));
@@ -269,16 +270,7 @@ public class Display {
 		glColor3f(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
 	}
 
-	public void setMode(DrawMode mode){
-		final float near = -1.0f;
-		final float far = 100.0f;
-		
-		final float top = -1.0f;
-		final float bottom = 1.0f;
-		
-		final float left = -1.0f;
-		final float right = 1.0f;
-		
+	public void setMode(DrawMode mode){	
 		glLoadIdentity();
 		switch(mode){
 			case MODE_2D:
@@ -291,7 +283,18 @@ public class Display {
 				glLoadIdentity();
 				glOrtho(left, right*aspectRatio, bottom*aspectRatio, top, near, far);
 				gluPerspective(60, aspectRatio, -near, far);
+				Circle hori = new Circle(camX, camY, far);
+				gluLookAt(camX, camY, camZ, hori.getX(camHoriRot), camY-1, hori.getY(camHoriRot), camX, camY+1, camZ);
 				break;
+		}
+	}
+	
+	public void setColorMode(ColorMode mode){
+		switch(mode){
+			case MODE_COLOR:
+				glDisable(GL_TEXTURE_2D);
+			case MODE_TEXTURE:
+				glEnable(GL_TEXTURE_2D);
 		}
 	}
 	
@@ -301,5 +304,39 @@ public class Display {
 	
 	public long getID(){
 		return window;
+	}
+	
+	public void setCamLocation(float camX, float camY, float camZ){
+		this.camX = camX;
+		this.camY = camY;
+		this.camZ = camZ;
+	}
+	
+	public float getCamX(){
+		return camX;
+	}
+	
+	public float getCamY(){
+		return camY;
+	}
+	
+	public float getCamZ(){
+		return camZ;
+	}
+	
+	public void setCamHorizontalRot(float camHoriRot){
+		this.camHoriRot = camHoriRot;
+	}
+	
+	public void setCamVerticalRot(float camVertRot){
+		this.camVertRot = camVertRot;
+	}
+	
+	public float getCamHorizontalRot(){
+		return camHoriRot;
+	}
+	
+	public float getCamVerticalRot(){
+		return camVertRot;
 	}
 }
