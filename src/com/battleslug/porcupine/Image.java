@@ -74,8 +74,8 @@ public class Image {
 		return rotation;
 	}
 	
-	private float getPointLengthFromLocal(int xLocal, int yLocal){
-		return new Double(sqrt(pow(abs(xLocal-this.xLocal), 2)+pow(abs(yLocal-this.yLocal), 2))).intValue();
+	private float getPointLengthFromLocal(float xLocal, float yLocal){
+		return new Double(sqrt(pow(abs(xLocal-this.xLocal), 2)+pow(abs(yLocal-this.yLocal), 2))).floatValue();
 	}
 	
 	public boolean isSpritesheet(){
@@ -112,24 +112,24 @@ public class Image {
 	}
 	
 	public void draw(Display display, int x, int y, int rotation){
-		int xL1 = 0;
-		int yL1 = 0;
-		int xL2 = 0;
-		int yL2 = height;
-		int xL3 = width;
-		int yL3 = height;
-		int xL4 = width;
-		int yL4 = 0;		
+		float xL1 = 0;
+		float yL1 = 0;
+		float xL2 = 0;
+		float yL2 = height;
+		float xL3 = width;
+		float yL3 = height;
+		float xL4 = width;
+		float yL4 = 0;		
 		//create a rotation circle to find our 4 rotated texture points
 		Circle c1 = new Circle(xLocal, yLocal, getPointLengthFromLocal(xL1, yL1));
 		Circle c2 = new Circle(xLocal, yLocal, getPointLengthFromLocal(xL2, yL2));
 		Circle c3 = new Circle(xLocal, yLocal, getPointLengthFromLocal(xL3, yL3));
 		Circle c4 = new Circle(xLocal, yLocal, getPointLengthFromLocal(xL4, yL3));
 				
-		int xG1, yG1;
-		int xG2, yG2;
-		int xG3, yG3;
-		int xG4, yG4;
+		float xG1, yG1;
+		float xG2, yG2;
+		float xG3, yG3;
+		float xG4, yG4;
 					
 		xG1 = x+c1.getX(rotation+c1.getRotation(xL1, yL1));
 		yG1 = y+c1.getY(rotation+c1.getRotation(xL1, yL1));

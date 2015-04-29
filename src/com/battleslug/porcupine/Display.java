@@ -255,16 +255,19 @@ public class Display {
 	public void coolTestShit(Texture tex, Texture tex_grass){
 		setColorMode(ColorMode.MODE_TEXTURE);
 		setMode(DrawMode.MODE_3D);
+		glFrontFace(GL11.GL_CW);
 		
 		glBegin(GL_QUADS);
         drawQuadTextured3D(new QuadTextured3D(0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, tex, null));
         drawQuadTextured3D(new QuadTextured3D(0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, tex, null));
+        drawQuadTextured3D(new QuadTextured3D(0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, tex, null));
         drawQuadTextured3D(new QuadTextured3D(0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, tex, null));
         drawQuadTextured3D(new QuadTextured3D(-0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, tex, null));
+        drawQuadTextured3D(new QuadTextured3D(0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, tex, null));
         drawQuadTextured3D(new QuadTextured3D(-10f, 1f, -10f, -10f, 1f, 10f, 10f, 1f, 10f, 10f, 1f, -10f, tex_grass, null));
         glEnd();
+        
+        glFrontFace(GL11.GL_CCW);
 	}
 	
 	private void randGlColor3f(){
@@ -283,11 +286,11 @@ public class Display {
 				glMatrixMode(GL_PROJECTION);
 				glLoadIdentity();
 				glOrtho(left, right*aspectRatio, bottom*aspectRatio, top, near, far);
-				gluPerspective(60, aspectRatio, -near, far);
+				gluPerspective(70, aspectRatio, -near, far);
 				Circle hori = new Circle(camX, camY, far);
 				gluLookAt(camX, camY, camZ, hori.getX(camHoriRot), camY, hori.getY(camHoriRot), camX, camY+far, camZ);
 				break;
-		}
+			}
 	}
 	
 	public void setColorMode(ColorMode mode){

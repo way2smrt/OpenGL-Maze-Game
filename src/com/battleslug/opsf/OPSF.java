@@ -8,7 +8,9 @@ import com.battleslug.flare.world.*;
 import com.battleslug.porcupine.*;
 import com.battleslug.porcupine.Display.DrawMode;
 
-public class OPSF extends Game {	
+public class OPSF extends Game {
+	private Player player;
+	
 	private World world;
 	
 	private Texture tex_test1, tex_grass;
@@ -26,11 +28,6 @@ public class OPSF extends Game {
 		//display.show();
 		
 		player = new Player();
-		player.setSpeed(1f, 0.5f, 1.5f);
-		player.setXSpeedGlobalMax(10f);
-		player.setYSpeedGlobalMax(10f);
-		player.setZSpeedGlobalMax(10f);
-		player.setLocation(0f, 0f, 0f);
 		
 		world = new World();
 		world.bind(display);
@@ -38,8 +35,8 @@ public class OPSF extends Game {
 		keyboard.bind(display);
 		
 		loadTextures();
-		tex_test1 = new Texture(GAME_FOLDER+"/res/tex/brick1.png");
-		tex_grass = new Texture(GAME_FOLDER+"/res/tex/grass2.png");
+		tex_test1 = new Texture(GAME_FOLDER+"/res/tex/brick1.png", Texture.NEAREST, Texture.REPEAT);
+		tex_grass = new Texture(GAME_FOLDER+"/res/tex/grass3.png", Texture.NEAREST, Texture.REPEAT);
 		img_doge = new Image(new Texture(GAME_FOLDER+"/res/img/misc/doge.png"));
 		img_doge.setDimensions(50, 50);
 		
@@ -49,7 +46,9 @@ public class OPSF extends Game {
 		pivot_doge.addChild(new Pivot());
 		pivot_doge.getChild(MUCH_DOGE).setRotation(90);
 		
-		float xRot = 0;
+		float camX = 0;
+		float camY = 0;
+		float camZ = 0;
 		
 		while(true){
 			final int LOCX = 100;
@@ -57,8 +56,8 @@ public class OPSF extends Game {
 			
 			keyboard.update();
 			
-			display.setCamHorizontalRot(xRot);
-			display.setCamLocation(player.getXGlobal(), player.getYGlobal(), player.getZGlobal());
+			display.setCamHorizontalRot(player.getRotationHorizontal());
+			display.setCamLocation(camX, camY, camZ);
 			
 			display.coolTestShit(tex_test1, tex_grass);
 			
@@ -76,79 +75,30 @@ public class OPSF extends Game {
 				System.out.println(pivot_doge.getRotation());
 			}
 			
-			final float TRACTION = 1f;
 			
-			//z movement
 			if(keyboard.isDown(GLFW_KEY_W)){
-				player.setZSpeedGlobal(player.getZSpeedGlobal()+(float)(player.getSpeedForward()*timePassed));	
+				camX += 1*timePassed;
 			}
-			else if(keyboard.isDown(GLFW_KEY_S)){
-				player.setZSpeedGlobal(player.getZSpeedGlobal()-(float)(player.getSpeedBackward()*timePassed));	
+			if(keyboard.isDown(GLFW_KEY_S)){
+				camX -= 1*timePassed;
 			}
-			else {
-				if (player.getXSpeedGlobal() > 0){
-					if(player.getZSpeedGlobal()-player.getSpeedForward()/TRACTION*timePassed >= 0){
-						player.setZSpeedGlobal(player.getZSpeedGlobal()-(float)(player.getSpeedForward()/TRACTION*timePassed));
-					}
-					else {
-						player.setZSpeedGlobal(0f);
-					}
-				}
-				else if(player.getZSpeedGlobal() < 0){
-					if(player.getZSpeedGlobal()+player.getSpeedBackward()/TRACTION*timePassed <= 0){
-						player.setZSpeedGlobal(player.getZSpeedGlobal()+(float)(player.getSpeedBackward()/TRACTION*timePassed));
-					}
-					else {
-						player.setZSpeedGlobal(0f);
-					}
-				}
-			}
-			
-			//x movement
 			if(keyboard.isDown(GLFW_KEY_A)){
-				player.setXSpeedGlobal(player.getXSpeedGlobal()-(float)(player.getSpeedStrafe()*timePassed));	
+				camZ += 1*timePassed;
 			}
-			else if(keyboard.isDown(GLFW_KEY_D)){
-				player.setXSpeedGlobal(player.getXSpeedGlobal()+(float)(player.getSpeedStrafe()*timePassed));	
+			if(keyboard.isDown(GLFW_KEY_D)){
+				camZ -= 1*timePassed;
 			}
-			else {
-				if (player.getXSpeedGlobal() > 0){
-					if(player.getXSpeedGlobal()-player.getSpeedStrafe()/TRACTION*timePassed >= 0){
-						player.setXSpeedGlobal(player.getXSpeedGlobal()-(float)(player.getSpeedStrafe()/TRACTION*timePassed));
-					}
-					else {
-						player.setXSpeedGlobal(0f);
-					}
-				}
-				else if(player.getXGlobal() < 0){
-					if(player.getXSpeedGlobal()+player.getSpeedStrafe()/TRACTION*timePassed <= 0){
-						player.setXSpeedGlobal(player.getXSpeedGlobal()+(float)(player.getSpeedStrafe()/TRACTION*timePassed));
-					}
-					else {
-						player.setXSpeedGlobal(0f);
-					}
-				}
-			}
-			
 			if(keyboard.isDown(GLFW_KEY_R)){
-				player.setLocation(player.getXGlobal(), player.getYGlobal()-player.getSpeedForward()*(float)timePassed, player.getZGlobal());
+				camY -= 1*timePassed;
 			}
 			if(keyboard.isDown(GLFW_KEY_F)){
-				player.setLocation(player.getXGlobal(), player.getYGlobal()+player.getSpeedForward()*(float)timePassed, player.getZGlobal());
+				camY += 1*timePassed;
 			}
 			if(keyboard.isDown(GLFW_KEY_Q)){
-				xRot -= 50*timePassed;
+				player.setRotationHorizontal((float)(player.getRotationHorizontal()-75*timePassed));
 			}
 			if(keyboard.isDown(GLFW_KEY_E)){
-				xRot += 50*timePassed;
-			}
-			
-			player.setLocation(player.getXGlobal()+(float)(player.getXSpeedGlobal()*timePassed), player.getYGlobal()+(float)(player.getYSpeedGlobal()*timePassed), player.getZGlobal()+(float)(player.getZSpeedGlobal()*timePassed));
-			
-			System.out.println(player.getXSpeedGlobal());
-			
-			if(keyboard.wasPressed(GLFW_KEY_ESCAPE)){
-				display.kill();
+				player.setRotationHorizontal((float)(player.getRotationHorizontal()+75*timePassed));
 			}
 			
 			display.update();

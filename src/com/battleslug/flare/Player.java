@@ -1,5 +1,8 @@
 package com.battleslug.flare;
 
+import com.battleslug.porcupine.Circle;
+import com.battleslug.porcupine.Display;
+
 public class Player {
 	private float speedForward, speedBackward, speedStrafe;
 	
@@ -7,14 +10,28 @@ public class Player {
 	private float xSpeedGlobal, ySpeedGlobal, zSpeedGlobal;
 	private float xSpeedGlobalMax, ySpeedGlobalMax, zSpeedGlobalMax;
 	
+	private float rotHori;
+	
+	private Circle circle;
+	
+	public enum Direction{FORWARD, BACKWARD, LEFT, RIGHT};
+	
 	public Player(){
+		circle = new Circle(xGlobal, zGlobal, Display.far);
 		
+		rotHori = 0;
+	}
+	
+	private void updateLocation(){
+		circle = new Circle(xGlobal, zGlobal, Display.far);
 	}
 	
 	public void setLocation(float xGlobal, float yGlobal, float zGlobal){
 		this.xGlobal = xGlobal;
 		this.yGlobal = yGlobal;
 		this.zGlobal = zGlobal;
+		
+		updateLocation();
 	}
 	
 	public void setXSpeedGlobal(float xSpeedGlobal){
@@ -104,4 +121,11 @@ public class Player {
 		return speedStrafe;
 	}
 	
+	public void setRotationHorizontal(float rotHori){
+		this.rotHori = rotHori;
+	}
+	
+	public float getRotationHorizontal(){
+		return rotHori;
+	}
 }
