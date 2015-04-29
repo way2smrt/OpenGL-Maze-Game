@@ -252,7 +252,7 @@ public class Display {
 		System.exit(0);
 	}
 		
-	public void coolTestShit(Texture tex){
+	public void coolTestShit(Texture tex, Texture tex_grass){
 		setColorMode(ColorMode.MODE_TEXTURE);
 		setMode(DrawMode.MODE_3D);
 		
@@ -263,6 +263,7 @@ public class Display {
         drawQuadTextured3D(new QuadTextured3D(0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, tex, null));
         drawQuadTextured3D(new QuadTextured3D(-0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, tex, null));
         drawQuadTextured3D(new QuadTextured3D(0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, tex, null));
+        drawQuadTextured3D(new QuadTextured3D(-10f, 1f, -10f, -10f, 1f, 10f, 10f, 1f, 10f, 10f, 1f, -10f, tex_grass, null));
         glEnd();
 	}
 	
@@ -284,7 +285,7 @@ public class Display {
 				glOrtho(left, right*aspectRatio, bottom*aspectRatio, top, near, far);
 				gluPerspective(60, aspectRatio, -near, far);
 				Circle hori = new Circle(camX, camY, far);
-				gluLookAt(camX, camY, camZ, hori.getX(camHoriRot), camY-1, hori.getY(camHoriRot), camX, camY+1, camZ);
+				gluLookAt(camX, camY, camZ, hori.getX(camHoriRot), camY, hori.getY(camHoriRot), camX, camY+far, camZ);
 				break;
 		}
 	}

@@ -6,16 +6,20 @@ import org.lwjgl.opengl.GL11;
 
 import com.battleslug.flare.event.Keyboard;
 import com.battleslug.flare.world.World;
+import com.battleslug.flare.Player;
+
 import com.battleslug.porcupine.Display;
 import com.battleslug.porcupine.Texture;
 
-
 public class Game {	
 	private double timeLast = 0;
+	
 	protected double timePassed = 0;
 	protected Keyboard keyboard;
 	protected World world;
 	protected Display display;
+	
+	protected Player player;
 	
 	protected Texture hud_bullet_normal, hud_bullet_rifle, hud_bullet_shotgun;
 	
