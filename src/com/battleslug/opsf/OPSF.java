@@ -109,6 +109,10 @@ public class OPSF extends Game {
 				player.setRotationHorizontal((float)(player.getRotationHorizontal()+75*timePassed));
 			}
 			
+			if(keyboard.isDown(GLFW_KEY_ESCAPE)){
+				display.kill();
+			}
+			
 			display.update();
 			display.clear();
 			updateTimer();

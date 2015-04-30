@@ -245,16 +245,16 @@ public class Display {
 		glBegin(GL_QUADS);
 		
 		//TODO, create proper texture sizing
-		glTexCoord2f(u*(quad.getX1()/WIDTH_TEXTURE), v*(quad.getY1()/WIDTH_TEXTURE));
+		glTexCoord2f(u, v);
 		glVertex3f(-quad.getX1(), -quad.getY1(), -quad.getZ1());
 
-		glTexCoord2f(u*(quad.getX2()/WIDTH_TEXTURE), v2*(quad.getY2()/WIDTH_TEXTURE));
+		glTexCoord2f(u, v2*(quad.getY2()-quad.getY1())/WIDTH_TEXTURE);
 		glVertex3f(-quad.getX2(), -quad.getY2(), -quad.getZ2());
 
-		glTexCoord2f(u2*(quad.getX3()/WIDTH_TEXTURE), v2*(quad.getY3()/WIDTH_TEXTURE));
+		glTexCoord2f(u2*(quad.getX3()-quad.getX1())/WIDTH_TEXTURE, v2*((quad.getY3()-quad.getY1())/WIDTH_TEXTURE));
 		glVertex3f(-quad.getX3(), -quad.getY3(), -quad.getZ3());
 		
-		glTexCoord2f(u*(quad.getX4()/WIDTH_TEXTURE), v2*(quad.getY4()/WIDTH_TEXTURE));
+		glTexCoord2f(u, v2*(quad.getY4()-quad.getY1())/WIDTH_TEXTURE);
 		glVertex3f(-quad.getX4(), -quad.getY4(), -quad.getZ4());
 		glEnd();
 	}
