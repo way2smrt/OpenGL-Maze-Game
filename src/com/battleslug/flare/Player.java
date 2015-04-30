@@ -12,26 +12,16 @@ public class Player {
 	
 	private float rotHori;
 	
-	private Circle circle;
-	
 	public enum Direction{FORWARD, BACKWARD, LEFT, RIGHT};
 	
 	public Player(){
-		circle = new Circle(xGlobal, zGlobal, Display.far);
-		
 		rotHori = 0;
-	}
-	
-	private void updateLocation(){
-		circle = new Circle(xGlobal, zGlobal, Display.far);
 	}
 	
 	public void setLocation(float xGlobal, float yGlobal, float zGlobal){
 		this.xGlobal = xGlobal;
 		this.yGlobal = yGlobal;
 		this.zGlobal = zGlobal;
-		
-		updateLocation();
 	}
 	
 	public void setXSpeedGlobal(float xSpeedGlobal){
@@ -127,5 +117,23 @@ public class Player {
 	
 	public float getRotationHorizontal(){
 		return rotHori;
+	}
+	
+	public void move(Direction dir, float change){
+		float rot = rotHori;
+		Circle circle = new Circle(0, 0, change);
+		
+		//no change for a direction of forward
+		if(dir == Direction.BACKWARD){
+			rot += 180;
+		}
+		else if(dir == Direction.LEFT){
+			rot += 270;
+		}
+		else if(dir == Direction.RIGHT){
+			rot += 90;
+		}
+		
+		setLocation(xGlobal+circle.getX(rot), yGlobal, zGlobal+circle.getY(rot));
 	}
 }

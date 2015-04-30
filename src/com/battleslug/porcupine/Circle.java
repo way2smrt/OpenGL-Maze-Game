@@ -11,6 +11,7 @@ public class Circle {
 	public Circle(float xLocal, float yLocal, float radius){
 		this.xLocal = xLocal;
 		this.yLocal = yLocal;
+		
 		r = radius;
 	}
 	

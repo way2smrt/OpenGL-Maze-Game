@@ -3,10 +3,8 @@ package com.battleslug.opsf;
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.battleslug.flare.*;
-import com.battleslug.flare.sentient.*;
 import com.battleslug.flare.world.*;
 import com.battleslug.porcupine.*;
-import com.battleslug.porcupine.Display.DrawMode;
 
 public class OPSF extends Game {
 	private Player player;
@@ -28,6 +26,7 @@ public class OPSF extends Game {
 		//display.show();
 		
 		player = new Player();
+		player.setSpeed(5, 2, 3);
 		
 		world = new World();
 		world.bind(display);
@@ -46,20 +45,30 @@ public class OPSF extends Game {
 		pivot_doge.addChild(new Pivot());
 		pivot_doge.getChild(MUCH_DOGE).setRotation(90);
 		
-		float camX = 0;
 		float camY = 0;
-		float camZ = 0;
+		
+		Texture tex1 = new Texture(GAME_FOLDER+"/res/tex/sand1.png");
+		Texture tex2 = new Texture(GAME_FOLDER+"/res/tex/rock1.png");
+		Texture tex3 = new Texture(GAME_FOLDER+"/res/tex/grassFlowers1.png");
+		Texture tex4 = new Texture(GAME_FOLDER+"/res/tex/bark1.png");
+		Texture tex5 = new Texture(GAME_FOLDER+"/res/tex/stoneRoad1.png");
+		
+		final int LOCX = 100;
+		final int LOCY = 100;
 		
 		while(true){
-			final int LOCX = 100;
-			final int LOCY = 100;
-			
 			keyboard.update();
 			
 			display.setCamHorizontalRot(player.getRotationHorizontal());
-			display.setCamLocation(camX, camY, camZ);
+			display.setCamLocation(player.getXGlobal(), camY, player.getZGlobal());
 			
 			display.coolTestShit(tex_test1, tex_grass);
+				
+			display.drawCube(3, 0, 5, tex1);
+			display.drawCube(-7, 0, 3, tex2);
+			display.drawCube(3, 0, -1, tex3);
+			display.drawCube(-3, 0, -4, tex4);
+			display.drawCube(25, 0, 25, tex5);
 			
 			if(keyboard.isDown(GLFW_KEY_Z)){								
 				img_doge.draw(display, LOCX, LOCY, pivot_doge.getRotation());
@@ -74,25 +83,24 @@ public class OPSF extends Game {
 				pivot_doge.setRotation(pivot_doge.getRotation()+new Double(timePassed*Circle.DEGREES).intValue());
 				System.out.println(pivot_doge.getRotation());
 			}
-			
-			
+
 			if(keyboard.isDown(GLFW_KEY_W)){
-				camX += 1*timePassed;
+				player.move(Player.Direction.FORWARD, (float)(player.getSpeedForward()*timePassed));
 			}
 			if(keyboard.isDown(GLFW_KEY_S)){
-				camX -= 1*timePassed;
+				player.move(Player.Direction.BACKWARD, (float)(player.getSpeedBackward()*timePassed));
 			}
 			if(keyboard.isDown(GLFW_KEY_A)){
-				camZ += 1*timePassed;
+				player.move(Player.Direction.LEFT, (float)(player.getSpeedStrafe()*timePassed));
 			}
 			if(keyboard.isDown(GLFW_KEY_D)){
-				camZ -= 1*timePassed;
+				player.move(Player.Direction.RIGHT, (float)(player.getSpeedStrafe()*timePassed));
 			}
 			if(keyboard.isDown(GLFW_KEY_R)){
-				camY -= 1*timePassed;
+				camY += 1*timePassed;
 			}
 			if(keyboard.isDown(GLFW_KEY_F)){
-				camY += 1*timePassed;
+				camY -= 1*timePassed;
 			}
 			if(keyboard.isDown(GLFW_KEY_Q)){
 				player.setRotationHorizontal((float)(player.getRotationHorizontal()-75*timePassed));
@@ -105,7 +113,6 @@ public class OPSF extends Game {
 			display.clear();
 			updateTimer();
 		}
-
 	}
 	
 	public static void main(String[] args) {
