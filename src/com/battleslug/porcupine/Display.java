@@ -4,12 +4,14 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.util.glu.GLU.*;
+import org.lwjgl.BufferUtils;
 
 import java.util.Random;
 
@@ -24,9 +26,8 @@ public class Display {
 	private String title;
 	private int width, height;
 	
-	private long xMouse, yMouse;
-	
-	private int x = 0;
+	private double xCursor, yCursor;
+	private double cursorRotHoriChange, cursorRotVertChange;
 	
 	private boolean fullscreen;
 	
@@ -49,13 +50,9 @@ public class Display {
 	private static final float near = 1f;
 	public static final float far = 1000.0f;
 	
-	private static final float top = -1.0f;
-	private static final float bottom = 1.0f;
-	
-	private static final float left = -1.0f;
-	private static final float right = 1.0f;
-	
 	public final float WIDTH_TEXTURE = 1.0f;
+	
+	private boolean cursorLocked;
 	
 	public Display(String title, int width, int height){
 		this(title, width, height, false);
@@ -103,6 +100,7 @@ public class Display {
 			@Override
 			public void invoke(long window, int width, int height){
 				glViewport(0, 0, width, height);
+				glfwPollEvents();
 			}
 		});
 		
@@ -150,6 +148,21 @@ public class Display {
 
 	public void update(){
 		glfwSwapBuffers(window);
+		
+		if (cursorLocked){
+			double xCursorOld = xCursor;
+			double yCursorOld = yCursor;
+			
+			updateCursor();
+			
+			cursorRotHoriChange = xCursor-xCursorOld;
+			cursorRotVertChange = yCursor-yCursorOld;
+			
+			glfwSetCursorPos(window, width/2, height/2);
+			
+			updateCursor();
+		}
+		
 		checkClose();
 	}
 	
@@ -303,10 +316,10 @@ public class Display {
 	public void setMode(DrawMode mode){	
 		glLoadIdentity();
 		switch(mode){
-			case MODE_2D:
+			case MODE_2D:		
 				glMatrixMode(GL_MODELVIEW);
 				glLoadIdentity();
-				glOrtho(0, width, height, 0, near+1, near);
+				glOrtho(0, width, height, 0, near+2, near+1);
 				break;
 			case MODE_3D:
 				glMatrixMode(GL_PROJECTION);
@@ -367,5 +380,46 @@ public class Display {
 	
 	public float getCamVerticalRot(){
 		return camVertRot;
+	}
+	
+	private void updateCursor(){
+		DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
+        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+		
+		glfwGetCursorPos(window, x, y);
+		
+		xCursor = x.get();
+		yCursor = y.get();
+	}
+	
+	public void setCursorLocked(boolean cursorLocked){
+		this.cursorLocked = cursorLocked;
+	
+		if (cursorLocked){
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		}
+		else {
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+	}
+	
+	public boolean isCursorLocked(){
+		return cursorLocked;
+	}
+	
+	public int getWidth(){
+		return width;
+	}
+	
+	public int getHeight(){
+		return height;
+	}
+	
+	public double getCursorRotHoriChange(){
+		return cursorRotHoriChange;
+	}
+	
+	public double getCursorRotVertChange(){
+		return cursorRotVertChange;
 	}
 }

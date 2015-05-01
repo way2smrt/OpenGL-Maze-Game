@@ -16,6 +16,8 @@ public class OPSF extends Game {
 	
 	private static final String GAME_FOLDER = "game/OPSF";
 	
+	private static final float CURSOR_SPEED = 0.4f;
+	
 	public OPSF(){
 	}
 	
@@ -23,7 +25,7 @@ public class OPSF extends Game {
 	public void play(){
 		display = new Display("Operation Solar Fury", 640, 480, false);
 		display.create();
-		//display.show();
+		display.setCursorLocked(true);
 		
 		player = new Player();
 		player.setSpeed(5, 2, 3);
@@ -63,7 +65,9 @@ public class OPSF extends Game {
 			display.setCamLocation(player.getXGlobal(), camY, player.getZGlobal());
 			
 			display.coolTestShit(tex_test1, tex_grass);
-				
+			
+			drawCrosshair();
+			
 			display.drawCube(3, 0, 5, tex1);
 			display.drawCube(-7, 0, 3, tex2);
 			display.drawCube(3, 0, -1, tex3);
@@ -102,12 +106,8 @@ public class OPSF extends Game {
 			if(keyboard.isDown(GLFW_KEY_F)){
 				camY -= 1*timePassed;
 			}
-			if(keyboard.isDown(GLFW_KEY_Q)){
-				player.setRotationHorizontal((float)(player.getRotationHorizontal()-75*timePassed));
-			}
-			if(keyboard.isDown(GLFW_KEY_E)){
-				player.setRotationHorizontal((float)(player.getRotationHorizontal()+75*timePassed));
-			}
+				
+			player.setRotationHorizontal(player.getRotationHorizontal()+(float)(display.getCursorRotHoriChange())*CURSOR_SPEED);
 			
 			if(keyboard.isDown(GLFW_KEY_ESCAPE)){
 				display.kill();
@@ -117,6 +117,19 @@ public class OPSF extends Game {
 			display.clear();
 			updateTimer();
 		}
+	}
+	
+	private void drawCrosshair(){
+		//TODO fix crosshair, not drawing. Maybe be 2D drawing problem.
+		display.drawPixel(display.getWidth()/2, display.getHeight()/2, new VectorColor(0f, 0f, 0f));
+		display.drawPixel((display.getWidth()/2)+1, (display.getHeight()/2), new VectorColor(0f, 0f, 0f));
+		display.drawPixel((display.getWidth()/2)+2, (display.getHeight()/2), new VectorColor(0f, 0f, 0f));
+		display.drawPixel((display.getWidth()/2)-1, (display.getHeight()/2), new VectorColor(0f, 0f, 0f));
+		display.drawPixel((display.getWidth()/2)-2, (display.getHeight()/2), new VectorColor(0f, 0f, 0f));
+		display.drawPixel((display.getWidth()/2), (display.getHeight()/2)+1, new VectorColor(0f, 0f, 0f));
+		display.drawPixel((display.getWidth()/2), (display.getHeight()/2)+2, new VectorColor(0f, 0f, 0f));
+		display.drawPixel((display.getWidth()/2), (display.getHeight()/2)-1, new VectorColor(0f, 0f, 0f));
+		display.drawPixel((display.getWidth()/2), (display.getHeight()/2)-2, new VectorColor(0f, 0f, 0f));
 	}
 	
 	public static void main(String[] args) {
