@@ -241,6 +241,7 @@ public class Display {
 		
 		float u = 0f;
 		float v = 0f;
+		
 		float u2 = 1f;
 		float v2 = 1f;
 		
@@ -257,16 +258,16 @@ public class Display {
 		
 		//TODO, create proper texture sizing
 		glTexCoord2f(u, v);
-		glVertex3f(-quad.getX1(), -quad.getY1(), -quad.getZ1());
+		glVertex3f(quad.getX1(), quad.getY1(), quad.getZ1());
 
-		glTexCoord2f(u, v2*(quad.getY2()-quad.getY1())/WIDTH_TEXTURE);
-		glVertex3f(-quad.getX2(), -quad.getY2(), -quad.getZ2());
+		glTexCoord2f(u, v2);
+		glVertex3f(quad.getX2(), quad.getY2(), quad.getZ2());
 
-		glTexCoord2f(u2*(quad.getX3()-quad.getX1())/WIDTH_TEXTURE, v2*((quad.getY3()-quad.getY1())/WIDTH_TEXTURE));
-		glVertex3f(-quad.getX3(), -quad.getY3(), -quad.getZ3());
+		glTexCoord2f(u2, v2);
+		glVertex3f(quad.getX3(), quad.getY3(), quad.getZ3());
 		
-		glTexCoord2f(u, v2*(quad.getY4()-quad.getY1())/WIDTH_TEXTURE);
-		glVertex3f(-quad.getX4(), -quad.getY4(), -quad.getZ4());
+		glTexCoord2f(u2, v);
+		glVertex3f(quad.getX4(), quad.getY4(), quad.getZ4());
 		glEnd();
 	}
 	

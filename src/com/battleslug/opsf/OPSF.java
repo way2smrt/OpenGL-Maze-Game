@@ -6,6 +6,8 @@ import com.battleslug.flare.*;
 import com.battleslug.flare.world.*;
 import com.battleslug.porcupine.*;
 
+import static java.lang.Math.*;
+
 public class OPSF extends Game {
 	private Player player;
 	
@@ -23,12 +25,14 @@ public class OPSF extends Game {
 	
 	@Override 
 	public void play(){
-		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 480, 360, false);
+		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 900, 720, false);
 		display.create();
 		display.setCursorLocked(true);
 		
-		player = new Player();
+		player = new Player("Bob the test dummy", 125);
 		player.setSpeed(5, 2, 3);
+		//average height for a human
+		player.setYCamLocal(1.7f);
 		
 		world = new World();
 		world.bind(display);
@@ -47,8 +51,6 @@ public class OPSF extends Game {
 		pivot_doge.addChild(new Pivot());
 		pivot_doge.getChild(MUCH_DOGE).setRotation(90);
 		
-		float camY = 0;
-		
 		Texture tex1 = new Texture(GAME_FOLDER+"/res/tex/sand1.png");
 		Texture tex2 = new Texture(GAME_FOLDER+"/res/tex/rock1.png");
 		Texture tex3 = new Texture(GAME_FOLDER+"/res/tex/grassFlowers1.png");
@@ -62,9 +64,10 @@ public class OPSF extends Game {
 			keyboard.update();
 			
 			display.setCamHorizontalRot(player.getRotationHorizontal());
-			display.setCamLocation(player.getXGlobal(), camY, player.getZGlobal());
+			display.setCamLocation(player.getXGlobal()+player.getXCamLocal(), player.getYGlobal()+player.getYCamLocal(), player.getZGlobal()+player.getZCamLocal());
 			
-			drawCrosshair(5);
+			drawCrosshair(3);
+			drawFloor(tex_grass);
 			
 			display.drawCube(3, 0, 5, tex1);
 			display.drawCube(-7, 0, 3, tex2);
@@ -99,14 +102,19 @@ public class OPSF extends Game {
 			if(keyboard.isDown(GLFW_KEY_D)){
 				player.move(Player.Direction.RIGHT, (float)(player.getSpeedStrafe()*timePassed));
 			}
-			if(keyboard.isDown(GLFW_KEY_R)){
-				camY += 1*timePassed;
-			}
-			if(keyboard.isDown(GLFW_KEY_F)){
-				camY -= 1*timePassed;
+			if(keyboard.wasPressed(GLFW_KEY_SPACE) && player.getYGlobal() == 0f){
+				player.setYSpeedGlobal(0.03f);
+				System.out.println("ayy lmao");
 			}
 				
 			player.setRotationHorizontal(player.getRotationHorizontal()+(float)(display.getCursorRotHoriChange())*CURSOR_SPEED);
+			player.setYSpeedGlobal(player.getYSpeedGlobal()-((float)(WORLD_GRAVITY*pow(timePassed, 2))));
+			
+			player.setYGlobal(player.getYGlobal()+player.getYSpeedGlobal());			
+			if(player.getYGlobal() < WORLD_FLOOR){
+				player.setYGlobal(WORLD_FLOOR);
+				player.setYSpeedGlobalMax(0f);
+			}
 			
 			if(keyboard.isDown(GLFW_KEY_ESCAPE)){
 				display.kill();
@@ -127,6 +135,11 @@ public class OPSF extends Game {
 			display.drawPixel((display.getWidth()/2), (display.getHeight()/2)+i, new VectorColor(1f, 1f, 1f));
 			display.drawPixel((display.getWidth()/2), (display.getHeight()/2)-i, new VectorColor(1f, 1f, 1f));
 		}	
+	}
+	
+	private void drawFloor(Texture tex_floor){
+		display.drawQuadTextured3D(new QuadTextured3D(10, WORLD_FLOOR, 10, 10, WORLD_FLOOR, -10, -10, WORLD_FLOOR, -10, -10, WORLD_FLOOR, 10, tex_floor, null));
+		display.drawQuadTextured3D(new QuadTextured3D(-10, WORLD_FLOOR, -10, -10, WORLD_FLOOR, 10, 10, WORLD_FLOOR, 10, 10, WORLD_FLOOR, -10, tex_floor, null));
 	}
 	
 	public static void main(String[] args) {

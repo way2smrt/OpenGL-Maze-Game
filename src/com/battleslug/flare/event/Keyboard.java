@@ -30,46 +30,44 @@ public class Keyboard {
             	else if(action == GLFW_RELEASE){
             		invokeState(key, false);
             	}
+            	else if(action == GLFW_REPEAT){
+            		invokeState(key, true);
+            	}
             }
         });
 	}
 	
 	private void invokeState(int key, boolean isPushed){
-		if(isPushed == true){
-			keyDown[key] = true;
-		}
-		else if(isPushed == false){
-			keyDown[key] = false;
-		}
+		keyDown[key] = isPushed;
 	}
 	
 	public boolean isDown(int key){	
-		if(keyDownLast[key] == true && keyDown[key] == true){
+		if(keyDownLast[key] && keyDown[key]){
 			return true;
 		}
 		return false;
 	}
 	
 	public boolean wasPressed(int key){	
-		if(keyDownLast[key] == false && keyDown[key] == true){
+		if(!keyDownLast[key] && keyDown[key]){
 			return true;
 		}
 		return false;
 	}
 	
 	public boolean wasReleased(int key){	
-		if(keyDownLast[key] == true && keyDown[key] == false){
+		if(keyDownLast[key] && !keyDown[key]){
 			return true;
 		}
 		return false;
 	}
 	
 	public void update(){
-		//get the key events by polling them
-		glfwPollEvents();
-		
 		for(int i = 0; i != GLFW_KEYS+1; i++){
 			keyDownLast[i] = keyDown[i];
 		}
+		
+		//get the key events by polling them
+		glfwPollEvents();
 	}
 }

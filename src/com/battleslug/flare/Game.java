@@ -25,6 +25,11 @@ public class Game {
 	
 	private final static boolean DEBUG_ENABLED = true;
 	
+	protected final static float WORLD_FLOOR = 0.0f;
+	protected final static float WORLD_GRAVITY = 9.81f;
+	//1 unit = 1 metre
+	protected final static float WORLD_UNIT_IN_METRES = 1.0f;
+	
 	public Game(){
 		if (glfwInit() != GL11.GL_TRUE){
 			throw new IllegalStateException("Unable to initialize GLFW");

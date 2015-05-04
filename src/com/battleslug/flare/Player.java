@@ -2,25 +2,33 @@ package com.battleslug.flare;
 
 import com.battleslug.porcupine.Circle;
 import com.battleslug.porcupine.Display;
+import com.battleslug.flare.sentient.*;
 
-public class Player {
-	private float speedForward, speedBackward, speedStrafe;
-	
-	private float xGlobal, yGlobal, zGlobal;
-	private float xSpeedGlobal, ySpeedGlobal, zSpeedGlobal;
-	private float xSpeedGlobalMax, ySpeedGlobalMax, zSpeedGlobalMax;
-	
-	private float rotHori;
-	
+public class Player extends Sentient{	
 	public enum Direction{FORWARD, BACKWARD, LEFT, RIGHT};
 	
-	public Player(){
+	public Player(String name, int maxHealth){
+		super(name, maxHealth);
+		
 		rotHori = 0;
 	}
 	
 	public void setLocation(float xGlobal, float yGlobal, float zGlobal){
 		this.xGlobal = xGlobal;
 		this.yGlobal = yGlobal;
+		this.zGlobal = zGlobal;
+	}
+	
+	public void setXGlobal(float xGlobal){
+		this.xGlobal = xGlobal;
+	}
+	
+	public void setYGlobal(float yGlobal){
+		this.yGlobal = yGlobal;
+	}
+	
+	public void setZGlobal(float zGlobal){
+
 		this.zGlobal = zGlobal;
 	}
 	
