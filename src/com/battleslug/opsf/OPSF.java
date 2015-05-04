@@ -23,7 +23,7 @@ public class OPSF extends Game {
 	
 	@Override 
 	public void play(){
-		display = new Display("Operation Solar Fury", 640, 480, false);
+		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 480, 360, false);
 		display.create();
 		display.setCursorLocked(true);
 		
@@ -64,28 +64,27 @@ public class OPSF extends Game {
 			display.setCamHorizontalRot(player.getRotationHorizontal());
 			display.setCamLocation(player.getXGlobal(), camY, player.getZGlobal());
 			
-			display.coolTestShit(tex_test1, tex_grass);
-			
-			drawCrosshair();
+			drawCrosshair(5);
 			
 			display.drawCube(3, 0, 5, tex1);
 			display.drawCube(-7, 0, 3, tex2);
 			display.drawCube(3, 0, -1, tex3);
 			display.drawCube(-3, 0, -4, tex4);
 			display.drawCube(25, 0, 25, tex5);
+			display.drawCube(0, 0, 0, img_doge.getTexture());
+			display.drawCube(-1, -1, 3, tex_grass);
 			
 			if(keyboard.isDown(GLFW_KEY_Z)){								
 				img_doge.draw(display, LOCX, LOCY, pivot_doge.getRotation());
 				img_doge.draw(display, LOCX+100, LOCY, pivot_doge.getChild(MUCH_DOGE).getRotation());
 				
 				img_doge.setLocal(img_doge.getWidth()/2, img_doge.getHeight()/2);
-				display.drawQuadTextured2D(new QuadTextured2D(0, 0, 200, 200, tex_test1, null));
-				display.drawQuadTextured2D(new QuadTextured2D(200, 200, 400, 0, tex_test1, null));
+				display.drawQuadTextured2D(new QuadTextured2D(0, 0, 200, 200, img_doge.getTexture(), null));
+				display.drawQuadTextured2D(new QuadTextured2D(200, 200, 400, 0, img_doge.getTexture(), null));
 			}
 			if(keyboard.isDown(GLFW_KEY_X)){
 				//1 rotation per second
 				pivot_doge.setRotation(pivot_doge.getRotation()+new Double(timePassed*Circle.DEGREES).intValue());
-				System.out.println(pivot_doge.getRotation());
 			}
 
 			if(keyboard.isDown(GLFW_KEY_W)){
@@ -119,17 +118,15 @@ public class OPSF extends Game {
 		}
 	}
 	
-	private void drawCrosshair(){
-		//TODO fix crosshair, not drawing. Maybe be 2D drawing problem.
-		display.drawPixel(display.getWidth()/2, display.getHeight()/2, new VectorColor(0f, 0f, 0f));
-		display.drawPixel((display.getWidth()/2)+1, (display.getHeight()/2), new VectorColor(0f, 0f, 0f));
-		display.drawPixel((display.getWidth()/2)+2, (display.getHeight()/2), new VectorColor(0f, 0f, 0f));
-		display.drawPixel((display.getWidth()/2)-1, (display.getHeight()/2), new VectorColor(0f, 0f, 0f));
-		display.drawPixel((display.getWidth()/2)-2, (display.getHeight()/2), new VectorColor(0f, 0f, 0f));
-		display.drawPixel((display.getWidth()/2), (display.getHeight()/2)+1, new VectorColor(0f, 0f, 0f));
-		display.drawPixel((display.getWidth()/2), (display.getHeight()/2)+2, new VectorColor(0f, 0f, 0f));
-		display.drawPixel((display.getWidth()/2), (display.getHeight()/2)-1, new VectorColor(0f, 0f, 0f));
-		display.drawPixel((display.getWidth()/2), (display.getHeight()/2)-2, new VectorColor(0f, 0f, 0f));
+	private void drawCrosshair(int width){
+		//TODO fix crosshair, not drawing. Maybe 2D drawing problem.
+		display.drawPixel(display.getWidth()/2, display.getHeight()/2, new VectorColor(1f, 1f, 1f));
+		for(int i = 1; i != width+1; i++){
+			display.drawPixel((display.getWidth()/2)+i, (display.getHeight()/2), new VectorColor(1f, 1f, 1f));
+			display.drawPixel((display.getWidth()/2)-i, (display.getHeight()/2), new VectorColor(1f, 1f, 1f));
+			display.drawPixel((display.getWidth()/2), (display.getHeight()/2)+i, new VectorColor(1f, 1f, 1f));
+			display.drawPixel((display.getWidth()/2), (display.getHeight()/2)-i, new VectorColor(1f, 1f, 1f));
+		}	
 	}
 	
 	public static void main(String[] args) {

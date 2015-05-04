@@ -40,6 +40,7 @@ public class Display {
 	
 	public enum DrawMode{MODE_2D, MODE_3D};
 	public enum ColorMode{MODE_COLOR, MODE_TEXTURE};
+	public DrawMode drawMode;
 	
 	private int aspectRatio;
 	
@@ -191,15 +192,12 @@ public class Display {
 		setColorMode(ColorMode.MODE_TEXTURE);
 		setMode(DrawMode.MODE_3D);
 		
-		glBegin(GL_QUADS);
-		
         drawQuadTextured3D(new QuadTextured3D(x+0.5f, y+0.5f, z-0.5f, x-0.5f, y+0.5f, z-0.5f, x-0.5f, y+0.5f, z+0.5f, x+0.5f, y+0.5f, z+0.5f, tex, null));
         drawQuadTextured3D(new QuadTextured3D(x+0.5f, y-0.5f, z+0.5f, x-0.5f, y-0.5f, z+0.5f, x-0.5f, y-0.5f, z-0.5f, x+0.5f, y-0.5f, z-0.5f, tex, null));
         drawQuadTextured3D(new QuadTextured3D(x+0.5f, y+0.5f, z+0.5f, x-0.5f, y+0.5f, z+0.5f, x-0.5f, y-0.5f, z+0.5f, x+0.5f, y-0.5f, z+0.5f, tex, null));
         drawQuadTextured3D(new QuadTextured3D(x+0.5f, y-0.5f, z-0.5f, x-0.5f, y-0.5f, z-0.5f, x-0.5f, y+0.5f, z-0.5f, x+0.5f, y+0.5f, z-0.5f, tex, null));
         drawQuadTextured3D(new QuadTextured3D(x-0.5f, y+0.5f, z+0.5f, x-0.5f, y+0.5f, z-0.5f, x-0.5f, y-0.5f, z-0.5f, x-0.5f, y-0.5f, z+0.5f, tex, null));
         drawQuadTextured3D(new QuadTextured3D(x+0.5f, y+0.5f, z-0.5f, x+0.5f, y+0.5f, z+0.5f, x+0.5f, y-0.5f, z+0.5f, x+0.5f, y-0.5f, z-0.5f, tex, null));
-        glEnd();
 	}
 
 	public void drawQuadTextured2D(QuadTextured2D quad){
@@ -288,47 +286,29 @@ public class Display {
 		errorCallback.release();
 		System.exit(0);
 	}
-		
-	public void coolTestShit(Texture tex, Texture tex_grass){
-		setColorMode(ColorMode.MODE_TEXTURE);
-		setMode(DrawMode.MODE_3D);
-		
-		glBegin(GL_QUADS);
-        drawQuadTextured3D(new QuadTextured3D(0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(-0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, tex, null));
-        glEnd();
-        
-        glFrontFace(GL_CCW);
-        glBegin(GL_QUADS);
-        drawQuadTextured3D(new QuadTextured3D(-10f, 1f, -10f, -10f, 1f, 10f, 10f, 1f, 10f, 10f, 1f, -10f, tex_grass, null));
-        glEnd();
-        glFrontFace(GL_CW);
-	}
 	
 	private void randGlColor3f(){
 		glColor3f(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
 	}
 
 	public void setMode(DrawMode mode){	
-		glLoadIdentity();
-		switch(mode){
-			case MODE_2D:		
-				glMatrixMode(GL_MODELVIEW);
-				glLoadIdentity();
-				glOrtho(0, width, height, 0, near+2, near+1);
-				break;
-			case MODE_3D:
-				glMatrixMode(GL_PROJECTION);
-				glLoadIdentity();
-				gluPerspective(45, aspectRatio, near, far);
-				Circle hori = new Circle(camX, camY, far);
-				gluLookAt(camX, camY, camZ, hori.getX(camHoriRot), camY, hori.getY(camHoriRot), camX, camY+far, camZ);
-				break;
+		if(mode != drawMode){
+			glLoadIdentity();
+			switch(mode){
+				case MODE_2D:
+					drawMode = mode;
+					glMatrixMode(GL_MODELVIEW);
+					glOrtho(0, width, height, 0, near-1, near);
+					break;
+				case MODE_3D:
+					drawMode = mode;
+					glMatrixMode(GL_PROJECTION);
+					gluPerspective(45, aspectRatio, near, far);
+					Circle hori = new Circle(camX, camY, far);
+					gluLookAt(camX, camY, camZ, hori.getX(camHoriRot), camY, hori.getY(camHoriRot), camX, camY+far, camZ);
+					break;
 			}
+		}
 	}
 	
 	public void setColorMode(ColorMode mode){
