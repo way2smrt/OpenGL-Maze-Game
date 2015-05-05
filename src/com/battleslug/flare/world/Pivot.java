@@ -5,102 +5,113 @@ import java.util.Arrays;
 import com.battleslug.porcupine.Circle;
 
 public class Pivot {
-	private float rotXAxis, rotYAxis, rotZAxis;
+	private float rotXZAxis, rotYZAxis, rotXYAxis;
 	
-	private float rotXAxisMin, rotYAxisMin, rotZAxisMin;
-	private float rotXAxisMax, rotYAxisMax, rotZAxisMax;
+	private float rotXZAxisMin, rotYZAxisMin, rotXYAxisMin;
+	private float rotXZAxisMax, rotYZAxisMax, rotXYAxisMax;
 	
 	public Pivot(float rotXAxis, float rotYAxis, float rotZAxis){
-		this.rotXAxis = rotXAxis;
-		this.rotYAxis = rotYAxis;
-		this.rotZAxis = rotZAxis;
+		this.rotXZAxis = rotXAxis;
+		this.rotYZAxis = rotYAxis;
+		this.rotXYAxis = rotZAxis;
 		
-		rotXAxisMin = 0;
-		rotYAxisMin = 0;
-		rotZAxisMin = 0;
+		rotXZAxisMin = 0;
+		rotXYAxisMin = 0;
+		rotXYAxisMin = 0;
 		
-		rotXAxisMax = 360;
-		rotYAxisMax = 360;
-		rotZAxisMax = 360;
+		rotXZAxisMax = 360;
+		rotYZAxisMax = 360;
+		rotXYAxisMax = 360;
 	}
 	
-	public float getRotXAxisMin(){
-		return rotXAxisMin;
+	public float getRotXZAxisMin(){
+		return rotXZAxisMin;
 	}
 	
-	public float getRotXAxisMax(){
-		return rotXAxisMax;
+	public float getRotXZAxisMax(){
+		return rotYZAxisMax;
 	}
 	
-	public float getRotYAxisMin(){
-		return rotYAxisMin;
+	public float getRotYZAxisMin(){
+		return rotXYAxisMin;
 	}
 	
-	public float getRotYAxisMax(){
-		return rotYAxisMax;
+	public float getRotYZAxisMax(){
+		return rotYZAxisMax;
 	}
 	
-	public float getRotZAxisMin(){
-		return rotZAxisMin;
+	public float getRotXYAxisMin(){
+		return rotXYAxisMin;
 	}
 	
-	public float getRotZAxisMax(){
-		return rotZAxisMax;
+	public float getRotXYAxisMax(){
+		return rotXYAxisMax;
 	}
 	
-	public void setRotXAxisLimits(float rotMin, float rotMax){
-		rotXAxisMin = rotMin;
-		rotXAxisMax = rotMax;
+	public void setRotXZAxisLimits(float rotMin, float rotMax){
+		rotXZAxisMin = rotMin;
+		rotXZAxisMax = rotMax;
 	}
 	
-	public void setRotYAxisLimits(float rotMin, float rotMax){
-		rotYAxisMin = rotMin;
-		rotYAxisMax = rotMax;
+	public void setRotYZAxisLimits(float rotMin, float rotMax){
+		rotYZAxisMin = rotMin;
+		rotYZAxisMax = rotMax;
 	}
 
-	public void setRotZAxisLimits(float rotMin, float rotMax){
-		rotZAxisMin = rotMin;
-		rotZAxisMax = rotMax;
+	public void setRotXYAxisLimits(float rotMin, float rotMax){
+		rotXYAxisMin = rotMin;
+		rotXYAxisMax = rotMax;
 	}
 	
-	public void setRotation(float rotXAxis, float rotYAxis, float rotZAxis){
-		this.rotXAxis = rotXAxis;
-		while(this.rotXAxis > rotXAxisMax){
-			this.rotXAxis -= rotXAxisMax-rotXAxisMin;
+	public void setRotation(float rotXZAxis, float rotYZAxis, float rotXYAxis){
+		this.rotXZAxis = rotXZAxis;
+		while(this.rotXZAxis > rotXZAxisMax){
+			this.rotXZAxis -= rotXZAxisMax-rotXZAxisMin;
 		}
-		while(this.rotXAxis < rotXAxisMin){
-			this.rotXAxis += rotXAxisMax-rotXAxisMin;
-		}
-		
-		this.rotYAxis = rotYAxis;
-		while(this.rotYAxis > rotYAxisMax){
-			this.rotYAxis -= rotYAxisMax-rotYAxisMin;
-		}
-		while(this.rotYAxis < rotYAxisMin){
-			this.rotYAxis += rotYAxisMax-rotYAxisMin;
+		while(this.rotXZAxis < rotXZAxisMin){
+			this.rotXZAxis += rotXZAxisMax-rotXZAxisMin;
 		}
 		
-		this.rotZAxis = rotZAxis;
-		while(this.rotZAxis > rotZAxisMax){
-			this.rotZAxis -= rotZAxisMax-rotZAxisMin;
+		this.rotYZAxis = rotYZAxis;
+		while(this.rotYZAxis > rotYZAxisMax){
+			this.rotYZAxis -= rotYZAxisMax-rotXYAxisMin;
 		}
-		while(this.rotZAxis < rotZAxisMin){
-			this.rotZAxis += rotZAxisMax-rotZAxisMin;
+		while(this.rotYZAxis < rotYZAxisMin){
+			this.rotYZAxis += rotYZAxisMax-rotXYAxisMin;
+		}
+		
+		this.rotXYAxis = rotXYAxis;
+		while(this.rotXYAxis > rotXYAxisMax){
+			this.rotXYAxis -= rotXYAxisMax-rotXYAxisMin;
+		}
+		while(this.rotXYAxis < rotXYAxisMin){
+			this.rotXYAxis += rotXYAxisMax-rotXYAxisMin;
 		}
 		
 
 	}
 	
-	public float getRotXAxis(){
-		return rotXAxis;
+	public float getRotXZAxis(){
+		return rotXZAxis;
 	}
 	
 	public float getRotYAxis(){
-		return rotYAxis;
+		return rotYZAxis;
 	}
 	
 	public float getRotZAxis(){
-		return rotZAxis;
+		return rotXYAxis;
 	}
-
+	
+	public void setRotXAxis(float rotXAxis){
+		this.rotXZAxis = rotXAxis;
+	}
+	
+	public void setRotYAxis(float rotYAxis){
+		this.rotYZAxis = rotYAxis;
+	}
+	
+	public void setRotZAxis(float rotZAxis){
+		this.rotXYAxis = rotZAxis;
+	}
 }

@@ -29,7 +29,7 @@ public class Display {
 	private int width, height;
 	
 	private double xCursor, yCursor;
-	private double cursorRotZAxisChange, cursorRotYAxisChange;
+	private double cursorRotXAxisChange, cursorRotYAxisChange;
 	
 	private boolean fullscreen;
 	
@@ -42,7 +42,8 @@ public class Display {
 	
 	public enum ModeDraw{MODE_2D, MODE_3D};
 	public enum ModeColor{MODE_COLOR, MODE_TEXTURE};
-	public ModeDraw drawMode;
+	private ModeDraw modeDraw;
+	private ModeColor modeColor;
 	
 	private int aspectRatio;
 	
@@ -51,8 +52,10 @@ public class Display {
 	private float camRotYAxis;
 	private float camRotXAxis;
 	
-	private static final float near = 1f;
-	public static final float far = 1000.0f;
+	private static final float NEAR = 1f;
+	public static final float FAR = 1000.0f;
+	
+	public static final float FOV = 45f;
 	
 	public final float WIDTH_TEXTURE = 1.0f;
 	
@@ -112,8 +115,6 @@ public class Display {
 		
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-		glEnable(GL_TEXTURE_2D);
-
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -123,14 +124,14 @@ public class Display {
 		glEnable(GL_CULL_FACE);
 		
 		glEnable(GL_DEPTH_TEST);
-		glClearDepth(far);
+		glClearDepth(FAR);
 		glDepthFunc(GL_LEQUAL);
 
 		glLoadIdentity();
 		
 		aspectRatio = width/height;
 		
-		glFrontFace(GL11.GL_CW);
+		modeColor = ModeColor.MODE_COLOR;
 	}
 	
 	public void setHint(int hint, boolean state){
@@ -161,7 +162,7 @@ public class Display {
 			
 			updateCursor();
 			
-			cursorRotZAxisChange = xCursor-xCursorOld;
+			cursorRotXAxisChange = xCursor-xCursorOld;
 			cursorRotYAxisChange = yCursor-yCursorOld;
 			
 			glfwSetCursorPos(window, width/2, height/2);
@@ -180,21 +181,19 @@ public class Display {
 		glfwShowWindow(window);
 	}
 	
-	public void drawPixel(int x, int y, VectorColor c){
-		setMode(ModeDraw.MODE_2D);
-		setModeColor(ModeColor.MODE_COLOR);
+	public void drawLine(float x1, float y1, float x2, float y2, VectorColor c1, VectorColor c2){
+		setMode(ModeDraw.MODE_2D, ModeColor.MODE_COLOR);
 		
-		glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
-		
-		glBegin(GL_POINTS);
-		glVertex2f(x, y);
+		glBegin(GL_LINES);
+		glColor4f(c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha());
+		glVertex2f(x1, y1);
+		glColor4f(c2.getRed(), c2.getGreen(), c2.getBlue(), c2.getAlpha());
+		glVertex2f(x2, y2);
 		glEnd();
-		
 	}
 	
 	public void drawCube(float x, float y, float z, Texture tex){
-		setModeColor(ModeColor.MODE_TEXTURE);
-		setMode(ModeDraw.MODE_3D);
+		setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
 		
         drawQuadTextured3D(new QuadTextured3D(x+0.5f, y+0.5f, z-0.5f, x-0.5f, y+0.5f, z-0.5f, x-0.5f, y+0.5f, z+0.5f, x+0.5f, y+0.5f, z+0.5f, tex, null));
         drawQuadTextured3D(new QuadTextured3D(x+0.5f, y-0.5f, z+0.5f, x-0.5f, y-0.5f, z+0.5f, x-0.5f, y-0.5f, z-0.5f, x+0.5f, y-0.5f, z-0.5f, tex, null));
@@ -205,8 +204,6 @@ public class Display {
 	}
 
 	public void drawQuadTextured2D(QuadTextured2D quad){
-		setMode(ModeDraw.MODE_2D);
-		
 		quad.getTexture().bind();
 		
 		float u = 0f;
@@ -215,11 +212,11 @@ public class Display {
 		float v2 = 1f;
 
 		if(quad.getColor() == null){
-			setModeColor(ModeColor.MODE_TEXTURE);
+			setMode(ModeDraw.MODE_2D, ModeColor.MODE_TEXTURE);
 			glColor4f(1f, 1f, 1f, 1f);
 		}
 		else {
-			setModeColor(ModeColor.MODE_COLOR);
+			setMode(ModeDraw.MODE_2D, ModeColor.MODE_COLOR);
 			glColor4f(quad.getColor().getRed(), quad.getColor().getGreen(), quad.getColor().getBlue(), quad.getColor().getAlpha());
 		}
 
@@ -239,8 +236,6 @@ public class Display {
 	}
 	
 	public void drawQuadTextured3D(QuadTextured3D quad){
-		setMode(ModeDraw.MODE_3D);
-		
 		quad.getTexture().bind();
 		
 		float u = 0f;
@@ -250,11 +245,11 @@ public class Display {
 		float v2 = 1f;
 		
 		if(quad.getColor() == null){
-			setModeColor(ModeColor.MODE_TEXTURE);
+			setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
 			glColor4f(1f, 1f, 1f, 1f);
 		}
 		else {
-			setModeColor(ModeColor.MODE_COLOR);
+			setMode(ModeDraw.MODE_3D, ModeColor.MODE_COLOR);
 			glColor4f(quad.getColor().getRed(), quad.getColor().getGreen(), quad.getColor().getBlue(), quad.getColor().getAlpha());
 		}
 		
@@ -296,37 +291,43 @@ public class Display {
 		glColor3f(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
 	}
 
-	public void setMode(ModeDraw mode){	
-		if(mode != drawMode){
-			glLoadIdentity();
-			switch(mode){
+	public void setMode(ModeDraw drawMode, ModeColor colorMode){	
+		if(this.modeDraw != drawMode){
+			switch(drawMode){
 				case MODE_2D:
-					drawMode = mode;
+					this.modeDraw = drawMode;
+					glLoadIdentity();
 					glMatrixMode(GL_MODELVIEW);
-					glOrtho(0, width, height, 0, near-1, near);
+					glOrtho(0, width, height, 0, NEAR-1, NEAR);
 					break;
 				case MODE_3D:
-					drawMode = mode;
+					this.modeDraw = drawMode;
+					glLoadIdentity();
 					glMatrixMode(GL_PROJECTION);
-					gluPerspective(45, aspectRatio, near, far);
+					gluPerspective(FOV, aspectRatio, NEAR, FAR);
 					
-					Circle rotXAxis = new Circle(camX, camY, far);
-					Circle rotYAxis = new Circle(camX, camY, far);
-					Circle rotZAxis = new Circle(camX, camY, far);
+					Circle rotXAxis = new Circle(camX, camY, FAR);
+					Circle rotYAxis = new Circle(camX, camY, FAR);
+					Circle rotZAxis = new Circle(camX, camY, FAR);
 					
-					gluLookAt(camX, camY, camZ, rotZAxis.getX(camRotZAxis), camY, rotZAxis.getY(camRotZAxis), camX, camY+far, camZ);
+					gluLookAt(camX, camY, camZ, rotXAxis.getX(pivotCam.getRotXZAxis()), camY, rotXAxis.getY(pivotCam.getRotXZAxis()), camX, camY+FAR, camZ);
 					break;
+			}
+		}	
+		
+		if(this.modeColor != colorMode){
+			switch(colorMode){
+				case MODE_COLOR:
+					this.modeColor = ModeColor.MODE_COLOR;
+					glDisable(GL_TEXTURE_2D);
+				case MODE_TEXTURE:
+					this.modeColor = ModeColor.MODE_TEXTURE;
+					glEnable(GL_TEXTURE_2D);
 			}
 		}
 	}
-	
-	public void setModeColor(ModeColor mode){
-		switch(mode){
-			case MODE_COLOR:
-				glDisable(GL_TEXTURE_2D);
-			case MODE_TEXTURE:
-				glEnable(GL_TEXTURE_2D);
-		}
+	public void setModeColor(){
+		
 	}
 	
 	public int getAspectRatio(){
@@ -412,8 +413,8 @@ public class Display {
 		return height;
 	}
 	
-	public double getCursorRotZAxisChange(){
-		return cursorRotZAxisChange;
+	public double getCursorRotXAxisChange(){
+		return cursorRotXAxisChange;
 	}
 	
 	public double getCursorRotYAxisChange(){

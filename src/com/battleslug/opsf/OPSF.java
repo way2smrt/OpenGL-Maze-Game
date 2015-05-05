@@ -27,12 +27,16 @@ public class OPSF extends Game {
 	public void play(){
 		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 900, 720, false);
 		display.create();
+		
 		display.setCursorLocked(true);
 		
 		player = new Player("Bob the test dummy", 125);
-		player.setSpeed(5, 2, 3);
+		player.setSpeed(10, 2, 3);
 		//average height for a human
 		player.setYCamLocal(1.7f);
+		player.setPivot(new Pivot(0, 90, 0));
+		
+		display.setPivotCam(player.getPivot());
 		
 		world = new World();
 		world.bind(display);
@@ -60,7 +64,7 @@ public class OPSF extends Game {
 			display.setCamRotZAxis(player.getRotationHorizontal());
 			display.setCamLocation(player.getXGlobal()+player.getXCamLocal(), player.getYGlobal()+player.getYCamLocal(), player.getZGlobal()+player.getZCamLocal());
 			
-			drawCrosshair(7);
+			drawCrosshair(2);
 			
 			display.drawCube(3, 0, 5, tex1);
 			display.drawCube(-7, 0, 3, tex2);
@@ -95,9 +99,12 @@ public class OPSF extends Game {
 				System.out.println("ayy lmao");
 			}
 				
-			player.setRotationHorizontal(player.getRotationHorizontal()+(float)(display.getCursorRotZAxisChange())*CURSOR_SPEED);
+			//update camera
+			player.getPivot().setRotXAxis(player.getPivot().getRotXZAxis()+(float)(display.getCursorRotXAxisChange())*CURSOR_SPEED);
+			display.setPivotCam(player.getPivot());
 			player.setYSpeedGlobal(player.getYSpeedGlobal()-((float)(WORLD_GRAVITY*pow(timePassed, 2))));
 			
+			//gravity
 			player.setYGlobal(player.getYGlobal()+player.getYSpeedGlobal());			
 			if(player.getYGlobal() < WORLD_FLOOR){
 				player.setYGlobal(WORLD_FLOOR);
@@ -114,20 +121,19 @@ public class OPSF extends Game {
 		}
 	}
 	
-	private void drawCrosshair(int width){
-		//TODO fix crosshair, not drawing. Maybe 2D drawing problem.
-		display.drawPixel(display.getWidth()/2, display.getHeight()/2, new VectorColor(1f, 1f, 1f));
-		for(int i = 1; i != width+1; i++){
-			display.drawPixel((display.getWidth()/2)+i, (display.getHeight()/2), new VectorColor(1f, 1f, 1f));
-			display.drawPixel((display.getWidth()/2)-i, (display.getHeight()/2), new VectorColor(1f, 1f, 1f));
-			display.drawPixel((display.getWidth()/2), (display.getHeight()/2)+i, new VectorColor(1f, 1f, 1f));
-			display.drawPixel((display.getWidth()/2), (display.getHeight()/2)-i, new VectorColor(1f, 1f, 1f));
-		}	
+	private void drawCrosshair(int size){
+		VectorColor cInner = new VectorColor(1f, 1f, 1f);
+		VectorColor cOuter = new VectorColor(1f, 1f, 1f);
+		
+		//we add 1 to account for rounding
+		display.drawLine((display.getWidth()/2)-size-1, (display.getHeight()/2), (display.getWidth()/2), (display.getHeight()/2), cOuter, cInner);
+		display.drawLine((display.getWidth()/2), (display.getHeight()/2)-size-1, (display.getWidth()/2), (display.getHeight()/2), cOuter, cInner);
+		display.drawLine((display.getWidth()/2), (display.getHeight()/2), (display.getWidth()/2)+size, (display.getHeight()/2), cInner, cOuter);
+		display.drawLine((display.getWidth()/2), (display.getHeight()/2), (display.getWidth()/2), (display.getHeight()/2)+size, cInner, cOuter);
 	}
 	
 	private void drawFloor(Texture texFloor){
-		display.drawQuadTextured3D(new QuadTextured3D(10, WORLD_FLOOR, 10, 10, WORLD_FLOOR, -10, -10, WORLD_FLOOR, -10, -10, WORLD_FLOOR, 10, texFloor, null));
-		display.drawQuadTextured3D(new QuadTextured3D(-10, WORLD_FLOOR, -10, -10, WORLD_FLOOR, 10, 10, WORLD_FLOOR, 10, 10, WORLD_FLOOR, -10, texFloor, null));
+		display.drawQuadTextured3D(new QuadTextured3D(display.FAR, WORLD_FLOOR, display.FAR, display.FAR, WORLD_FLOOR, -display.FAR, -display.FAR, WORLD_FLOOR, -display.FAR, -display.FAR, WORLD_FLOOR, display.FAR, texFloor, null));
 	}
 	
 	public static void main(String[] args) {
