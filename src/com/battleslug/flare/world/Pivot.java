@@ -5,95 +5,102 @@ import java.util.Arrays;
 import com.battleslug.porcupine.Circle;
 
 public class Pivot {
-	private int rotation;
-	private int rotMin = 0;
-	private int rotMax = 360;
+	private float rotXAxis, rotYAxis, rotZAxis;
 	
-	private boolean rotBindedToParent;
+	private float rotXAxisMin, rotYAxisMin, rotZAxisMin;
+	private float rotXAxisMax, rotYAxisMax, rotZAxisMax;
 	
-	private Pivot parent;
-	
-	private Pivot[] child = new Pivot[0];
-	private int children;
-	
-	public Pivot(){
-		rotation = 0;
-	}
-	
-	public Pivot(int rotation){
-		this.rotation = rotation;
-	}
-	
-	public Pivot getParent(){
-		return parent;
-	}
-	
-	public void addChild(Pivot pivot){
-		children += 1;
+	public Pivot(float rotXAxis, float rotYAxis, float rotZAxis){
+		this.rotXAxis = rotXAxis;
+		this.rotYAxis = rotYAxis;
+		this.rotZAxis = rotZAxis;
 		
-		child = Arrays.copyOf(child, children);
+		rotXAxisMin = 0;
+		rotYAxisMin = 0;
+		rotZAxisMin = 0;
 		
-		child[children-1] = pivot;
+		rotXAxisMax = 360;
+		rotYAxisMax = 360;
+		rotZAxisMax = 360;
 	}
 	
-	public Pivot getChild(int child){
-		if(child > 0 && child <= children){
-			return this.child[child-1];
-		}
-		return null;
+	public float getRotXAxisMin(){
+		return rotXAxisMin;
 	}
 	
-	public boolean hasChildren(){
-		if (children > 0){
-			return true;
-		}
-		return false;
+	public float getRotXAxisMax(){
+		return rotXAxisMax;
 	}
 	
-	public boolean hasParent(){
-		if(parent != null){
-			return true;
-		}
-		return false;
+	public float getRotYAxisMin(){
+		return rotYAxisMin;
 	}
 	
-	
-	public boolean isRotBindedToParent(){
-		return rotBindedToParent;
+	public float getRotYAxisMax(){
+		return rotYAxisMax;
 	}
 	
-	public void setRotation(int rotation){
-		while(rotation >= Circle.DEGREES){
-			rotation -= Circle.DEGREES;
+	public float getRotZAxisMin(){
+		return rotZAxisMin;
+	}
+	
+	public float getRotZAxisMax(){
+		return rotZAxisMax;
+	}
+	
+	public void setRotXAxisLimits(float rotMin, float rotMax){
+		rotXAxisMin = rotMin;
+		rotXAxisMax = rotMax;
+	}
+	
+	public void setRotYAxisLimits(float rotMin, float rotMax){
+		rotYAxisMin = rotMin;
+		rotYAxisMax = rotMax;
+	}
+
+	public void setRotZAxisLimits(float rotMin, float rotMax){
+		rotZAxisMin = rotMin;
+		rotZAxisMax = rotMax;
+	}
+	
+	public void setRotation(float rotXAxis, float rotYAxis, float rotZAxis){
+		this.rotXAxis = rotXAxis;
+		while(this.rotXAxis > rotXAxisMax){
+			this.rotXAxis -= rotXAxisMax-rotXAxisMin;
 		}
-		while(rotation < 0){
-			rotation += Circle.DEGREES;
-		}
-		
-		if(rotation < rotMin){
-			this.rotation = rotMin;
-		}
-		else if(rotation > rotMax){
-			this.rotation = rotMax;
-		}
-		else {
-			this.rotation = rotation;
+		while(this.rotXAxis < rotXAxisMin){
+			this.rotXAxis += rotXAxisMax-rotXAxisMin;
 		}
 		
-		if(hasChildren()){
-			updateChildren();
+		this.rotYAxis = rotYAxis;
+		while(this.rotYAxis > rotYAxisMax){
+			this.rotYAxis -= rotYAxisMax-rotYAxisMin;
 		}
+		while(this.rotYAxis < rotYAxisMin){
+			this.rotYAxis += rotYAxisMax-rotYAxisMin;
+		}
+		
+		this.rotZAxis = rotZAxis;
+		while(this.rotZAxis > rotZAxisMax){
+			this.rotZAxis -= rotZAxisMax-rotZAxisMin;
+		}
+		while(this.rotZAxis < rotZAxisMin){
+			this.rotZAxis += rotZAxisMax-rotZAxisMin;
+		}
+		
+
 	}
 	
-	public void updateChildren(){
-		for (int i = 0; i != children; i++){
-			if(child[i].isRotBindedToParent()){
-				child[i].setRotation(child[i].getRotation()+rotation);
-			}
-		}
+	public float getRotXAxis(){
+		return rotXAxis;
 	}
 	
-	public int getRotation(){
-		return rotation;
+	public float getRotYAxis(){
+		return rotYAxis;
 	}
+	
+	public float getRotZAxis(){
+		return rotZAxis;
+	}
+
 }
