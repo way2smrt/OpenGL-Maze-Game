@@ -1,9 +1,5 @@
 package com.battleslug.flare.world;
 
-import java.util.Arrays;
-
-import com.battleslug.porcupine.Circle;
-
 public class Pivot {
 	private float rotXZAxis, rotYZAxis, rotXYAxis;
 	
@@ -74,10 +70,10 @@ public class Pivot {
 		
 		this.rotYZAxis = rotYZAxis;
 		while(this.rotYZAxis > rotYZAxisMax){
-			this.rotYZAxis -= rotYZAxisMax-rotXYAxisMin;
+			this.rotYZAxis -= rotYZAxisMax-rotYZAxisMin;
 		}
 		while(this.rotYZAxis < rotYZAxisMin){
-			this.rotYZAxis += rotYZAxisMax-rotXYAxisMin;
+			this.rotYZAxis += rotYZAxisMax-rotYZAxisMin;
 		}
 		
 		this.rotXYAxis = rotXYAxis;
@@ -95,23 +91,23 @@ public class Pivot {
 		return rotXZAxis;
 	}
 	
-	public float getRotYAxis(){
+	public float getRotYZAxis(){
 		return rotYZAxis;
 	}
 	
-	public float getRotZAxis(){
+	public float getRotXYAxis(){
 		return rotXYAxis;
 	}
 	
-	public void setRotXAxis(float rotXAxis){
-		this.rotXZAxis = rotXAxis;
+	public void setRotXZAxis(float rotXZAxis){
+		this.rotXZAxis = rotXZAxis;
 	}
 	
-	public void setRotYAxis(float rotYAxis){
-		this.rotYZAxis = rotYAxis;
+	public void setRotYZAxis(float rotYZAxis){
+		this.rotYZAxis = rotYZAxis;
 	}
 	
-	public void setRotZAxis(float rotZAxis){
-		this.rotXYAxis = rotZAxis;
+	public void setRotXYAxis(float rotXYAxis){
+		this.rotXYAxis = rotXYAxis;
 	}
 }

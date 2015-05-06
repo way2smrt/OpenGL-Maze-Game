@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import com.battleslug.flare.*;
 import com.battleslug.flare.world.*;
+import com.battleslug.flare.sentient.Sentient;
 import com.battleslug.porcupine.*;
 
 import static java.lang.Math.*;
@@ -31,10 +32,11 @@ public class OPSF extends Game {
 		display.setCursorLocked(true);
 		
 		player = new Player("Bob the test dummy", 125);
-		player.setSpeed(10, 2, 3);
+		player.setSpeed(5, 2, 3);
 		//average height for a human
 		player.setYCamLocal(1.7f);
 		player.setPivot(new Pivot(0, 90, 0));
+		player.getPivot().setRotYZAxisLimits(0f, 180f);
 		
 		display.setPivotCam(player.getPivot());
 		
@@ -55,24 +57,21 @@ public class OPSF extends Game {
 		Texture tex4 = new Texture(GAME_FOLDER+"/res/tex/bark1.png");
 		Texture tex5 = new Texture(GAME_FOLDER+"/res/tex/stoneRoad1.png");
 		
-		final int LOCX = 100;
-		final int LOCY = 100;
-		
 		while(true){
 			keyboard.update();
-			
-			display.setCamRotZAxis(player.getRotationHorizontal());
 			display.setCamLocation(player.getXGlobal()+player.getXCamLocal(), player.getYGlobal()+player.getYCamLocal(), player.getZGlobal()+player.getZCamLocal());
 			
-			drawCrosshair(2);
+			drawCrosshair(12, 5);
 			
-			display.drawCube(3, 0, 5, tex1);
-			display.drawCube(-7, 0, 3, tex2);
-			display.drawCube(3, 0, -1, tex3);
-			display.drawCube(-3, 0, -4, tex4);
-			display.drawCube(25, 0, 25, tex5);
-			display.drawCube(0, 0, 0, imgDoge.getTexture());
-			display.drawCube(-1, -1, 3, texGrass);
+			display.drawCube(3, 0.5f, 5, 1, tex1);
+			display.drawCube(3, 1.5f, 5, 1, tex2);
+			display.drawCube(3, 2.5f, 5, 1, tex3);
+			display.drawCube(-7, 0.5f, 3, 1, tex2);
+			display.drawCube(3, 0.5f, -1, 1, tex3);
+			display.drawCube(-3, 0.5f, -4, 1, tex4);
+			display.drawCube(25, 0.5f, 25, 1, tex5);
+			display.drawCube(0, 0.5f, 0, 1, imgDoge.getTexture());
+			display.drawCube(-1, -1, 3, 5, texGrass);
 			
 			drawFloor(texGrass);
 			
@@ -83,16 +82,16 @@ public class OPSF extends Game {
 			}
 
 			if(keyboard.isDown(GLFW_KEY_W)){
-				player.move(Player.Direction.FORWARD, (float)(player.getSpeedForward()*timePassed));
+				player.move(Sentient.Direction.FORWARD, (float)(player.getSpeedForward()*timePassed));
 			}
 			if(keyboard.isDown(GLFW_KEY_S)){
-				player.move(Player.Direction.BACKWARD, (float)(player.getSpeedBackward()*timePassed));
+				player.move(Sentient.Direction.BACKWARD, (float)(player.getSpeedBackward()*timePassed));
 			}
 			if(keyboard.isDown(GLFW_KEY_A)){
-				player.move(Player.Direction.LEFT, (float)(player.getSpeedStrafe()*timePassed));
+				player.move(Sentient.Direction.LEFT, (float)(player.getSpeedStrafe()*timePassed));
 			}
 			if(keyboard.isDown(GLFW_KEY_D)){
-				player.move(Player.Direction.RIGHT, (float)(player.getSpeedStrafe()*timePassed));
+				player.move(Sentient.Direction.RIGHT, (float)(player.getSpeedStrafe()*timePassed));
 			}
 			if(keyboard.wasPressed(GLFW_KEY_SPACE) && player.getYGlobal() == 0f){
 				player.setYSpeedGlobal(0.05f);
@@ -100,11 +99,12 @@ public class OPSF extends Game {
 			}
 				
 			//update camera
-			player.getPivot().setRotXAxis(player.getPivot().getRotXZAxis()+(float)(display.getCursorRotXAxisChange())*CURSOR_SPEED);
+			player.getPivot().setRotXZAxis(player.getPivot().getRotXZAxis()+(float)(display.getCursorRotXZAxisChange())*CURSOR_SPEED);
+			player.getPivot().setRotYZAxis(player.getPivot().getRotYZAxis()+(float)(display.getCursorRotYZAxisChange())*CURSOR_SPEED);
 			display.setPivotCam(player.getPivot());
 			player.setYSpeedGlobal(player.getYSpeedGlobal()-((float)(WORLD_GRAVITY*pow(timePassed, 2))));
 			
-			//gravity
+			//invoke gravity on player
 			player.setYGlobal(player.getYGlobal()+player.getYSpeedGlobal());			
 			if(player.getYGlobal() < WORLD_FLOOR){
 				player.setYGlobal(WORLD_FLOOR);
@@ -118,18 +118,19 @@ public class OPSF extends Game {
 			display.update();
 			display.clear();
 			updateTimer();
+			
+			System.out.println(player.getPivot().getRotYZAxis());
 		}
 	}
 	
-	private void drawCrosshair(int size){
-		VectorColor cInner = new VectorColor(1f, 1f, 1f);
-		VectorColor cOuter = new VectorColor(1f, 1f, 1f);
+	private void drawCrosshair(int size, int spacing){
+		VectorColor cInner = new VectorColor(1f, 0f, 0.5f);
+		VectorColor cOuter = new VectorColor(0f, 0f, 0f);
 		
-		//we add 1 to account for rounding
-		display.drawLine((display.getWidth()/2)-size-1, (display.getHeight()/2), (display.getWidth()/2), (display.getHeight()/2), cOuter, cInner);
-		display.drawLine((display.getWidth()/2), (display.getHeight()/2)-size-1, (display.getWidth()/2), (display.getHeight()/2), cOuter, cInner);
-		display.drawLine((display.getWidth()/2), (display.getHeight()/2), (display.getWidth()/2)+size, (display.getHeight()/2), cInner, cOuter);
-		display.drawLine((display.getWidth()/2), (display.getHeight()/2), (display.getWidth()/2), (display.getHeight()/2)+size, cInner, cOuter);
+		display.drawLine((display.getWidth()/2)-size-spacing, (display.getHeight()/2), (display.getWidth()/2)-spacing, (display.getHeight()/2), cOuter, cInner);
+		display.drawLine((display.getWidth()/2), (display.getHeight()/2)-size-spacing, (display.getWidth()/2), (display.getHeight()/2)-spacing, cOuter, cInner);
+		display.drawLine((display.getWidth()/2)+spacing, (display.getHeight()/2), (display.getWidth()/2)+size+spacing, (display.getHeight()/2), cInner, cOuter);
+		display.drawLine((display.getWidth()/2), (display.getHeight()/2)+spacing, (display.getWidth()/2), (display.getHeight()/2)+size+spacing, cInner, cOuter);
 	}
 	
 	private void drawFloor(Texture texFloor){

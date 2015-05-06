@@ -25,18 +25,22 @@ public class Sentient {
 	protected float xSpeedGlobal, ySpeedGlobal, zSpeedGlobal;
 	protected float xSpeedGlobalMax, ySpeedGlobalMax, zSpeedGlobalMax;
 	
-	protected float rotHori;
-	
 	protected float xCamLocal, yCamLocal, zCamLocal;
 	
-	protected enum Direction{FORWARD, BACKWARD, LEFT, RIGHT};
+	public enum Direction{FORWARD, BACKWARD, LEFT, RIGHT};
 	
-	private Pivot pivot;
+	protected Pivot pivot;
 	
 	public Sentient(String name, int maxHealth){
 		this.name = name;
 		this.health = maxHealth;
 		this.maxHealth = maxHealth;
+		
+		xCamLocal = 0;
+		yCamLocal = 0;
+		zCamLocal = 0;
+		
+		setSpeed(5, 2, 3);
 	}
 	
 	public void getAction(){
@@ -256,4 +260,5 @@ public class Sentient {
 		
 		setLocation(xGlobal+circle.getX(rot), yGlobal, zGlobal+circle.getY(rot));
 	}
+
 }

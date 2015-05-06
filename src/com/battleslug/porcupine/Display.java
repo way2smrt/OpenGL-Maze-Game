@@ -29,7 +29,7 @@ public class Display {
 	private int width, height;
 	
 	private double xCursor, yCursor;
-	private double cursorRotXAxisChange, cursorRotYAxisChange;
+	private double cursorRotXZAxisChange, cursorRotYZAxisChange;
 	
 	private boolean fullscreen;
 	
@@ -48,9 +48,6 @@ public class Display {
 	private int aspectRatio;
 	
 	private float camX, camY, camZ;
-	private float camRotZAxis;
-	private float camRotYAxis;
-	private float camRotXAxis;
 	
 	private static final float NEAR = 1f;
 	public static final float FAR = 1000.0f;
@@ -113,6 +110,19 @@ public class Display {
 			}
 		});
 		
+		//release cursor when it exits the window
+		glfwSetCursorEnterCallback(window, new GLFWCursorEnterCallback(){
+			@Override
+			public void invoke(long window, int entered){
+				if(entered == GL_TRUE){
+					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				}
+				else if(entered == GL_FALSE){
+					setCursorLocked(false);
+				}
+			}
+		});
+		
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		glEnable(GL_BLEND);
@@ -162,8 +172,8 @@ public class Display {
 			
 			updateCursor();
 			
-			cursorRotXAxisChange = xCursor-xCursorOld;
-			cursorRotYAxisChange = yCursor-yCursorOld;
+			cursorRotXZAxisChange = xCursor-xCursorOld;
+			cursorRotYZAxisChange = yCursor-yCursorOld;
 			
 			glfwSetCursorPos(window, width/2, height/2);
 			
@@ -192,15 +202,17 @@ public class Display {
 		glEnd();
 	}
 	
-	public void drawCube(float x, float y, float z, Texture tex){
+	public void drawCube(float x, float y, float z, float width, Texture tex){
 		setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
 		
-        drawQuadTextured3D(new QuadTextured3D(x+0.5f, y+0.5f, z-0.5f, x-0.5f, y+0.5f, z-0.5f, x-0.5f, y+0.5f, z+0.5f, x+0.5f, y+0.5f, z+0.5f, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(x+0.5f, y-0.5f, z+0.5f, x-0.5f, y-0.5f, z+0.5f, x-0.5f, y-0.5f, z-0.5f, x+0.5f, y-0.5f, z-0.5f, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(x+0.5f, y+0.5f, z+0.5f, x-0.5f, y+0.5f, z+0.5f, x-0.5f, y-0.5f, z+0.5f, x+0.5f, y-0.5f, z+0.5f, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(x+0.5f, y-0.5f, z-0.5f, x-0.5f, y-0.5f, z-0.5f, x-0.5f, y+0.5f, z-0.5f, x+0.5f, y+0.5f, z-0.5f, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(x-0.5f, y+0.5f, z+0.5f, x-0.5f, y+0.5f, z-0.5f, x-0.5f, y-0.5f, z-0.5f, x-0.5f, y-0.5f, z+0.5f, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(x+0.5f, y+0.5f, z-0.5f, x+0.5f, y+0.5f, z+0.5f, x+0.5f, y-0.5f, z+0.5f, x+0.5f, y-0.5f, z-0.5f, tex, null));
+		float widthHalf = width/2;
+		
+        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z+widthHalf, x+widthHalf, y+widthHalf, z+widthHalf, tex, null));
+        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y-widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x+widthHalf, y-widthHalf, z-widthHalf, tex, null));
+        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z+widthHalf, tex, null));
+        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x+widthHalf, y+widthHalf, z-widthHalf, tex, null));
+        drawQuadTextured3D(new QuadTextured3D(x-widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, tex, null));
+        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z-widthHalf, x+widthHalf, y+widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z-widthHalf, tex, null));
 	}
 
 	public void drawQuadTextured2D(QuadTextured2D quad){
@@ -306,11 +318,10 @@ public class Display {
 					glMatrixMode(GL_PROJECTION);
 					gluPerspective(FOV, aspectRatio, NEAR, FAR);
 					
-					Circle rotXAxis = new Circle(camX, camY, FAR);
-					Circle rotYAxis = new Circle(camX, camY, FAR);
-					Circle rotZAxis = new Circle(camX, camY, FAR);
+					Circle cXZ = new Circle(camX, camZ, FAR);
+					Circle cYZ = new Circle(camY, camZ, FAR);
 					
-					gluLookAt(camX, camY, camZ, rotXAxis.getX(pivotCam.getRotXZAxis()), camY, rotXAxis.getY(pivotCam.getRotXZAxis()), camX, camY+FAR, camZ);
+					gluLookAt(camX, camY, camZ, cXZ.getX(pivotCam.getRotXZAxis()), cYZ.getX(pivotCam.getRotYZAxis()), cXZ.getX(pivotCam.getRotXZAxis()), camX, camY+FAR, camZ);
 					break;
 			}
 		}	
@@ -320,9 +331,11 @@ public class Display {
 				case MODE_COLOR:
 					this.modeColor = ModeColor.MODE_COLOR;
 					glDisable(GL_TEXTURE_2D);
+					break;
 				case MODE_TEXTURE:
 					this.modeColor = ModeColor.MODE_TEXTURE;
 					glEnable(GL_TEXTURE_2D);
+					break;
 			}
 		}
 	}
@@ -354,30 +367,6 @@ public class Display {
 	
 	public float getCamZ(){
 		return camZ;
-	}
-	
-	public void setCamRotZAxis(float camRot){
-		this.camRotZAxis = camRot;
-	}
-	
-	public void setCamRotYAxis(float camRot){
-		this.camRotYAxis = camRot;
-	}
-	
-	public void setRotXAxis(float camRot){
-		this.camRotXAxis = camRot;
-	}
-	
-	public float getCamRotXAxis(){
-		return camRotXAxis;
-	}
-	
-	public float getCamRotYAxis(){
-		return camRotYAxis;
-	}
-	
-	public float getCamRotZAxis(){
-		return camRotZAxis;
 	}
 	
 	private void updateCursor(){
@@ -413,12 +402,12 @@ public class Display {
 		return height;
 	}
 	
-	public double getCursorRotXAxisChange(){
-		return cursorRotXAxisChange;
+	public double getCursorRotXZAxisChange(){
+		return cursorRotXZAxisChange;
 	}
 	
-	public double getCursorRotYAxisChange(){
-		return cursorRotYAxisChange;
+	public double getCursorRotYZAxisChange(){
+		return cursorRotYZAxisChange;
 	}
 	
 	public void setPivotCam(Pivot pivot){
