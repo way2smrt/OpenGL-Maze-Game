@@ -62,12 +62,12 @@ public class Keyboard {
 		return false;
 	}
 	
+	/**
+	 * Should be called before GLFW events are polled.
+	 */
 	public void update(){
 		for(int i = 0; i != GLFW_KEYS+1; i++){
 			keyDownLast[i] = keyDown[i];
 		}
-		
-		//get the key events by polling them
-		glfwPollEvents();
 	}
 }

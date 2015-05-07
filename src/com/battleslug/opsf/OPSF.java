@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import com.battleslug.flare.*;
 import com.battleslug.flare.world.*;
+import com.battleslug.flare.world.Pivot.LimitMode;
 import com.battleslug.flare.sentient.Sentient;
 import com.battleslug.porcupine.*;
 
@@ -37,6 +38,7 @@ public class OPSF extends Game {
 		player.setYCamLocal(1.7f);
 		player.setPivot(new Pivot(0, 90, 0));
 		player.getPivot().setRotYZAxisLimits(0f, 180f);
+		player.getPivot().setYZAxisLimitMode(LimitMode.STOP);
 		
 		display.setPivotCam(player.getPivot());
 		
@@ -59,6 +61,7 @@ public class OPSF extends Game {
 		
 		while(true){
 			keyboard.update();
+			Display.pollEvents();
 			display.setCamLocation(player.getXGlobal()+player.getXCamLocal(), player.getYGlobal()+player.getYCamLocal(), player.getZGlobal()+player.getZCamLocal());
 			
 			drawCrosshair(12, 5);
@@ -111,6 +114,8 @@ public class OPSF extends Game {
 				player.setYSpeedGlobalMax(0f);
 			}
 			
+			System.out.println(display.getCursorRotXZAxisChange());
+			
 			if(keyboard.isDown(GLFW_KEY_ESCAPE)){
 				display.kill();
 			}
@@ -118,8 +123,6 @@ public class OPSF extends Game {
 			display.update();
 			display.clear();
 			updateTimer();
-			
-			System.out.println(player.getPivot().getRotYZAxis());
 		}
 	}
 	

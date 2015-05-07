@@ -11,6 +11,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.util.glu.GLU.*;
+
 import org.lwjgl.BufferUtils;
 
 import com.battleslug.flare.world.*;
@@ -110,12 +111,13 @@ public class Display {
 			}
 		});
 		
-		//release cursor when it exits the window
+		//release cursor when it exits the window, and regain upon re-entering
 		glfwSetCursorEnterCallback(window, new GLFWCursorEnterCallback(){
 			@Override
 			public void invoke(long window, int entered){
 				if(entered == GL_TRUE){
 					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+					glfwSetCursorPos(window, width/2, height/2);
 				}
 				else if(entered == GL_FALSE){
 					setCursorLocked(false);
@@ -181,6 +183,10 @@ public class Display {
 		}
 		
 		checkClose();
+	}
+	
+	public static void pollEvents(){
+		glfwPollEvents();
 	}
 	
 	public void hide(){
@@ -320,8 +326,9 @@ public class Display {
 					
 					Circle cXZ = new Circle(camX, camZ, FAR);
 					Circle cYZ = new Circle(camY, camZ, FAR);
+					Circle cXY = new Circle(camX, camY, FAR);
 					
-					gluLookAt(camX, camY, camZ, cXZ.getX(pivotCam.getRotXZAxis()), cYZ.getX(pivotCam.getRotYZAxis()), cXZ.getX(pivotCam.getRotXZAxis()), camX, camY+FAR, camZ);
+					gluLookAt(camX, camY, camZ, cXY.getX(pivotCam.getRotXZAxis()), cYZ.getX(pivotCam.getRotYZAxis()), cXZ.getY(pivotCam.getRotXZAxis()), 0, 1, 0);
 					break;
 			}
 		}	
