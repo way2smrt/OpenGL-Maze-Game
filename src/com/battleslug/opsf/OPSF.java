@@ -7,6 +7,8 @@ import com.battleslug.flare.world.*;
 import com.battleslug.flare.world.Pivot.LimitMode;
 import com.battleslug.flare.sentient.Sentient;
 import com.battleslug.porcupine.*;
+import com.battleslug.flare.item.*;
+import com.battleslug.flare.GUI.*;
 
 import static java.lang.Math.*;
 
@@ -27,7 +29,7 @@ public class OPSF extends Game {
 	
 	@Override 
 	public void play(){
-		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 900, 720, false);
+		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 640, 480, false);
 		display.create();
 		
 		display.setCursorLocked(true);
@@ -46,6 +48,7 @@ public class OPSF extends Game {
 		world.bind(display);
 		
 		keyboard.bind(display);
+		mouse.bind(display);
 		
 		loadTextures();
 		texTest1 = new Texture(GAME_FOLDER+"/res/tex/brick1.png", Texture.NEAREST, Texture.REPEAT);
@@ -59,12 +62,48 @@ public class OPSF extends Game {
 		Texture tex4 = new Texture(GAME_FOLDER+"/res/tex/bark1.png");
 		Texture tex5 = new Texture(GAME_FOLDER+"/res/tex/stoneRoad1.png");
 		
+		float crossHairDist = 5;
+		final int CROSSHAIR_DIST_MAX = 30;
+		
+		HUDBulletDisplay bulletDisplay = new HUDBulletDisplay(0, 0, 512, 128, player.getWeapon(), hud_bullet_normal);
+		bulletDisplay.bind(display);
+		
 		while(true){
 			keyboard.update();
+			mouse.update();
 			Display.pollEvents();
 			display.setCamLocation(player.getXGlobal()+player.getXCamLocal(), player.getYGlobal()+player.getYCamLocal(), player.getZGlobal()+player.getZCamLocal());
 			
-			drawCrosshair(12, 5);
+			bulletDisplay.draw();
+			
+			//draw cursor and shoot gun
+			if(player.getWeapon().getFireMode() == Weapon.FireMode.Semiautomatic && mouse.wasPressedLeftButton() && player.getWeapon().canShoot(display.getTime())){
+				crossHairDist = 0;
+				
+				drawCrosshair(9, (int)(crossHairDist));
+				drawCrosshair(7, 5);
+				
+				player.getWeapon().shoot(0, 0, 0, 0, display.getTime());
+			}
+			else if(player.getWeapon().getFireMode() == Weapon.FireMode.Automatic && mouse.isDownLeftButton() && player.getWeapon().canShoot(display.getTime())){
+				crossHairDist = 0;
+				
+				drawCrosshair(9, (int)(crossHairDist));
+				drawCrosshair(7, 5);
+				
+				player.getWeapon().shoot(0, 0, 0, 0, display.getTime());
+			}
+			else {
+				if(crossHairDist < CROSSHAIR_DIST_MAX){
+					crossHairDist += (float)(75*display.getTimePassed());
+				}
+				if(crossHairDist > CROSSHAIR_DIST_MAX){
+					crossHairDist = CROSSHAIR_DIST_MAX;
+				}
+				
+				drawCrosshair(9, (int)(crossHairDist));
+				drawCrosshair(7, 5);
+			}
 			
 			display.drawCube(3, 0.5f, 5, 1, tex1);
 			display.drawCube(3, 1.5f, 5, 1, tex2);
@@ -85,16 +124,16 @@ public class OPSF extends Game {
 			}
 
 			if(keyboard.isDown(GLFW_KEY_W)){
-				player.move(Sentient.Direction.FORWARD, (float)(player.getSpeedForward()*timePassed));
+				player.move(Sentient.Direction.FORWARD, (float)(player.getSpeedForward()*display.getTimePassed()));
 			}
 			if(keyboard.isDown(GLFW_KEY_S)){
-				player.move(Sentient.Direction.BACKWARD, (float)(player.getSpeedBackward()*timePassed));
+				player.move(Sentient.Direction.BACKWARD, (float)(player.getSpeedBackward()*display.getTimePassed()));
 			}
 			if(keyboard.isDown(GLFW_KEY_A)){
-				player.move(Sentient.Direction.LEFT, (float)(player.getSpeedStrafe()*timePassed));
+				player.move(Sentient.Direction.LEFT, (float)(player.getSpeedStrafe()*display.getTimePassed()));
 			}
 			if(keyboard.isDown(GLFW_KEY_D)){
-				player.move(Sentient.Direction.RIGHT, (float)(player.getSpeedStrafe()*timePassed));
+				player.move(Sentient.Direction.RIGHT, (float)(player.getSpeedStrafe()*display.getTimePassed()));
 			}
 			if(keyboard.wasPressed(GLFW_KEY_SPACE) && player.getYGlobal() == 0f){
 				player.setYSpeedGlobal(0.05f);
@@ -105,7 +144,7 @@ public class OPSF extends Game {
 			player.getPivot().setRotXZAxis(player.getPivot().getRotXZAxis()+(float)(display.getCursorRotXZAxisChange())*CURSOR_SPEED);
 			player.getPivot().setRotYZAxis(player.getPivot().getRotYZAxis()+(float)(display.getCursorRotYZAxisChange())*CURSOR_SPEED);
 			display.setPivotCam(player.getPivot());
-			player.setYSpeedGlobal(player.getYSpeedGlobal()-((float)(WORLD_GRAVITY*pow(timePassed, 2))));
+			player.setYSpeedGlobal(player.getYSpeedGlobal()-((float)(WORLD_GRAVITY*pow(display.getTimePassed(), 2))));
 			
 			//invoke gravity on player
 			player.setYGlobal(player.getYGlobal()+player.getYSpeedGlobal());			
@@ -122,7 +161,7 @@ public class OPSF extends Game {
 			
 			display.update();
 			display.clear();
-			updateTimer();
+			display.updateTimer();
 		}
 	}
 	

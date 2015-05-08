@@ -21,6 +21,7 @@ import java.util.Random;
 public class Display {	
 	private GLFWKeyCallback keyCallback;
 	private GLFWErrorCallback errorCallback;
+	private GLFWMouseButtonCallback mouseCallback;
 
 	private long window;
 	
@@ -60,6 +61,9 @@ public class Display {
 	private boolean cursorLocked;
 	
 	private Pivot pivotCam;
+	
+	private double timeLast = 0;
+	private double timePassed = 0;
 	
 	public Display(String title, int width, int height){
 		this(title, width, height, false);
@@ -292,9 +296,18 @@ public class Display {
 		this.keyCallback = keyCallback;
 		glfwSetKeyCallback(window, keyCallback);
 	}
+	
+	public void setMouseButtonCallback(GLFWMouseButtonCallback mouseCallback){
+		this.mouseCallback = mouseCallback;
+		glfwSetMouseButtonCallback(window, mouseCallback);
+	}
 
 	public GLFWKeyCallback getKeyCallback(){
 		return keyCallback;
+	}
+	
+	public GLFWMouseButtonCallback getMouseButtonCallback(){
+		return mouseCallback;
 	}
 
 	public void kill(){
@@ -423,5 +436,18 @@ public class Display {
 	
 	public Pivot getPivotCam(){
 		return pivotCam;
+	}
+	
+	public void updateTimer(){
+		timePassed = glfwGetTime()-timeLast;
+		timeLast = glfwGetTime();
+	}
+	
+	public double getTimePassed(){
+		return timePassed;
+	}
+	
+	public double getTime(){
+		return glfwGetTime();
 	}
 }

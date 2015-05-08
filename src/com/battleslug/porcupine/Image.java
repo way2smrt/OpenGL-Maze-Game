@@ -18,6 +18,7 @@ public class Image {
 	private int frame;
 	
 	public Image(Texture tex){
+		//TODO fix fucked up Image class
 		this(tex, tex.getWidth(), tex.getHeight());
 	}
 	
@@ -75,7 +76,7 @@ public class Image {
 	}
 	
 	private float getPointLengthFromLocal(float xLocal, float yLocal){
-		return new Double(sqrt(pow(abs(xLocal-this.xLocal), 2)+pow(abs(yLocal-this.yLocal), 2))).floatValue();
+		return new Double(sqrt((pow(abs(xLocal-this.xLocal), 2)+pow(abs(yLocal-this.yLocal), 2)))).floatValue();
 	}
 	
 	public boolean isSpritesheet(){
@@ -120,29 +121,33 @@ public class Image {
 		float yL3 = height;
 		float xL4 = width;
 		float yL4 = 0;		
+		
 		//create a rotation circle to find our 4 rotated texture points
-		Circle c1 = new Circle(xLocal, yLocal, getPointLengthFromLocal(xL1, yL1));
-		Circle c2 = new Circle(xLocal, yLocal, getPointLengthFromLocal(xL2, yL2));
-		Circle c3 = new Circle(xLocal, yLocal, getPointLengthFromLocal(xL3, yL3));
-		Circle c4 = new Circle(xLocal, yLocal, getPointLengthFromLocal(xL4, yL3));
-				
+		Circle circle = new Circle(xLocal, yLocal, getPointLengthFromLocal(xL1, yL1));
+		
 		float xG1, yG1;
 		float xG2, yG2;
 		float xG3, yG3;
 		float xG4, yG4;
+		
+		//TODO remove these when done fixing Image
+		System.out.println(circle.getRotation(xL1, yL1));
+		System.out.println(circle.getRotation(xL2, yL2));
+		System.out.println(circle.getRotation(xL3, yL3));
+		System.out.println(circle.getRotation(xL4, yL4));
+		
+		xG1 = x+circle.getX(rotation+circle.getRotation(xL1, yL1));
+		yG1 = y+circle.getY(rotation+circle.getRotation(xL1, yL1));
 					
-		xG1 = x+c1.getX(rotation+c1.getRotation(xL1, yL1));
-		yG1 = y+c1.getY(rotation+c1.getRotation(xL1, yL1));
-					
-		xG2 = x+c2.getX(rotation+c2.getRotation(xL2, yL2));
-		yG2 = y+c2.getY(rotation+c2.getRotation(xL2, yL2));
+		xG2 = x+circle.getX(rotation+circle.getRotation(xL2, yL2));
+		yG2 = y+circle.getY(rotation+circle.getRotation(xL2, yL2));
 		
-		xG3 = x+c3.getX(rotation+c3.getRotation(xL3, yL3));
-		yG3 = y+c3.getY(rotation+c3.getRotation(xL3, yL3));
+		xG3 = x+circle.getX(rotation+circle.getRotation(xL3, yL3));
+		yG3 = y+circle.getY(rotation+circle.getRotation(xL3, yL3));
 		
-		xG4 = x+c4.getX(rotation+c4.getRotation(xL4, yL4));
-		yG4 = y+c4.getY(rotation+c4.getRotation(xL4, yL4));
-		
+		xG4 = x+circle.getX(rotation+circle.getRotation(xL4, yL4));
+		yG4 = y+circle.getY(rotation+circle.getRotation(xL4, yL4));
+	
 		display.drawQuadTextured2D(new QuadTextured2D(xG1, yG1, xG2, yG2, xG3, yG3, xG4, yG4, this.tex, null));   
 	}
 }

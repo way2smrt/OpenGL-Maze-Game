@@ -12,10 +12,10 @@ public class Sentient {
 	private int speed;
 	private int maxHealth;
 	
-	private Weapon weapon;
-	private Armor armor;
-	private Item item;
-	private Inventory inventory;
+	protected Weapon weapon;
+	protected Armor armor;
+	protected Item item;
+	protected Inventory inventory;
 	
 	private Texture texture;
 	

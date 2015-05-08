@@ -8,24 +8,36 @@ public class Weapon extends Item{
 	private int clipSize;
 	private int clipCurr;
 	
-	private String type;
+	private double fireTimeLast;
+	private float fireDelay;
 	
 	private AmmoType ammoType;
-	public enum AmmoType{pistol, smg, shotgun, rifle}
+	public enum AmmoType{Pistol, SMG, Shotgun, Rifle}
 	
-	public Weapon(String name, String description, CanUse usability, int damage, int clipSize){
-		super(name, description, usability);
+	public enum FireMode{Automatic, Semiautomatic};
+	private FireMode fireMode;
+	
+	public Weapon(String name, String description, FireMode fireMode, int damage, int clipSize){
+		super(name, description);
 		
 		this.damage = damage;
+		this.clipCurr = clipSize;
 		this.clipSize = clipSize;
+		this.fireMode = fireMode;
+		
+		fireDelay = 0.1f;
 	}
 	
-	public void setType(String type){
-		this.type = type;
+	public void setFireDelay(int fireDelay){
+		this.fireDelay = fireDelay;
 	}
 	
-	public String getType(){
-		return type;
+	public float getFireDelay(){
+		return fireDelay;
+	}
+	
+	public FireMode getFireMode(){
+		return fireMode;
 	}
 	
 	public AmmoType getAmmoType(){
@@ -39,6 +51,13 @@ public class Weapon extends Item{
 		return false;
 	}
 	
+	public boolean canShoot(double currTime){
+		if(fireTimeLast+fireDelay <= currTime){
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean isClipFull(){
 		if(clipCurr == clipSize){
 			return true;
@@ -46,13 +65,22 @@ public class Weapon extends Item{
 		return false;
 	}
 	
-	public Bullet shoot(int x, int y, int xSpeed, int ySpeed){
+	public Bullet shoot(int x, int y, int xSpeed, int ySpeed, double currTime){
+		fireTimeLast = currTime;
+		
 		if(clipCurr != 0){
 			clipCurr -= 1;
-			return new Bullet(x, y, xSpeed, ySpeed, damage);
-			
+			return new Bullet(x, y, xSpeed, ySpeed, damage);	
 		}
 		return null;
+	}
+	
+	public int getBullets(){
+		return clipCurr;
+	}
+	
+	public int getBulletsMax(){
+		return clipSize;
 	}
 	
 	public void Reload(){

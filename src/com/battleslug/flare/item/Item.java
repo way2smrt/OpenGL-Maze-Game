@@ -4,14 +4,9 @@ public class Item {
 	private String name;
 	private String description;
 	
-	private CanUse usability;
-	
-	public enum CanUse{human, alien, both}
-	
-	public Item(String _name, String _description, CanUse _usability){
+	public Item(String _name, String _description){
 		name = _name;
 		description = _description;
-		usability = _usability;
 	}
 	
 	public void setDescription(String _description){
@@ -24,9 +19,5 @@ public class Item {
 	
 	public String getDescription(){
 		return description;
-	}
-	
-	public CanUse getUsability(){
-		return usability;
 	}
 }
