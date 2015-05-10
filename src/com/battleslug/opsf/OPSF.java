@@ -29,7 +29,7 @@ public class OPSF extends Game {
 	
 	@Override 
 	public void play(){
-		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 640, 480, false);
+		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 900, 720, false);
 		display.create();
 		
 		display.setCursorLocked(true);
@@ -65,7 +65,7 @@ public class OPSF extends Game {
 		float crossHairDist = 5;
 		final int CROSSHAIR_DIST_MAX = 30;
 		
-		HUDBulletDisplay bulletDisplay = new HUDBulletDisplay(0, 0, 512, 128, player.getWeapon(), hud_bullet_normal);
+		HUDBulletDisplay bulletDisplay = new HUDBulletDisplay(0, 0, 512, 128, player.getWeaponInstance(), hud_bullet_normal);
 		bulletDisplay.bind(display);
 		
 		while(true){
@@ -77,21 +77,25 @@ public class OPSF extends Game {
 			bulletDisplay.draw();
 			
 			//draw cursor and shoot gun
-			if(player.getWeapon().getFireMode() == Weapon.FireMode.Semiautomatic && mouse.wasPressedLeftButton() && player.getWeapon().canShoot(display.getTime())){
-				crossHairDist = 0;
-				
-				drawCrosshair(9, (int)(crossHairDist));
-				drawCrosshair(7, 5);
-				
-				player.getWeapon().shoot(0, 0, 0, 0, display.getTime());
+			if(player.getWeaponInstance().getMode() == WeaponInstance.Mode.Reload){
+				player.getWeaponInstance().updateReload(display.getTime());
 			}
-			else if(player.getWeapon().getFireMode() == Weapon.FireMode.Automatic && mouse.isDownLeftButton() && player.getWeapon().canShoot(display.getTime())){
+			
+			if(player.getWeaponInstance().getWeapon().getFireMode() == Weapon.FireMode.Semiautomatic && mouse.wasPressedLeftButton() && player.getWeaponInstance().canShoot(display.getTime())){
 				crossHairDist = 0;
 				
 				drawCrosshair(9, (int)(crossHairDist));
 				drawCrosshair(7, 5);
 				
-				player.getWeapon().shoot(0, 0, 0, 0, display.getTime());
+				player.getWeaponInstance().shoot(0, 0, 0, 0, display.getTime());
+			}
+			else if(player.getWeaponInstance().getWeapon().getFireMode() == Weapon.FireMode.Automatic && mouse.isDownLeftButton() && player.getWeaponInstance().canShoot(display.getTime())){
+				crossHairDist = 0;
+				
+				drawCrosshair(9, (int)(crossHairDist));
+				drawCrosshair(7, 5);
+				
+				player.getWeaponInstance().shoot(0, 0, 0, 0, display.getTime());
 			}
 			else {
 				if(crossHairDist < CROSSHAIR_DIST_MAX){
@@ -138,6 +142,11 @@ public class OPSF extends Game {
 			if(keyboard.wasPressed(GLFW_KEY_SPACE) && player.getYGlobal() == 0f){
 				player.setYSpeedGlobal(0.05f);
 				System.out.println("ayy lmao");
+			}
+			if(keyboard.wasPressed(GLFW_KEY_R)){
+				if(player.getWeaponInstance().getMode() == WeaponInstance.Mode.Ready){
+					player.getWeaponInstance().initReload(display.getTime());
+				}
 			}
 				
 			//update camera

@@ -3,8 +3,8 @@ package com.battleslug.flare.item;
 public class Armor extends Item {
 	private int protection;
 	
-	public Armor(String name, String description, CanUse usability, int protection){
-		super(name, description, usability);
+	public Armor(String name, String description, int protection){
+		super(name, description);
 		
 		this.protection = protection;
 	}

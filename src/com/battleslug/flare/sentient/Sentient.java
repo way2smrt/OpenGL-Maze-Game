@@ -12,7 +12,7 @@ public class Sentient {
 	private int speed;
 	private int maxHealth;
 	
-	protected Weapon weapon;
+	protected WeaponInstance weaponInstance;
 	protected Armor armor;
 	protected Item item;
 	protected Inventory inventory;
@@ -59,8 +59,8 @@ public class Sentient {
 		this.inventory = inventory;
 	}
 	
-	public Weapon getWeapon(){
-		return weapon;
+	public WeaponInstance getWeaponInstance(){
+		return weaponInstance;
 	}
 	
 	public Armor getArmor(){

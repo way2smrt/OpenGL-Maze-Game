@@ -337,11 +337,10 @@ public class Display {
 					glMatrixMode(GL_PROJECTION);
 					gluPerspective(FOV, aspectRatio, NEAR, FAR);
 					
-					Circle cXZ = new Circle(camX, camZ, FAR);
 					Circle cYZ = new Circle(camY, camZ, FAR);
-					Circle cXY = new Circle(camX, camY, FAR);
+					Circle cXZ = new Circle(camX, camZ, cYZ.getY(pivotCam.getRotYZAxis())+1f);
 					
-					gluLookAt(camX, camY, camZ, cXY.getX(pivotCam.getRotXZAxis()), cYZ.getX(pivotCam.getRotYZAxis()), cXZ.getY(pivotCam.getRotXZAxis()), 0, 1, 0);
+					gluLookAt(camX, camY, camZ, cXZ.getX(pivotCam.getRotXZAxis()), cYZ.getX(pivotCam.getRotYZAxis()), cXZ.getY(pivotCam.getRotXZAxis()), 0, 1, 0);
 					break;
 			}
 		}	

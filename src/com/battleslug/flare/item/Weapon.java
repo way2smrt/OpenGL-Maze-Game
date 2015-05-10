@@ -1,35 +1,32 @@
 package com.battleslug.flare.item;
 
-import com.battleslug.flare.world.Bullet;
-
-public class Weapon extends Item{
+public class Weapon extends Item {
 	private int damage;
+
+	private int ammoMax;
 	
-	private int clipSize;
-	private int clipCurr;
-	
-	private double fireTimeLast;
 	private float fireDelay;
+	private float reloadDelay;
 	
-	private AmmoType ammoType;
 	public enum AmmoType{Pistol, SMG, Shotgun, Rifle}
+	private AmmoType ammoType;
 	
 	public enum FireMode{Automatic, Semiautomatic};
 	private FireMode fireMode;
 	
-	public Weapon(String name, String description, FireMode fireMode, int damage, int clipSize){
+	public enum ReloadMode{ChamberSingle, ChamberFull, Clip}
+	private ReloadMode reloadMode;
+	
+	public Weapon(String name, String description, FireMode fireMode, float fireDelay, int damage, ReloadMode reloadMode, float reloadDelay, AmmoType ammoType, int ammoMax){
 		super(name, description);
 		
-		this.damage = damage;
-		this.clipCurr = clipSize;
-		this.clipSize = clipSize;
 		this.fireMode = fireMode;
-		
-		fireDelay = 0.1f;
-	}
-	
-	public void setFireDelay(int fireDelay){
 		this.fireDelay = fireDelay;
+		this.damage = damage;
+		this.reloadMode = reloadMode;
+		this.reloadDelay = reloadDelay;
+		this.ammoType = ammoType;
+		this.ammoMax = ammoMax;
 	}
 	
 	public float getFireDelay(){
@@ -44,46 +41,19 @@ public class Weapon extends Item{
 		return ammoType;
 	}
 	
-	public boolean hasBullets(){
-		if(clipCurr != 0){
-			return true;
-		}
-		return false;
+	public ReloadMode getReloadMode(){
+		return reloadMode;
 	}
 	
-	public boolean canShoot(double currTime){
-		if(fireTimeLast+fireDelay <= currTime){
-			return true;
-		}
-		return false;
+	public float getReloadDelay(){
+		return reloadDelay;
 	}
 	
-	public boolean isClipFull(){
-		if(clipCurr == clipSize){
-			return true;
-		}
-		return false;
+	public int getAmmoMax(){
+		return ammoMax;
 	}
 	
-	public Bullet shoot(int x, int y, int xSpeed, int ySpeed, double currTime){
-		fireTimeLast = currTime;
-		
-		if(clipCurr != 0){
-			clipCurr -= 1;
-			return new Bullet(x, y, xSpeed, ySpeed, damage);	
-		}
-		return null;
-	}
-	
-	public int getBullets(){
-		return clipCurr;
-	}
-	
-	public int getBulletsMax(){
-		return clipSize;
-	}
-	
-	public void Reload(){
-		clipCurr = clipSize;
+	public int getDamage(){
+		return damage;
 	}
 }
