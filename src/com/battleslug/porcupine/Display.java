@@ -189,7 +189,7 @@ public class Display {
 		checkClose();
 	}
 	
-	public static void pollEvents(){
+	public static void updateEvents(){
 		glfwPollEvents();
 	}
 	
@@ -358,6 +358,43 @@ public class Display {
 			}
 		}
 	}
+	
+	public void drawImage(Image img, float x, float y, float rot){
+		img.getTexture().bind();
+		
+		float u = 0f;
+		float v = 0f;
+		
+		float u2 = 1f;
+		float v2 = 1f;
+		
+		setMode(ModeDraw.MODE_2D, ModeColor.MODE_TEXTURE);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		
+		glPushMatrix();
+		glTranslatef(x+img.getXLocal(), y+img.getYLocal(), 0);
+		glRotatef(rot, 0, 0, 1);
+		glTranslatef(-(x+img.getXLocal()), -(y+img.getYLocal()), 0);
+		
+		glBegin(GL_QUADS);
+		
+		glTexCoord2f(u, v);
+		glVertex2f(x+img.getXLocal(), y+img.getYLocal());
+
+		glTexCoord2f(u, v2);
+		glVertex2f(x+img.getXLocal(), y+img.getYLocal()+img.getHeight());
+
+		glTexCoord2f(u2, v2);
+		glVertex2f(x+img.getXLocal()+img.getWidth(), y+img.getYLocal()+img.getHeight());
+		
+		glTexCoord2f(u2, v);
+		glVertex2f(x+img.getXLocal()+img.getWidth(), y+img.getYLocal());
+		
+		glEnd();
+		
+		glPopMatrix();
+	}
+	
 	public void setModeColor(){
 		
 	}

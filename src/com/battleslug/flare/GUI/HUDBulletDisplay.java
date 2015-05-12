@@ -1,6 +1,7 @@
 package com.battleslug.flare.GUI;
 
 import com.battleslug.porcupine.*;
+import com.battleslug.flare.item.Weapon;
 import com.battleslug.flare.item.WeaponInstance;
 
 public class HUDBulletDisplay extends GUIObject {
@@ -15,10 +16,10 @@ public class HUDBulletDisplay extends GUIObject {
 	
 	private Image bulletImg;
 	
-	public HUDBulletDisplay(int x, int y, int width, int height, WeaponInstance weapon, Texture bulletTex){
+	public HUDBulletDisplay(int x, int y, int width, int height, WeaponInstance weaponInstance, Texture bulletTex){
 		super(x, y, width, height);
 		
-		this.weapon = weapon;
+		this.weapon = weaponInstance;
 		this.bulletTex = bulletTex;
 		
 		bulletImg = new Image(bulletTex, bulletTex.getWidth(), bulletTex.getHeight(), bulletTex.getWidth()/2, bulletTex.getHeight()/2);
@@ -40,13 +41,12 @@ public class HUDBulletDisplay extends GUIObject {
 			bulletFiredX3 += 350*display.getTimePassed();
 			bulletFiredRot3 += 700*display.getTimePassed();
 			
-			//TODO image not drawing
+			//TODO last bullet not drawing
 			if(bulletImg != null){
-				bulletImg.draw(display, bulletFiredX, bulletFiredY, bulletFiredRot);
-				bulletImg.draw(display, bulletFiredX2, bulletFiredY2, bulletFiredRot2);
+				display.drawImage(bulletImg, bulletFiredX, bulletFiredY, bulletFiredRot);
+				display.drawImage(bulletImg, bulletFiredX2, bulletFiredY2, bulletFiredRot2);
+				display.drawImage(bulletImg, bulletFiredX3, bulletFiredY3, bulletFiredRot3);
 			}
-			
-			//display.drawQuadTextured2D(new QuadTextured2D(bulletFiredX, bulletFiredY, bulletFiredX+bulletTex.getWidth(), bulletFiredY+bulletTex.getHeight(), bulletTex, null));
 		}
 		
 		for(int cy = y; cy+bulletTex.getHeight() <= y+height && bulletCurr != 0; cy+=bulletTex.getHeight()){

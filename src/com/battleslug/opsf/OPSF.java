@@ -35,7 +35,7 @@ public class OPSF extends Game {
 		display.setCursorLocked(true);
 		
 		player = new Player("Bob the test dummy", 125);
-		player.setSpeed(5, 2, 3);
+		player.setSpeed(20, 2, 3);
 		//average height for a human
 		player.setYCamLocal(1.7f);
 		player.setPivot(new Pivot(0, 90, 0));
@@ -65,14 +65,15 @@ public class OPSF extends Game {
 		float crossHairDist = 5;
 		final int CROSSHAIR_DIST_MAX = 30;
 		
-		HUDBulletDisplay bulletDisplay = new HUDBulletDisplay(0, 0, 512, 128, player.getWeaponInstance(), hud_bullet_normal);
+		HUDBulletDisplay bulletDisplay = new HUDBulletDisplay(0, 0, 512, 128, player.getWeaponInstance(), hud_bullet_rifle);
 		bulletDisplay.bind(display);
+		
+		float cubeX = 0f;
 		
 		while(true){
 			keyboard.update();
 			mouse.update();
-			Display.pollEvents();
-			display.setCamLocation(player.getXGlobal()+player.getXCamLocal(), player.getYGlobal()+player.getYCamLocal(), player.getZGlobal()+player.getZCamLocal());
+			Display.updateEvents();
 			
 			bulletDisplay.draw();
 			
@@ -115,9 +116,10 @@ public class OPSF extends Game {
 			display.drawCube(-7, 0.5f, 3, 1, tex2);
 			display.drawCube(3, 0.5f, -1, 1, tex3);
 			display.drawCube(-3, 0.5f, -4, 1, tex4);
-			display.drawCube(25, 0.5f, 25, 1, tex5);
 			display.drawCube(0, 0.5f, 0, 1, imgDoge.getTexture());
-			display.drawCube(-1, -1, 3, 5, texGrass);
+			
+			display.drawCube(cubeX, 3, 0, 5, tex5);
+			cubeX += (float)(2f*display.getTimePassed());
 			
 			drawFloor(texGrass);
 			
@@ -140,7 +142,7 @@ public class OPSF extends Game {
 				player.move(Sentient.Direction.RIGHT, (float)(player.getSpeedStrafe()*display.getTimePassed()));
 			}
 			if(keyboard.wasPressed(GLFW_KEY_SPACE) && player.getYGlobal() == 0f){
-				player.setYSpeedGlobal(0.05f);
+				player.setYSpeedGlobal(0.2f);
 				System.out.println("ayy lmao");
 			}
 			if(keyboard.wasPressed(GLFW_KEY_R)){
@@ -153,9 +155,12 @@ public class OPSF extends Game {
 			player.getPivot().setRotXZAxis(player.getPivot().getRotXZAxis()+(float)(display.getCursorRotXZAxisChange())*CURSOR_SPEED);
 			player.getPivot().setRotYZAxis(player.getPivot().getRotYZAxis()+(float)(display.getCursorRotYZAxisChange())*CURSOR_SPEED);
 			display.setPivotCam(player.getPivot());
-			player.setYSpeedGlobal(player.getYSpeedGlobal()-((float)(WORLD_GRAVITY*pow(display.getTimePassed(), 2))));
+			display.setCamLocation(player.getXGlobal()+player.getXCamLocal(), player.getYGlobal()+player.getYCamLocal(), player.getZGlobal()+player.getZCamLocal());
 			
 			//invoke gravity on player
+			player.setYSpeedGlobal(player.getYSpeedGlobal()-(float)(WORLD_GRAVITY*pow(display.getTimePassed(), 2)));
+			
+			//update player location
 			player.setYGlobal(player.getYGlobal()+player.getYSpeedGlobal());			
 			if(player.getYGlobal() < WORLD_FLOOR){
 				player.setYGlobal(WORLD_FLOOR);
