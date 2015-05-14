@@ -32,13 +32,13 @@ public class HUDBulletDisplay extends GUIObject {
 		
 		if(bullets == bulletsLast){			
 			bulletFiredY += 1000*display.getTimePassed();
-			bulletFiredX += 350*display.getTimePassed();
+			bulletFiredX += 250*display.getTimePassed();
 			bulletFiredRot += 700*display.getTimePassed();
 			bulletFiredY2 += 1000*display.getTimePassed();
-			bulletFiredX2 += 350*display.getTimePassed();
+			bulletFiredX2 += 250*display.getTimePassed();
 			bulletFiredRot2 += 700*display.getTimePassed();
 			bulletFiredY3 += 1000*display.getTimePassed();
-			bulletFiredX3 += 350*display.getTimePassed();
+			bulletFiredX3 += 250*display.getTimePassed();
 			bulletFiredRot3 += 700*display.getTimePassed();
 			
 			//TODO last bullet not drawing

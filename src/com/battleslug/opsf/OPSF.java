@@ -35,9 +35,6 @@ public class OPSF extends Game {
 		display.setCursorLocked(true);
 		
 		player = new Player("Bob the test dummy", 125);
-		player.setSpeed(20, 2, 3);
-		//average height for a human
-		player.setYCamLocal(1.7f);
 		player.setPivot(new Pivot(0, 90, 0));
 		player.getPivot().setRotYZAxisLimits(0f, 180f);
 		player.getPivot().setYZAxisLimitMode(LimitMode.STOP);
@@ -65,7 +62,7 @@ public class OPSF extends Game {
 		float crossHairDist = 5;
 		final int CROSSHAIR_DIST_MAX = 30;
 		
-		HUDBulletDisplay bulletDisplay = new HUDBulletDisplay(0, 0, 512, 128, player.getWeaponInstance(), hud_bullet_rifle);
+		HUDBulletDisplay bulletDisplay = new HUDBulletDisplay(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4, display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), hud_bullet_rifle);
 		bulletDisplay.bind(display);
 		
 		float cubeX = 0f;
@@ -149,6 +146,23 @@ public class OPSF extends Game {
 				if(player.getWeaponInstance().getMode() == WeaponInstance.Mode.Ready){
 					player.getWeaponInstance().initReload(display.getTime());
 				}
+			}
+			
+			if(keyboard.isDown(GLFW_KEY_LEFT_CONTROL)){
+				player.setSpeed(0.7f, 0.2f, 0.5f);
+				//player is lying down
+				player.setYCamLocal(0.3f);
+				
+			}
+			else if(keyboard.isDown(GLFW_KEY_LEFT_SHIFT)){
+				player.setSpeed(6, 2f, 5);
+				//average height for a human
+				player.setYCamLocal(1.5f);
+			}
+			else {
+				player.setSpeed(3, 1.5f, 2);
+				//average height for a human
+				player.setYCamLocal(1.5f);
 			}
 				
 			//update camera

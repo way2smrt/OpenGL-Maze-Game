@@ -15,6 +15,7 @@ import static org.lwjgl.util.glu.GLU.*;
 import org.lwjgl.BufferUtils;
 
 import com.battleslug.flare.world.*;
+import com.battleslug.porcupine.Point;
 
 import java.util.Random;
 
@@ -51,7 +52,7 @@ public class Display {
 	
 	private float camX, camY, camZ;
 	
-	private static final float NEAR = 1f;
+	private static final float NEAR = 0.01f;
 	public static final float FAR = 1000.0f;
 	
 	public static final float FOV = 45f;
@@ -212,6 +213,19 @@ public class Display {
 		glEnd();
 	}
 	
+	/*
+	public void drawLine(Point p1, Point p2, VectorColor c1, VectorColor c2){
+		setMode(ModeDraw.MODE_2D, ModeColor.MODE_COLOR);
+		
+		glBegin(GL_LINES);
+		glColor4f(c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha());
+		glVertex2f(x1, y1);
+		glColor4f(c2.getRed(), c2.getGreen(), c2.getBlue(), c2.getAlpha());
+		glVertex2f(x2, y2);
+		glEnd();
+	}
+	*/
+	
 	public void drawCube(float x, float y, float z, float width, Texture tex){
 		setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
 		
@@ -260,11 +274,13 @@ public class Display {
 	public void drawQuadTextured3D(QuadTextured3D quad){
 		quad.getTexture().bind();
 		
+		float TEXTURE_SCALING = 0.15f;
+		
 		float u = 0f;
 		float v = 0f;
 		
-		float u2 = 1f;
-		float v2 = 1f;
+		float u2 = TEXTURE_SCALING*Point.getDistance(new Point(quad.getX3(), quad.getY3(), quad.getZ3()), new Point(quad.getX4(), quad.getY4(), quad.getZ4()));
+		float v2 = TEXTURE_SCALING*Point.getDistance(new Point(quad.getX1(), quad.getY1(), quad.getZ1()), new Point(quad.getX2(), quad.getY2(), quad.getZ2()));
 		
 		if(quad.getColor() == null){
 			setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
@@ -379,16 +395,16 @@ public class Display {
 		glBegin(GL_QUADS);
 		
 		glTexCoord2f(u, v);
-		glVertex2f(x+img.getXLocal(), y+img.getYLocal());
+		glVertex2f(x-img.getXLocal(), y-img.getYLocal());
 
 		glTexCoord2f(u, v2);
-		glVertex2f(x+img.getXLocal(), y+img.getYLocal()+img.getHeight());
+		glVertex2f(x-img.getXLocal(), y-img.getYLocal()+img.getHeight());
 
 		glTexCoord2f(u2, v2);
-		glVertex2f(x+img.getXLocal()+img.getWidth(), y+img.getYLocal()+img.getHeight());
+		glVertex2f(x-img.getXLocal()+img.getWidth(), y-img.getYLocal()+img.getHeight());
 		
 		glTexCoord2f(u2, v);
-		glVertex2f(x+img.getXLocal()+img.getWidth(), y+img.getYLocal());
+		glVertex2f(x-img.getXLocal()+img.getWidth(), y-img.getYLocal());
 		
 		glEnd();
 		
