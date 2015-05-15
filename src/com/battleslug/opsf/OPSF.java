@@ -29,7 +29,7 @@ public class OPSF extends Game {
 	
 	@Override 
 	public void play(){
-		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 900, 720, false);
+		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 1280, 1024, true);
 		display.create();
 		
 		display.setCursorLocked(true);
@@ -118,7 +118,7 @@ public class OPSF extends Game {
 			display.drawCube(cubeX, 3, 0, 5, tex5);
 			cubeX += (float)(2f*display.getTimePassed());
 			
-			drawFloor(texGrass);
+			drawFloor(tex1);
 			
 			if(keyboard.isDown(GLFW_KEY_Z)){										
 				imgDoge.setLocal(imgDoge.getWidth()/2, imgDoge.getHeight()/2);
@@ -148,21 +148,37 @@ public class OPSF extends Game {
 				}
 			}
 			
+			final float HEIGHT_CROUCH = 0.3f;
+			final float HEIGHT = 1.5f;
 			if(keyboard.isDown(GLFW_KEY_LEFT_CONTROL)){
-				player.setSpeed(0.7f, 0.2f, 0.5f);
-				//player is lying down
-				player.setYCamLocal(0.3f);
-				
+				//crouching movement
+				if(player.getYCamLocal() != HEIGHT_CROUCH){
+					player.setYCamLocal(player.getYCamLocal()-(float)(3.1f*display.getTimePassed()));
+					if(player.getYCamLocal() < HEIGHT_CROUCH){
+						player.setYCamLocal(HEIGHT_CROUCH);
+					}
+					player.setSpeed(0, 0, 0);
+				}
+				else {
+					player.setSpeed(0.7f, 0.2f, 0.5f);
+				}
 			}
-			else if(keyboard.isDown(GLFW_KEY_LEFT_SHIFT)){
-				player.setSpeed(6, 2f, 5);
-				//average height for a human
-				player.setYCamLocal(1.5f);
+			else if(keyboard.isDown(GLFW_KEY_LEFT_SHIFT) && player.getYCamLocal() == HEIGHT){
+				//running
+				player.setSpeed(6, 2f, 5);	
 			}
 			else {
-				player.setSpeed(3, 1.5f, 2);
-				//average height for a human
-				player.setYCamLocal(1.5f);
+				//normal standing
+				if(player.getYCamLocal() != HEIGHT){
+					player.setYCamLocal(player.getYCamLocal()+(float)(1.7f*display.getTimePassed()));
+					if(player.getYCamLocal() > HEIGHT){
+						player.setYCamLocal(HEIGHT);
+					}
+					player.setSpeed(0, 0, 0);
+				}
+				else {
+					player.setSpeed(3, 1.5f, 2);
+				}
 			}
 				
 			//update camera

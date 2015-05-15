@@ -274,7 +274,7 @@ public class Display {
 	public void drawQuadTextured3D(QuadTextured3D quad){
 		quad.getTexture().bind();
 		
-		float TEXTURE_SCALING = 0.15f;
+		float TEXTURE_SCALING = 0.12f;
 		
 		float u = 0f;
 		float v = 0f;
@@ -332,10 +332,6 @@ public class Display {
 		glfwTerminate();
 		errorCallback.release();
 		System.exit(0);
-	}
-	
-	private void randGlColor3f(){
-		glColor3f(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
 	}
 
 	public void setMode(ModeDraw drawMode, ModeColor colorMode){	
