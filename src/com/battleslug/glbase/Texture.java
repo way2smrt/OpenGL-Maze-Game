@@ -1,4 +1,4 @@
-package com.battleslug.porcupine;
+package com.battleslug.glbase;
 
 import org.lwjgl.BufferUtils;
 

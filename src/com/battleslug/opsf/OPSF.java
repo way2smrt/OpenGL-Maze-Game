@@ -2,37 +2,67 @@ package com.battleslug.opsf;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import org.lwjgl.opengl.GL11;
+
 import com.battleslug.flare.*;
 import com.battleslug.flare.world.*;
-import com.battleslug.flare.world.Pivot.LimitMode;
+import com.battleslug.flare.sentient.Player;
 import com.battleslug.flare.sentient.Sentient;
-import com.battleslug.porcupine.*;
 import com.battleslug.flare.item.*;
 import com.battleslug.flare.GUI.*;
+import com.battleslug.glbase.*;
+import com.battleslug.glbase.geometry.*;
+import com.battleslug.glbase.geometry.Pivot.LimitMode;
+import com.battleslug.glbase.Display;
+import com.battleslug.glbase.Texture;
+import com.battleslug.glbase.event.*;
 
 import static java.lang.Math.*;
 
-public class OPSF extends Game {
-	private Player player;
-	
-	private World world;
-	
-	private Texture texTest1, texGrass;
-	private Image imgDoge;
+public class OPSF {	
+	private final static float WORLD_FLOOR = 0.0f;
+	private final static float WORLD_GRAVITY = 9.81f;
 	
 	private static final String GAME_FOLDER = "game/OPSF";
 	
 	private static final float CURSOR_SPEED = 0.4f;
 	
+	private Keyboard keyboard;
+	private Mouse mouse;
+	private World world;
+	private Display display;
+	
+	private Player player;
+	
+	private Image imgDoge;
+	
+	private Texture texTest1, texGrass;
+	
+	private Texture hud_bullet_normal, hud_bullet_rifle, hud_bullet_shotgun;
+	
 	public OPSF(){
+		init();
+		play();
 	}
 	
-	@Override 
-	public void play(){
-		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 1280, 1024, true);
+	public void init(){
+		if (glfwInit() != GL11.GL_TRUE){
+			throw new IllegalStateException("Unable to initialize GLFW");
+		}
+		
+		keyboard = new Keyboard();
+		mouse = new Mouse();
+		
+		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 1280, 1024, false);
 		display.create();
 		
 		display.setCursorLocked(true);
+	}
+	
+	public void play(){
+		hud_bullet_normal = new Texture("res/img/hud/bullet_normal.png");
+		hud_bullet_rifle = new Texture("res/img/hud/bullet_rifle.png");
+		hud_bullet_shotgun = new Texture("res/img/hud/bullet_shotgun.png");
 		
 		player = new Player("Bob the test dummy", 125);
 		player.setPivot(new Pivot(0, 90, 0));
@@ -47,7 +77,6 @@ public class OPSF extends Game {
 		keyboard.bind(display);
 		mouse.bind(display);
 		
-		loadTextures();
 		texTest1 = new Texture(GAME_FOLDER+"/res/tex/brick1.png", Texture.NEAREST, Texture.REPEAT);
 		texGrass = new Texture(GAME_FOLDER+"/res/tex/grass3.png", Texture.NEAREST, Texture.REPEAT);
 		imgDoge = new Image(new Texture(GAME_FOLDER+"/res/img/misc/doge.png"));
@@ -140,7 +169,6 @@ public class OPSF extends Game {
 			}
 			if(keyboard.wasPressed(GLFW_KEY_SPACE) && player.getYGlobal() == 0f){
 				player.setYSpeedGlobal(0.2f);
-				System.out.println("ayy lmao");
 			}
 			if(keyboard.wasPressed(GLFW_KEY_R)){
 				if(player.getWeaponInstance().getMode() == WeaponInstance.Mode.Ready){
@@ -184,7 +212,12 @@ public class OPSF extends Game {
 			//update camera
 			player.getPivot().setRotXZAxis(player.getPivot().getRotXZAxis()+(float)(display.getCursorRotXZAxisChange())*CURSOR_SPEED);
 			player.getPivot().setRotYZAxis(player.getPivot().getRotYZAxis()+(float)(display.getCursorRotYZAxisChange())*CURSOR_SPEED);
+			
+			//quick fox do a barrel roll
+			player.getPivot().setRotXYAxis(player.getPivot().getRotXYAxis()+(float)(display.getTimePassed()*180));
+			
 			display.setPivotCam(player.getPivot());
+			System.out.println(player.getXGlobal()+player.getXCamLocal());
 			display.setCamLocation(player.getXGlobal()+player.getXCamLocal(), player.getYGlobal()+player.getYCamLocal(), player.getZGlobal()+player.getZCamLocal());
 			
 			//invoke gravity on player
@@ -197,15 +230,13 @@ public class OPSF extends Game {
 				player.setYSpeedGlobalMax(0f);
 			}
 			
-			System.out.println(display.getCursorRotXZAxisChange());
-			
 			if(keyboard.isDown(GLFW_KEY_ESCAPE)){
 				display.kill();
 			}
 			
 			display.update();
 			display.clear();
-			display.updateTimer();
+			display.updateTimer();			
 		}
 	}
 	

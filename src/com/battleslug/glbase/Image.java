@@ -1,4 +1,4 @@
-package com.battleslug.porcupine;
+package com.battleslug.glbase;
 
 public class Image {
 	private Texture tex;

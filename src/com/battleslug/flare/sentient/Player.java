@@ -1,4 +1,4 @@
-package com.battleslug.flare;
+package com.battleslug.flare.sentient;
 
 import com.battleslug.flare.sentient.*;
 import com.battleslug.flare.item.*;

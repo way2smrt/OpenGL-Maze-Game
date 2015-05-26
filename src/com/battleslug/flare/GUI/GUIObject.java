@@ -1,6 +1,6 @@
 package com.battleslug.flare.GUI;
 
-import com.battleslug.porcupine.*;
+import com.battleslug.glbase.*;
 
 public class GUIObject {
 	protected Display display;

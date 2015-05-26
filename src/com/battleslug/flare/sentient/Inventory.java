@@ -1,8 +1,8 @@
 package com.battleslug.flare.sentient;
 
 import com.battleslug.flare.item.Item;
-import com.battleslug.porcupine.Display;
-import com.battleslug.porcupine.Texture;
+import com.battleslug.glbase.Display;
+import com.battleslug.glbase.Texture;
 
 
 

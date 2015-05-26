@@ -1,6 +1,6 @@
 package com.battleslug.flare.object;
 
-import com.battleslug.porcupine.*;
+import com.battleslug.glbase.*;
 
 public class Material {
 	private Texture tex;

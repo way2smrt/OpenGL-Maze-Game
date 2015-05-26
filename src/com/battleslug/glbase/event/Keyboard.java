@@ -1,10 +1,10 @@
-package com.battleslug.flare.event;
+package com.battleslug.glbase.event;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 import org.lwjgl.glfw.GLFWKeyCallback;
 
-import com.battleslug.porcupine.Display;
+import com.battleslug.glbase.Display;
 
 public class Keyboard {
 	//any key higher than this value would be very odd

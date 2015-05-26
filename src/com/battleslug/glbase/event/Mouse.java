@@ -1,14 +1,12 @@
-package com.battleslug.flare.event;
-
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+package com.battleslug.glbase.event;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
 
-import com.battleslug.porcupine.Display;
+
+import com.battleslug.glbase.Display;
 
 public class Mouse {
 	private boolean leftButton, rightButton = false;

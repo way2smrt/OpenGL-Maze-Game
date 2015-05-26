@@ -1,7 +1,7 @@
 package com.battleslug.flare.world;
 
-import com.battleslug.porcupine.Display;
-import com.battleslug.porcupine.QuadTextured2D;
+import com.battleslug.glbase.Display;
+import com.battleslug.glbase.QuadTextured2D;
 
 
 public class World {

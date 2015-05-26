@@ -1,9 +1,10 @@
 package com.battleslug.flare.sentient;
 
 import com.battleslug.flare.item.*;
-import com.battleslug.porcupine.Circle;
-import com.battleslug.porcupine.Texture;
 import com.battleslug.flare.world.*;
+import com.battleslug.glbase.Circle;
+import com.battleslug.glbase.Texture;
+import com.battleslug.glbase.geometry.Pivot;
 
 public class Sentient {
 	private String name;

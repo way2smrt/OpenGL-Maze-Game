@@ -1,4 +1,4 @@
-package com.battleslug.porcupine;
+package com.battleslug.glbase;
 
 public class QuadTextured3D extends QuadTextured2D {
 	private float z1, z2, z3, z4;

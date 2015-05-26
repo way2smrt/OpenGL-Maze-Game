@@ -1,4 +1,4 @@
-package com.battleslug.porcupine;
+package com.battleslug.glbase;
 
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -15,7 +15,8 @@ import static org.lwjgl.util.glu.GLU.*;
 import org.lwjgl.BufferUtils;
 
 import com.battleslug.flare.world.*;
-import com.battleslug.porcupine.Point;
+import com.battleslug.glbase.Point;
+import com.battleslug.glbase.geometry.Pivot;
 
 import java.util.Random;
 
@@ -94,8 +95,11 @@ public class Display {
  
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-		//center it
-		glfwSetWindowPos(window, (GLFWvidmode.width(vidmode) - width) / 2, (GLFWvidmode.height(vidmode) - height) / 2);
+		if(!fullscreen){
+			//center window
+			glfwSetWindowPos(window, (GLFWvidmode.width(vidmode) - width) / 2, (GLFWvidmode.height(vidmode) - height) / 2);
+		}
+		
  
 		glfwMakeContextCurrent(window);
 		
@@ -349,10 +353,14 @@ public class Display {
 					glMatrixMode(GL_PROJECTION);
 					gluPerspective(FOV, aspectRatio, NEAR, FAR);
 					
-					Circle cYZ = new Circle(camY, camZ, FAR);
-					Circle cXZ = new Circle(camX, camZ, cYZ.getY(pivotCam.getRotYZAxis())+1f);
+					Circle cY = new Circle(0, camY, 1);
+					Circle cXZ = new Circle(camX, camZ, 10);
 					
-					gluLookAt(camX, camY, camZ, cXZ.getX(pivotCam.getRotXZAxis()), cYZ.getX(pivotCam.getRotYZAxis()), cXZ.getY(pivotCam.getRotXZAxis()), 0, 1, 0);
+					Circle up = new Circle(0, 0, 1);
+					
+					//todo fix with sine and cosine functions
+					//this shit is complicated - do not fiddle!
+					gluLookAt(camX, camY, camZ, cXZ.getX(pivotCam.getRotXZAxis()), pivotCam.getRotYZAxis()-90, cXZ.getY(pivotCam.getRotXZAxis()), 0, 1, 0);
 					break;
 			}
 		}	

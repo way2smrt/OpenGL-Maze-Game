@@ -1,4 +1,4 @@
-package com.battleslug.flare.world;
+package com.battleslug.glbase.geometry;
 
 public class Pivot {
 	private float rotXZAxis, rotYZAxis, rotXYAxis;
@@ -22,6 +22,10 @@ public class Pivot {
 		rotXZAxisMax = 360;
 		rotYZAxisMax = 360;
 		rotXYAxisMax = 360;
+		
+		rotXZAxis = 0;
+		rotYZAxis = 90;
+		rotXYAxis = 0;
 		
 		xZAxisLimitMode = LimitMode.SKIP;
 		yZAxisLimitMode = LimitMode.SKIP;
@@ -129,7 +133,7 @@ public class Pivot {
 			}
 		}
 		
-		this.rotXYAxis = rotXZAxis;
+		this.rotXYAxis = rotXYAxis;
 		if(xYAxisLimitMode == LimitMode.SKIP){
 			while(this.rotXYAxis > rotXYAxisMax){
 				this.rotXYAxis -= rotXYAxisMax-rotXYAxisMin;

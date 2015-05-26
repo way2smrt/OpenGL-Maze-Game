@@ -1,4 +1,4 @@
-package com.battleslug.porcupine;
+package com.battleslug.glbase;
 
 public class VectorColor {
 	private float r, g, b, a;

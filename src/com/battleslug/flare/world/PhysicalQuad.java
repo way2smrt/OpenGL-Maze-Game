@@ -1,8 +1,8 @@
 package com.battleslug.flare.world;
 
-import com.battleslug.porcupine.Texture;
-import com.battleslug.porcupine.QuadTextured2D;
-import com.battleslug.porcupine.VectorColor;
+import com.battleslug.glbase.QuadTextured2D;
+import com.battleslug.glbase.Texture;
+import com.battleslug.glbase.VectorColor;
 
 
 public class PhysicalQuad extends QuadTextured2D{

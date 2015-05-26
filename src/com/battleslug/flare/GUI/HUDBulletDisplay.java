@@ -1,8 +1,8 @@
 package com.battleslug.flare.GUI;
 
-import com.battleslug.porcupine.*;
 import com.battleslug.flare.item.Weapon;
 import com.battleslug.flare.item.WeaponInstance;
+import com.battleslug.glbase.*;
 
 public class HUDBulletDisplay extends GUIObject {
 	private int bulletFiredX, bulletFiredY, bulletFiredRot = 0;
