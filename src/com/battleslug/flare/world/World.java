@@ -1,41 +1,47 @@
 package com.battleslug.flare.world;
 
-import com.battleslug.glbase.Display;
-import com.battleslug.glbase.QuadTextured2D;
+import com.battleslug.glbase.*;
+import com.battleslug.glbase.geometry.*;
 
-
-public class World {
+public class World {	
 	private Display display;
 	
 	private Bullet[] bullet;
-	private QuadTextured2D[] foreground;
-	private QuadTextured2D[] background;
-	private PhysicalQuad[] stage;
-	
-	
-	private int camX, camY;
+	private int bullets;
 	
 	public World(){
+		bullets = 0;
+	}
+	
+	public void addBullet(Bullet bullet){
+		
 	}
 	
 	public void bind(Display display){
 		this.display = display;
 	}
 	
-	public void DrawWorld(){
-		
+	private void drawBullets(){
+		for(int i = 0; i != bullets; i++){
+			display.drawLine3D(bullet[i].getObjectWorldData().getPoint(), new Point(
+					bullet[i].getObjectWorldData().getPoint().getX()+bullet[i].getObjectWorldData().getPoint().getXSpeed(),
+					bullet[i].getObjectWorldData().getPoint().getY()+bullet[i].getObjectWorldData().getPoint().getYSpeed(),
+					bullet[i].getObjectWorldData().getPoint().getZ()+bullet[i].getObjectWorldData().getPoint().getZSpeed()
+					), new VectorColor(1f, 0f, 0f), new VectorColor(1f, 0f, 0f));
+		}
 	}
 	
-	public void setCamera(int camX, int camY){
-		this.camX = camX;
-		this.camY = camY;
+	private void updateBullets(double timePassed){
+		for(int i = 0; i != bullets; i++){
+			bullet[i].getObjectWorldData().getPoint().update(timePassed);
+		}
 	}
 	
-	public int getCamX(){
-		return camX;
+	public void drawWorld(){
+		drawBullets();
 	}
 	
-	public int getCamY(){
-		return camY;
+	public void updateWorld(double timePassed){
+		updateBullets(timePassed);
 	}
 }

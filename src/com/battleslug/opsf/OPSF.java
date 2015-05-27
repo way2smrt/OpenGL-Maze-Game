@@ -128,9 +128,17 @@ public class OPSF {
 				}
 			}
 			
+			Point pO = new Point(0, 0, 0);
+			
+			VectorColor colorBlue = new VectorColor(0f, 0f, 1f);
+			VectorColor colorWhite = new VectorColor(1f, 1f, 1f);
+			VectorColor colorBlack = new VectorColor(0f, 0f, 0f);
+			VectorColor colorGreen = new VectorColor(0f, 1f, 0f);
+			VectorColor colorRedDark = new VectorColor(1f, 0f, 0.5f);
+			
 			//draw the crosshair
-			drawCrosshair(9, (int)(crossHairDist), new VectorColor(0f, 0f, 0f), new VectorColor(1f, 0f, 0.5f));
-			drawCrosshair(7, 5, new VectorColor(1f, 0f, 0.5f), new VectorColor(0f, 0f, 0f));
+			drawCrosshair(9, (int)(crossHairDist), new VectorColor(0f, 0f, 0f), colorRedDark);
+			drawCrosshair(7, 5, colorRedDark, new VectorColor(0f, 0f, 0f));
 			
 			display.drawCube(3, 0.5f, 5, 1, tex1);
 			display.drawCube(3, 1.5f, 5, 1, tex2);
@@ -144,6 +152,9 @@ public class OPSF {
 			cubeX += (float)(2f*display.getTimePassed());
 			
 			drawFloor(tex1);
+			
+			display.drawLine3D(pO, new Point(0, 5, 0), colorBlue, colorWhite);
+			display.drawLine3D(pO, new Point(cubeX, 5f, 0), colorGreen, colorGreen);
 			
 			if(keyboard.isDown(GLFW_KEY_Z)){										
 				imgDoge.setLocal(imgDoge.getWidth()/2, imgDoge.getHeight()/2);

@@ -1,42 +1,22 @@
 package com.battleslug.flare.world;
 
+import com.battleslug.flare.world.ObjectWorldData;
+
 public class Bullet {
-	public int damage;
+	public float damage;
 	
-	private double x, y;
-	private double xSpeed, ySpeed;
+	public ObjectWorldData objectWorldData;
 	
-	public Bullet(double x, double y, double xSpeed, double ySpeed, int damage){
-		this.x = x;
-		this.y = y;
-		this.xSpeed = xSpeed;
-		this.ySpeed = ySpeed;
-		
+	public Bullet(ObjectWorldData objectWorldData, float damage){
+		this.objectWorldData = objectWorldData;
 		this.damage = damage;
 	}
 	
-	public double getX(){
-		return x;
+	public ObjectWorldData getObjectWorldData(){
+		return objectWorldData;
 	}
 	
-	public double getY(){
-		return y;
-	}
-	
-	public double getXSpeed(){
-		return xSpeed;
-	}
-	
-	public double getYSpeed(){
-		return ySpeed;
-	}
-	
-	public int getDamage(){
+	public float getDamage(){
 		return damage;
-	}
-	
-	public void update(long millisPassed){
-		x += (xSpeed*millisPassed);
-		y += (ySpeed*millisPassed);
 	}
 }

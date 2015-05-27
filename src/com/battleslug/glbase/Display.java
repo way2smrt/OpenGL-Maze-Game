@@ -14,8 +14,8 @@ import static org.lwjgl.util.glu.GLU.*;
 
 import org.lwjgl.BufferUtils;
 
-import com.battleslug.glbase.Point;
 import com.battleslug.glbase.geometry.Pivot;
+import com.battleslug.glbase.geometry.Point;
 
 import static java.lang.Math.*;
 
@@ -203,6 +203,17 @@ public class Display {
 	
 	public void show(){
 		glfwShowWindow(window);
+	}
+	
+	public void drawLine3D(Point p1, Point p2, VectorColor c1, VectorColor c2){
+		setMode(ModeDraw.MODE_3D, ModeColor.MODE_COLOR);
+		
+		glBegin(GL_LINES);
+		glColor4f(c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha());
+		glVertex3f(p1.getX(), p1.getY(), p1.getZ());
+		glColor4f(c2.getRed(), c2.getGreen(), c2.getBlue(), c2.getAlpha());
+		glVertex3f(p2.getX(), p2.getY(), p2.getZ());
+		glEnd();
 	}
 	
 	public void drawLine(float x1, float y1, float x2, float y2, VectorColor c1, VectorColor c2){

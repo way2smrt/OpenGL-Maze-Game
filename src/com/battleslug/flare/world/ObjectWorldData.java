@@ -1,40 +1,25 @@
 package com.battleslug.flare.world;
 
+import com.battleslug.glbase.geometry.*;
+
 public class ObjectWorldData {
-	private float x, y, z;
-	private float xSpeed, ySpeed, zSpeed;
+	private Point point;
+	private Pivot pivot;
 	
-	public ObjectWorldData(float x, float y, float z){
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		
-		xSpeed = 0;
-		ySpeed = 0;
-		zSpeed = 0;
+	public ObjectWorldData(Point point){
+		this(point, new Pivot(0, 0, 0));
 	}
 	
-	public float getX(){
-		return x;
+	public ObjectWorldData(Point point, Pivot pivot){
+		this.point = point;
+		this.pivot = pivot;
 	}
 	
-	public float getY(){
-		return y;
+	public Point getPoint(){
+		return point;
 	}
 	
-	public float getZ(){
-		return z;
-	}
-	
-	public float getXSpeed(){
-		return xSpeed;
-	}
-	
-	public float getYSpeed(){
-		return ySpeed;
-	}
-	
-	public float getZSpeed(){
-		return zSpeed;
+	public Pivot getPivot(){
+		return pivot;
 	}
 }
