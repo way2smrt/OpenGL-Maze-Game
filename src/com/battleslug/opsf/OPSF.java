@@ -53,7 +53,7 @@ public class OPSF {
 		keyboard = new Keyboard();
 		mouse = new Mouse();
 		
-		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 1280, 1024, false);
+		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 1280, 1024, true);
 		display.create();
 		
 		display.setCursorLocked(true);
@@ -87,6 +87,7 @@ public class OPSF {
 		Texture tex3 = new Texture(GAME_FOLDER+"/res/tex/grassFlowers1.png");
 		Texture tex4 = new Texture(GAME_FOLDER+"/res/tex/bark1.png");
 		Texture tex5 = new Texture(GAME_FOLDER+"/res/tex/stoneRoad1.png");
+		Texture tex6 = new Texture(GAME_FOLDER+"/res/tex/sandRocks2.png");
 		
 		float crossHairDist = 5;
 		final int CROSSHAIR_DIST_MAX = 30;
@@ -94,7 +95,7 @@ public class OPSF {
 		HUDBulletDisplay bulletDisplay = new HUDBulletDisplay(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4, display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), hud_bullet_rifle);
 		bulletDisplay.bind(display);
 		
-		float cubeX = 0f;
+		float cubeX = -40f;
 		
 		while(true){
 			keyboard.update();
@@ -111,16 +112,10 @@ public class OPSF {
 			if(player.getWeaponInstance().getWeapon().getFireMode() == Weapon.FireMode.Semiautomatic && mouse.wasPressedLeftButton() && player.getWeaponInstance().canShoot(display.getTime())){
 				crossHairDist = 0;
 				
-				drawCrosshair(9, (int)(crossHairDist));
-				drawCrosshair(7, 5);
-				
 				player.getWeaponInstance().shoot(0, 0, 0, 0, display.getTime());
 			}
 			else if(player.getWeaponInstance().getWeapon().getFireMode() == Weapon.FireMode.Automatic && mouse.isDownLeftButton() && player.getWeaponInstance().canShoot(display.getTime())){
 				crossHairDist = 0;
-				
-				drawCrosshair(9, (int)(crossHairDist));
-				drawCrosshair(7, 5);
 				
 				player.getWeaponInstance().shoot(0, 0, 0, 0, display.getTime());
 			}
@@ -131,10 +126,11 @@ public class OPSF {
 				if(crossHairDist > CROSSHAIR_DIST_MAX){
 					crossHairDist = CROSSHAIR_DIST_MAX;
 				}
-				
-				drawCrosshair(9, (int)(crossHairDist));
-				drawCrosshair(7, 5);
 			}
+			
+			//draw the crosshair
+			drawCrosshair(9, (int)(crossHairDist), new VectorColor(0f, 0f, 0f), new VectorColor(1f, 0f, 0.5f));
+			drawCrosshair(7, 5, new VectorColor(1f, 0f, 0.5f), new VectorColor(0f, 0f, 0f));
 			
 			display.drawCube(3, 0.5f, 5, 1, tex1);
 			display.drawCube(3, 1.5f, 5, 1, tex2);
@@ -144,7 +140,7 @@ public class OPSF {
 			display.drawCube(-3, 0.5f, -4, 1, tex4);
 			display.drawCube(0, 0.5f, 0, 1, imgDoge.getTexture());
 			
-			display.drawCube(cubeX, 3, 0, 5, tex5);
+			display.drawCube(cubeX, 5, 0, 5, tex5);
 			cubeX += (float)(2f*display.getTimePassed());
 			
 			drawFloor(tex1);
@@ -211,7 +207,7 @@ public class OPSF {
 				
 			//update camera
 			player.getPivot().setRotXZAxis(player.getPivot().getRotXZAxis()+(float)(display.getCursorRotXZAxisChange())*CURSOR_SPEED);
-			player.getPivot().setRotYZAxis(player.getPivot().getRotYZAxis()+(float)(display.getCursorRotYZAxisChange())*CURSOR_SPEED);
+			player.getPivot().setRotYZAxis(player.getPivot().getRotYZAxis()-(float)(display.getCursorRotYZAxisChange())*CURSOR_SPEED);
 			
 			//quick fox do a barrel roll
 			player.getPivot().setRotXYAxis(player.getPivot().getRotXYAxis()+(float)(display.getTimePassed()*180));
@@ -240,10 +236,7 @@ public class OPSF {
 		}
 	}
 	
-	private void drawCrosshair(int size, int spacing){
-		VectorColor cInner = new VectorColor(1f, 0f, 0.5f);
-		VectorColor cOuter = new VectorColor(0f, 0f, 0f);
-		
+	private void drawCrosshair(int size, int spacing, VectorColor cInner, VectorColor cOuter){
 		display.drawLine((display.getWidth()/2)-size-spacing, (display.getHeight()/2), (display.getWidth()/2)-spacing, (display.getHeight()/2), cOuter, cInner);
 		display.drawLine((display.getWidth()/2), (display.getHeight()/2)-size-spacing, (display.getWidth()/2), (display.getHeight()/2)-spacing, cOuter, cInner);
 		display.drawLine((display.getWidth()/2)+spacing, (display.getHeight()/2), (display.getWidth()/2)+size+spacing, (display.getHeight()/2), cInner, cOuter);

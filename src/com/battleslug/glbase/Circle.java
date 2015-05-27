@@ -12,6 +12,8 @@ public class Circle {
 		this.xLocal = xLocal;
 		this.yLocal = yLocal;
 		
+		//TODO fix x + y local, its kinda broken
+		
 		r = radius;
 	}
 	

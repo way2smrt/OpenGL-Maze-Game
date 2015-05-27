@@ -14,11 +14,10 @@ import static org.lwjgl.util.glu.GLU.*;
 
 import org.lwjgl.BufferUtils;
 
-import com.battleslug.flare.world.*;
 import com.battleslug.glbase.Point;
 import com.battleslug.glbase.geometry.Pivot;
 
-import java.util.Random;
+import static java.lang.Math.*;
 
 public class Display {	
 	private GLFWKeyCallback keyCallback;
@@ -345,7 +344,7 @@ public class Display {
 					this.modeDraw = drawMode;
 					glLoadIdentity();
 					glMatrixMode(GL_MODELVIEW);
-					glOrtho(0, width, height, 0, NEAR-1, NEAR);
+					glOrtho(0, width, height, 0, NEAR-0.01, NEAR-0.001);
 					break;
 				case MODE_3D:
 					this.modeDraw = drawMode;
@@ -353,14 +352,11 @@ public class Display {
 					glMatrixMode(GL_PROJECTION);
 					gluPerspective(FOV, aspectRatio, NEAR, FAR);
 					
-					Circle cY = new Circle(0, camY, 1);
-					Circle cXZ = new Circle(camX, camZ, 10);
+					//we have to add a small number to the circle radius to ensure we don't get zero
+					Circle cXZ = new Circle(0, 0, (float)(cos(toRadians(pivotCam.getRotYZAxis()-90)))+0.01f);
 					
-					Circle up = new Circle(0, 0, 1);
-					
-					//todo fix with sine and cosine functions
 					//this shit is complicated - do not fiddle!
-					gluLookAt(camX, camY, camZ, cXZ.getX(pivotCam.getRotXZAxis()), pivotCam.getRotYZAxis()-90, cXZ.getY(pivotCam.getRotXZAxis()), 0, 1, 0);
+					gluLookAt(camX, camY, camZ, camX+cXZ.getX(pivotCam.getRotXZAxis()), camY+(float)(sin(toRadians(pivotCam.getRotYZAxis()-90))), camZ+cXZ.getY(pivotCam.getRotXZAxis()), 0, 1, 0);
 					break;
 			}
 		}	
