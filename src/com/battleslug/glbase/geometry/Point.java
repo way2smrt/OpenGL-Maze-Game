@@ -4,7 +4,6 @@ import static java.lang.Math.*;
 
 public class Point {
 	private float x, y, z;
-	private float xSpeed, ySpeed, zSpeed;
 	
 	public Point(float x, float y){
 		this(x, y, 0);
@@ -14,20 +13,6 @@ public class Point {
 		this.x = x;
 		this.y = y; 
 		this.z = z;
-		
-		this.xSpeed = 0;
-		this.ySpeed = 0;
-		this.zSpeed = 0;
-	}
-	
-	public Point(float x, float y, float z, float xSpeed, float ySpeed, float zSpeed){
-		this.x = x;
-		this.y = y; 
-		this.z = z;
-		
-		this.xSpeed = xSpeed;
-		this.ySpeed = ySpeed;
-		this.zSpeed = zSpeed;
 	}
 	
 	public float getX(){
@@ -42,18 +27,6 @@ public class Point {
 		return z;
 	}
 	
-	public float getXSpeed(){
-		return xSpeed;
-	}
-	
-	public float getYSpeed(){
-		return ySpeed;
-	}
-	
-	public float getZSpeed(){
-		return zSpeed;
-	}
-	
 	public void setX(float x){
 		this.x = x;
 	}
@@ -66,22 +39,10 @@ public class Point {
 		this.z = z;
 	}
 	
-	public void setXSpeed(float xSpeed){
-		this.xSpeed = xSpeed;
-	}
-	
-	public void setYSpeed(float ySpeed){
-		this.ySpeed = ySpeed;
-	}
-	
-	public void setZSpeed(float zSpeed){
-		this.zSpeed = zSpeed;
-	}
-	
-	public void update(double timePassed){
-		x += (float)(xSpeed*timePassed);
-		y += (float)(ySpeed*timePassed);
-		z += (float)(zSpeed*timePassed);
+	public void update(Speed speed, double timePassed){
+		x += (float)(speed.getXSpeed()*timePassed);
+		y += (float)(speed.getXSpeed()*timePassed);
+		z += (float)(speed.getXSpeed()*timePassed);
 	}
 	
 	public static float getDistance(Point p1, Point p2){

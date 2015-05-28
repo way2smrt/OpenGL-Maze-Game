@@ -3,18 +3,21 @@ package com.battleslug.flare.world;
 import com.battleslug.glbase.*;
 import com.battleslug.glbase.geometry.*;
 
+import java.util.Arrays;
+
 public class World {	
 	private Display display;
 	
 	private Bullet[] bullet;
-	private int bullets;
 	
 	public World(){
-		bullets = 0;
+		bullet = new Bullet[0];
 	}
 	
 	public void addBullet(Bullet bullet){
+		this.bullet = Arrays.copyOf(this.bullet, this.bullet.length+1);
 		
+		this.bullet[this.bullet.length-1] = bullet;
 	}
 	
 	public void bind(Display display){
@@ -22,7 +25,8 @@ public class World {
 	}
 	
 	private void drawBullets(){
-		for(int i = 0; i != bullets; i++){
+		for(int i = 0; i != bullet.length; i++){
+			//TODO fix bullet drawing
 			display.drawLine3D(bullet[i].getObjectWorldData().getPoint(), new Point(
 					bullet[i].getObjectWorldData().getPoint().getX()+bullet[i].getObjectWorldData().getPoint().getXSpeed(),
 					bullet[i].getObjectWorldData().getPoint().getY()+bullet[i].getObjectWorldData().getPoint().getYSpeed(),
@@ -32,16 +36,20 @@ public class World {
 	}
 	
 	private void updateBullets(double timePassed){
-		for(int i = 0; i != bullets; i++){
+		for(int i = 0; i != bullet.length; i++){
 			bullet[i].getObjectWorldData().getPoint().update(timePassed);
+		
+			if(bullet[i].getDamage() <= 0){
+				bullet[i] = null;
+			}
 		}
 	}
 	
-	public void drawWorld(){
+	public void draw(){
 		drawBullets();
 	}
 	
-	public void updateWorld(double timePassed){
+	public void update(double timePassed){
 		updateBullets(timePassed);
 	}
 }

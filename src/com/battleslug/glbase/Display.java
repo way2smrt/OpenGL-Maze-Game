@@ -422,10 +422,6 @@ public class Display {
 		glPopMatrix();
 	}
 	
-	public void setModeColor(){
-		
-	}
-	
 	public int getAspectRatio(){
 		return aspectRatio;
 	}

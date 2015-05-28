@@ -53,7 +53,7 @@ public class OPSF {
 		keyboard = new Keyboard();
 		mouse = new Mouse();
 		
-		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 1280, 1024, true);
+		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 1280, 1024, false);
 		display.create();
 		
 		display.setCursorLocked(true);
@@ -95,12 +95,14 @@ public class OPSF {
 		HUDBulletDisplay bulletDisplay = new HUDBulletDisplay(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4, display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), hud_bullet_rifle);
 		bulletDisplay.bind(display);
 		
-		float cubeX = -40f;
+		float cubeX = -40f;;
 		
 		while(true){
 			keyboard.update();
 			mouse.update();
 			Display.updateEvents();
+			
+			world.update(display.getTimePassed());
 			
 			bulletDisplay.draw();
 			
@@ -155,6 +157,8 @@ public class OPSF {
 			
 			display.drawLine3D(pO, new Point(0, 5, 0), colorBlue, colorWhite);
 			display.drawLine3D(pO, new Point(cubeX, 5f, 0), colorGreen, colorGreen);
+			
+			world.draw();
 			
 			if(keyboard.isDown(GLFW_KEY_Z)){										
 				imgDoge.setLocal(imgDoge.getWidth()/2, imgDoge.getHeight()/2);
