@@ -5,15 +5,22 @@ import com.battleslug.glbase.geometry.*;
 public class ObjectWorldData {
 	private Point point;
 	private Pivot pivot;
+	private Speed speed;
 	
 	public ObjectWorldData(Point point){
-		this(point, new Pivot(0, 0, 0));
+		this(point, new Speed(0, 0, 0), new Pivot(0, 0, 0));
 	}
 	
-	public ObjectWorldData(Point point, Pivot pivot){
+	public ObjectWorldData(Point point, Speed speed){
+		this(point, speed, new Pivot(0, 0, 0));
+	}
+	
+	public ObjectWorldData(Point point, Speed speed, Pivot pivot){
 		this.point = point;
+		this.speed = speed;
 		this.pivot = pivot;
 	}
+	
 	
 	public Point getPoint(){
 		return point;
@@ -21,5 +28,9 @@ public class ObjectWorldData {
 	
 	public Pivot getPivot(){
 		return pivot;
+	}
+	
+	public Speed getSpeed(){
+		return speed;
 	}
 }

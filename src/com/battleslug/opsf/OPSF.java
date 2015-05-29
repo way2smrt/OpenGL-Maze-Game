@@ -64,7 +64,7 @@ public class OPSF {
 		hud_bullet_rifle = new Texture("res/img/hud/bullet_rifle.png");
 		hud_bullet_shotgun = new Texture("res/img/hud/bullet_shotgun.png");
 		
-		player = new Player("Bob the test dummy", 125);
+		player = new Player(world, "Bob the test dummy", 125);
 		player.setPivot(new Pivot(0, 90, 0));
 		player.getPivot().setRotYZAxisLimits(0f, 180f);
 		player.getPivot().setYZAxisLimitMode(LimitMode.STOP);
@@ -178,8 +178,8 @@ public class OPSF {
 			if(keyboard.isDown(GLFW_KEY_D)){
 				player.move(Sentient.Direction.RIGHT, (float)(player.getSpeedStrafe()*display.getTimePassed()));
 			}
-			if(keyboard.wasPressed(GLFW_KEY_SPACE) && player.getYGlobal() == 0f){
-				player.setYSpeedGlobal(0.2f);
+			if(keyboard.wasPressed(GLFW_KEY_SPACE) && player.getObjectWorldData().getPoint().getY() == 0f){
+				player.getObjectWorldData().getSpeed().setYSpeed(0.5f);
 			}
 			if(keyboard.wasPressed(GLFW_KEY_R)){
 				if(player.getWeaponInstance().getMode() == WeaponInstance.Mode.Ready){
@@ -228,7 +228,6 @@ public class OPSF {
 			player.getPivot().setRotXYAxis(player.getPivot().getRotXYAxis()+(float)(display.getTimePassed()*180));
 			
 			display.setPivotCam(player.getPivot());
-			System.out.println(player.getXGlobal()+player.getXCamLocal());
 			display.setCamLocation(player.getXGlobal()+player.getXCamLocal(), player.getYGlobal()+player.getYCamLocal(), player.getZGlobal()+player.getZCamLocal());
 			
 			//invoke gravity on player

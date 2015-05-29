@@ -4,7 +4,7 @@ import com.battleslug.flare.item.*;
 import com.battleslug.flare.world.*;
 import com.battleslug.glbase.Circle;
 import com.battleslug.glbase.Texture;
-import com.battleslug.glbase.geometry.Pivot;
+import com.battleslug.glbase.geometry.*;
 
 public class Sentient {
 	private String name;
@@ -22,9 +22,7 @@ public class Sentient {
 	
 	protected float speedForward, speedBackward, speedStrafe;
 	
-	protected float xGlobal, yGlobal, zGlobal;
-	protected float xSpeedGlobal, ySpeedGlobal, zSpeedGlobal;
-	protected float xSpeedGlobalMax, ySpeedGlobalMax, zSpeedGlobalMax;
+	protected ObjectWorldData objectWorldData;
 	
 	protected float xCamLocal, yCamLocal, zCamLocal;
 	
@@ -32,7 +30,11 @@ public class Sentient {
 	
 	protected Pivot pivot;
 	
-	public Sentient(String name, int maxHealth){
+	protected World world;
+	
+	public Sentient(World world, String name, int maxHealth){
+		this.world = world;
+		
 		this.name = name;
 		this.health = maxHealth;
 		this.maxHealth = maxHealth;
@@ -107,92 +109,8 @@ public class Sentient {
 		//TODO, add bullet collisions
 	}
 	
-	public void setLocation(float xGlobal, float yGlobal, float zGlobal){
-		this.xGlobal = xGlobal;
-		this.yGlobal = yGlobal;
-		this.zGlobal = zGlobal;
-	}
-	
-	public void setXGlobal(float xGlobal){
-		this.xGlobal = xGlobal;
-	}
-	
-	public void setYGlobal(float yGlobal){
-		this.yGlobal = yGlobal;
-	}
-	
-	public void setZGlobal(float zGlobal){
-
-		this.zGlobal = zGlobal;
-	}
-	
-	public void setXSpeedGlobal(float xSpeedGlobal){
-		this.xSpeedGlobal = xSpeedGlobal;
-		
-		if(xSpeedGlobal > xSpeedGlobalMax){
-			xSpeedGlobal = xSpeedGlobalMax;
-		}
-		else if(xSpeedGlobal < -xSpeedGlobalMax){
-			xSpeedGlobal = -xSpeedGlobalMax;
-		}
-	}
-	
-	public void setYSpeedGlobal(float ySpeedGlobal){
-		this.ySpeedGlobal = ySpeedGlobal;
-		
-		if(ySpeedGlobal > ySpeedGlobalMax){
-			ySpeedGlobal = ySpeedGlobalMax;
-		}
-		else if(ySpeedGlobal < -ySpeedGlobalMax){
-			ySpeedGlobal = -ySpeedGlobalMax;
-		}
-	}
-	
-	public void setZSpeedGlobal(float zSpeedGlobal){
-		this.zSpeedGlobal = zSpeedGlobal;
-		
-		if(zSpeedGlobal > zSpeedGlobalMax){
-			zSpeedGlobal = zSpeedGlobalMax;
-		}
-		else if(zSpeedGlobal < -zSpeedGlobalMax){
-			zSpeedGlobal = -zSpeedGlobalMax;
-		}
-	}
-	
-	public void setXSpeedGlobalMax(float xSpeedGlobalMax){
-		this.xSpeedGlobalMax = xSpeedGlobalMax;
-	}
-	
-	public void setYSpeedGlobalMax(float ySpeedGlobalMax){
-		this.ySpeedGlobalMax = ySpeedGlobalMax;
-	}
-	
-	public void setZSpeedGlobalMax(float zSpeedGlobalMax){
-		this.zSpeedGlobalMax = zSpeedGlobalMax;
-	}
-	
-	public float getXGlobal(){
-		return xGlobal;
-	}
-	
-	public float getYGlobal(){
-		return yGlobal;
-	}
-	
-	public float getZGlobal(){
-		return zGlobal;
-	}
-	
-	public float getXSpeedGlobal(){
-		return xSpeedGlobal;
-	}
-	
-	public float getYSpeedGlobal(){
-		return ySpeedGlobal;
-	}
-	
-	public float getZSpeedGlobal(){
-		return zSpeedGlobal;
+	public ObjectWorldData getObjectWorldData(){
+		return objectWorldData;
 	}
 	
 	public void setSpeed(float speedForward, float speedBackward, float speedStrafe){
@@ -245,9 +163,15 @@ public class Sentient {
 		this.pivot = pivot;
 	}
 	
+	public World getWorld(){
+		return world;
+	}
+	
 	public void move(Direction dir, float change){
 		float rot = pivot.getRotXZAxis();
 		Circle circle = new Circle(0, 0, change);
+		
+		//Speed speed = new Speed();
 		
 		if(dir == Direction.BACKWARD){
 			rot += 180;
@@ -259,7 +183,7 @@ public class Sentient {
 			rot += 90;
 		}
 		
-		setLocation(xGlobal+circle.getX(rot), yGlobal, zGlobal+circle.getY(rot));
+		
 	}
 
 }

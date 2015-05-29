@@ -53,8 +53,7 @@ public class WeaponInstance {
 		fireTimeLast = currTime;
 		
 		//TODO fix bullet adding
-		world.addBullet(new Bullet(new ObjectWorldData(new Point(
-				origin.getPoint())), 35));
+		world.addBullet(new Bullet(origin, 35));
 		
 		if(ammoCurr != 0){
 			ammoCurr -= 1;	
