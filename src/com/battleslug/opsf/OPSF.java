@@ -166,57 +166,14 @@ public class OPSF {
 				display.drawQuadTextured2D(new QuadTextured2D(200, 200, 400, 0, imgDoge.getTexture(), null));
 			}
 
-			if(keyboard.isDown(GLFW_KEY_W)){
-				player.move(Sentient.Direction.FORWARD, (float)(player.getSpeedForward()*display.getTimePassed()));
-			}
-			if(keyboard.isDown(GLFW_KEY_S)){
-				player.move(Sentient.Direction.BACKWARD, (float)(player.getSpeedBackward()*display.getTimePassed()));
-			}
-			if(keyboard.isDown(GLFW_KEY_A)){
-				player.move(Sentient.Direction.LEFT, (float)(player.getSpeedStrafe()*display.getTimePassed()));
-			}
-			if(keyboard.isDown(GLFW_KEY_D)){
-				player.move(Sentient.Direction.RIGHT, (float)(player.getSpeedStrafe()*display.getTimePassed()));
-			}
+			player.updateUserControlled(keyboard, mouse, display.getTimePassed());
+			
 			if(keyboard.wasPressed(GLFW_KEY_SPACE) && player.getObjectWorldData().getPoint().getY() == 0f){
 				player.getObjectWorldData().getSpeed().setYSpeed(0.5f);
 			}
 			if(keyboard.wasPressed(GLFW_KEY_R)){
 				if(player.getWeaponInstance().getMode() == WeaponInstance.Mode.Ready){
 					player.getWeaponInstance().initReload(display.getTime());
-				}
-			}
-			
-			final float HEIGHT_CROUCH = 0.3f;
-			final float HEIGHT = 1.5f;
-			if(keyboard.isDown(GLFW_KEY_LEFT_CONTROL)){
-				//crouching movement
-				if(player.getCamLocation().getY() != HEIGHT_CROUCH){
-					player.getCamLocation().setY(player.getCamLocation().getY()-(float)(3.1f*display.getTimePassed()));
-					if(player.getCamLocation().getY() < HEIGHT_CROUCH){
-						player.getCamLocation().setY(HEIGHT_CROUCH);
-					}
-					player.setSpeed(0, 0, 0);
-				}
-				else {
-					player.setSpeed(0.7f, 0.2f, 0.5f);
-				}
-			}
-			else if(keyboard.isDown(GLFW_KEY_LEFT_SHIFT) && player.getCamLocation().getY() == HEIGHT){
-				//running
-				player.setSpeed(6, 2f, 5);	
-			}
-			else {
-				//normal standing
-				if(player.getCamLocation().getY() != HEIGHT){
-					player.getCamLocation().setY(player.getCamLocation().getY()+(float)(1.7f*display.getTimePassed()));
-					if(player.getCamLocation().getY() > HEIGHT){
-						player.getCamLocation().setY(HEIGHT);
-					}
-					player.setSpeed(0, 0, 0);
-				}
-				else {
-					player.setSpeed(3, 1.5f, 2);
 				}
 			}
 				
