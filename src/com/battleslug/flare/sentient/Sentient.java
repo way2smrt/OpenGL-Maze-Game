@@ -168,10 +168,16 @@ public class Sentient {
 		return world;
 	}
 	
+	/**
+	 * Updates with AI, making decisions by itself.
+	 */
 	public void updateAIControlled(double timePassed){
 		//AI here
 	}
 	
+	/**
+	 * Updates with player controls
+	 */
 	public void updateUserControlled(Keyboard keyboard, Mouse mouse, double timePassed){
 		float rotChange = 0;
 		boolean hasMoved = false;

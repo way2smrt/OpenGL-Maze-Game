@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.battleslug.flare.*;
 import com.battleslug.flare.world.*;
-import com.battleslug.flare.sentient.Player;
 import com.battleslug.flare.sentient.Sentient;
 import com.battleslug.flare.item.*;
 import com.battleslug.flare.GUI.*;
@@ -32,7 +31,7 @@ public class OPSF {
 	private World world;
 	private Display display;
 	
-	private Player player;
+	private Sentient player;
 	
 	private Image imgDoge;
 	
@@ -64,7 +63,7 @@ public class OPSF {
 		hud_bullet_rifle = new Texture("res/img/hud/bullet_rifle.png");
 		hud_bullet_shotgun = new Texture("res/img/hud/bullet_shotgun.png");
 		
-		player = new Player(world, "Bob the test dummy", 125);
+		player = new Sentient(world, "Bob the test dummy", 125);
 		player.setPivot(new Pivot(0, 90, 0));
 		player.getPivot().setRotYZAxisLimits(0f, 180f);
 		player.getPivot().setYZAxisLimitMode(LimitMode.STOP);
