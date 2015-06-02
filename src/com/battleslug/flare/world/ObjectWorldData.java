@@ -7,6 +7,10 @@ public class ObjectWorldData {
 	private Pivot pivot;
 	private Speed speed;
 	
+	public ObjectWorldData(){
+		this(new Point(0, 0, 0), new Speed(0, 0, 0), new Pivot(0, 0, 0));
+	}
+	
 	public ObjectWorldData(Point point){
 		this(point, new Speed(0, 0, 0), new Pivot(0, 0, 0));
 	}

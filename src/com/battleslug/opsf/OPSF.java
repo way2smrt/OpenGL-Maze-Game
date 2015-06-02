@@ -191,10 +191,10 @@ public class OPSF {
 			final float HEIGHT = 1.5f;
 			if(keyboard.isDown(GLFW_KEY_LEFT_CONTROL)){
 				//crouching movement
-				if(player.getYCamLocal() != HEIGHT_CROUCH){
-					player.setYCamLocal(player.getYCamLocal()-(float)(3.1f*display.getTimePassed()));
-					if(player.getYCamLocal() < HEIGHT_CROUCH){
-						player.setYCamLocal(HEIGHT_CROUCH);
+				if(player.getCamLocation().getY() != HEIGHT_CROUCH){
+					player.getCamLocation().setY(player.getCamLocation().getY()-(float)(3.1f*display.getTimePassed()));
+					if(player.getCamLocation().getY() < HEIGHT_CROUCH){
+						player.getCamLocation().setY(HEIGHT_CROUCH);
 					}
 					player.setSpeed(0, 0, 0);
 				}
@@ -202,16 +202,16 @@ public class OPSF {
 					player.setSpeed(0.7f, 0.2f, 0.5f);
 				}
 			}
-			else if(keyboard.isDown(GLFW_KEY_LEFT_SHIFT) && player.getYCamLocal() == HEIGHT){
+			else if(keyboard.isDown(GLFW_KEY_LEFT_SHIFT) && player.getCamLocation().getY() == HEIGHT){
 				//running
 				player.setSpeed(6, 2f, 5);	
 			}
 			else {
 				//normal standing
-				if(player.getYCamLocal() != HEIGHT){
-					player.setYCamLocal(player.getYCamLocal()+(float)(1.7f*display.getTimePassed()));
-					if(player.getYCamLocal() > HEIGHT){
-						player.setYCamLocal(HEIGHT);
+				if(player.getCamLocation().getY() != HEIGHT){
+					player.getCamLocation().setY(player.getCamLocation().getY()+(float)(1.7f*display.getTimePassed()));
+					if(player.getCamLocation().getY() > HEIGHT){
+						player.getCamLocation().setY(HEIGHT);
 					}
 					player.setSpeed(0, 0, 0);
 				}
@@ -228,16 +228,16 @@ public class OPSF {
 			player.getPivot().setRotXYAxis(player.getPivot().getRotXYAxis()+(float)(display.getTimePassed()*180));
 			
 			display.setPivotCam(player.getPivot());
-			display.setCamLocation(player.getXGlobal()+player.getXCamLocal(), player.getYGlobal()+player.getYCamLocal(), player.getZGlobal()+player.getZCamLocal());
+			display.setCamLocation(player.getCamLocation());
 			
 			//invoke gravity on player
-			player.setYSpeedGlobal(player.getYSpeedGlobal()-(float)(WORLD_GRAVITY*pow(display.getTimePassed(), 2)));
+			player.getObjectWorldData().getPoint().setY(player.getObjectWorldData().getSpeed().getYSpeed()-(float)(WORLD_GRAVITY*pow(display.getTimePassed(), 2)));
 			
 			//update player location
-			player.setYGlobal(player.getYGlobal()+player.getYSpeedGlobal());			
-			if(player.getYGlobal() < WORLD_FLOOR){
-				player.setYGlobal(WORLD_FLOOR);
-				player.setYSpeedGlobalMax(0f);
+			player.getObjectWorldData().getPoint().setY(player.getObjectWorldData().getPoint().getY()+player.getObjectWorldData().getSpeed().getYSpeed());			
+			if(player.getObjectWorldData().getPoint().getY() < WORLD_FLOOR){
+				player.getObjectWorldData().getPoint().setY(WORLD_FLOOR);
+				player.getObjectWorldData().getSpeed().setYSpeed(0f);
 			}
 			
 			if(keyboard.isDown(GLFW_KEY_ESCAPE)){

@@ -28,16 +28,16 @@ public class World {
 		for(int i = 0; i != bullet.length; i++){
 			//TODO fix bullet drawing
 			display.drawLine3D(bullet[i].getObjectWorldData().getPoint(), new Point(
-					bullet[i].getObjectWorldData().getPoint().getX()+bullet[i].getObjectWorldData().getPoint().getXSpeed(),
-					bullet[i].getObjectWorldData().getPoint().getY()+bullet[i].getObjectWorldData().getPoint().getYSpeed(),
-					bullet[i].getObjectWorldData().getPoint().getZ()+bullet[i].getObjectWorldData().getPoint().getZSpeed()
+					bullet[i].getObjectWorldData().getPoint().getX()+bullet[i].getObjectWorldData().getSpeed().getXSpeed(),
+					bullet[i].getObjectWorldData().getPoint().getY()+bullet[i].getObjectWorldData().getSpeed().getYSpeed(),
+					bullet[i].getObjectWorldData().getPoint().getZ()+bullet[i].getObjectWorldData().getSpeed().getZSpeed()
 					), new VectorColor(1f, 0f, 0f), new VectorColor(1f, 0f, 0f));
 		}
 	}
 	
 	private void updateBullets(double timePassed){
 		for(int i = 0; i != bullet.length; i++){
-			bullet[i].getObjectWorldData().getPoint().update(timePassed);
+			bullet[i].getObjectWorldData().getPoint().update(bullet[i].getObjectWorldData().getSpeed(), timePassed);
 		
 			if(bullet[i].getDamage() <= 0){
 				bullet[i] = null;

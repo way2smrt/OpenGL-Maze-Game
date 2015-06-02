@@ -50,7 +50,7 @@ public class Display {
 	
 	private int aspectRatio;
 	
-	private float camX, camY, camZ;
+	private Point cam;
 	
 	private static final float NEAR = 0.01f;
 	public static final float FAR = 1000.0f;
@@ -77,6 +77,8 @@ public class Display {
 		this.fullscreen = fullscreen;
 		
 		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
+		
+		cam = new Point(0, 0, 0);
 	}
 	
 	public void create() {
@@ -367,7 +369,7 @@ public class Display {
 					Circle cXZ = new Circle(0, 0, (float)(cos(toRadians(pivotCam.getRotYZAxis()-90)))+0.01f);
 					
 					//this shit is complicated - do not fiddle!
-					gluLookAt(camX, camY, camZ, camX+cXZ.getX(pivotCam.getRotXZAxis()), camY+(float)(sin(toRadians(pivotCam.getRotYZAxis()-90))), camZ+cXZ.getY(pivotCam.getRotXZAxis()), 0, 1, 0);
+					gluLookAt(cam.getX(), cam.getY(), cam.getZ(), cam.getX()+cXZ.getX(pivotCam.getRotXZAxis()), cam.getY()+(float)(sin(toRadians(pivotCam.getRotYZAxis()-90))), cam.getZ()+cXZ.getY(pivotCam.getRotXZAxis()), 0, 1, 0);
 					break;
 			}
 		}	
@@ -430,22 +432,12 @@ public class Display {
 		return window;
 	}
 	
-	public void setCamLocation(float camX, float camY, float camZ){
-		this.camX = camX;
-		this.camY = camY;
-		this.camZ = camZ;
+	public void setCamLocation(Point cam){	
+		this.cam = cam;
 	}
 	
-	public float getCamX(){
-		return camX;
-	}
-	
-	public float getCamY(){
-		return camY;
-	}
-	
-	public float getCamZ(){
-		return camZ;
+	public Point getCamLocation(){
+		return cam;
 	}
 	
 	private void updateCursor(){

@@ -24,7 +24,8 @@ public class Sentient {
 	
 	protected ObjectWorldData objectWorldData;
 	
-	protected float xCamLocal, yCamLocal, zCamLocal;
+	protected Point cam;
+	protected float eyeHeight;
 	
 	public enum Direction{FORWARD, BACKWARD, LEFT, RIGHT};
 	
@@ -39,11 +40,10 @@ public class Sentient {
 		this.health = maxHealth;
 		this.maxHealth = maxHealth;
 		
-		xCamLocal = 0;
-		yCamLocal = 0;
-		zCamLocal = 0;
-		
 		setSpeed(5, 2, 3);
+		
+		objectWorldData = new ObjectWorldData();
+		cam = new Point(objectWorldData.getPoint().getX(), objectWorldData.getPoint().getY()+eyeHeight, objectWorldData.getPoint().getZ());
 	}
 	
 	public void getAction(){
@@ -131,28 +131,16 @@ public class Sentient {
 		return speedStrafe;
 	}
 	
-	public void setXCamLocal(float xCamLocal){
-		this.xCamLocal = xCamLocal;
+	public void setHeight(float height){
+		this.eyeHeight = height;
 	}
 	
-	public void setYCamLocal(float yCamLocal){
-		this.yCamLocal = yCamLocal;
-	}
-
-	public void setZCamLocal(float zCamLocal){
-		this.zCamLocal = zCamLocal;
+	public void setCamLocation(Point cam){
+		this.cam = cam;
 	}
 	
-	public float getXCamLocal(){
-		return xCamLocal;
-	}
-	
-	public float getYCamLocal(){
-		return yCamLocal;
-	}
-	
-	public float getZCamLocal(){
-		return zCamLocal;
+	public Point getCamLocation(){
+		return cam;
 	}
 	
 	public Pivot getPivot(){
@@ -183,7 +171,7 @@ public class Sentient {
 			rot += 90;
 		}
 		
-		
+		cam.setY(objectWorldData.getPoint().getY()+eyeHeight);
 	}
 
 }
