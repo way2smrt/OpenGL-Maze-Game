@@ -71,6 +71,10 @@ public class Sentient {
 		this.inventory = inventory;
 	}
 	
+	public void setWeaponInstance(WeaponInstance weaponInstance){
+		this.weaponInstance = weaponInstance;
+	}
+	
 	public WeaponInstance getWeaponInstance(){
 		return weaponInstance;
 	}
@@ -237,8 +241,8 @@ public class Sentient {
 		}
 		
 		//update camera rotation
-		rotXZAxis +=(float)(display.getCursorRotXZAxisChange())*CURSOR_SPEED);
-		rotYZAxis -=(float)(display.getCursorRotYZAxisChange())*CURSOR_SPEED);
+		pivot.setRotXZAxis(pivot.getRotXZAxis()+(float)(mouse.getCursorRotXZChange()*mouse.getSensitivity3D()));
+		pivot.setRotYZAxis(pivot.getRotYZAxis()-(float)(mouse.getCursorRotYZChange()*mouse.getSensitivity3D()));
 	}
 	
 	private void move(float initialRot, float moveRot, double timePassed){

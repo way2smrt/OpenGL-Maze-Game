@@ -32,7 +32,7 @@ public class Display {
 	private int width, height;
 	
 	private double xCursor, yCursor;
-	private double xCursorChange, yCursorChange;
+	private double xCursorLast, yCursorLast;
 	
 	private boolean fullscreen;
 	
@@ -178,17 +178,22 @@ public class Display {
 	public void update(){
 		glfwSwapBuffers(window);
 		
-		if (cursorLocked){
-			updateCursor();
-			
-			double xCursorOld = xCursor;
-			double yCursorOld = yCursor;
-			glfwSetCursorPos(window, width/2, height/2);
-			
-			updateCursor();
-		}
+		xCursorLast = xCursor;
+		yCursorLast = yCursor;
+		
+		updateCursor();
 		
 		checkClose();
+	}
+
+	private void updateCursor(){
+		DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
+        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+		
+		glfwGetCursorPos(window, x, y);
+		
+		xCursor = x.get();
+		yCursor = y.get();
 	}
 	
 	public static void updateEvents(){
@@ -214,29 +219,16 @@ public class Display {
 		glEnd();
 	}
 	
-	public void drawLine(float x1, float y1, float x2, float y2, VectorColor c1, VectorColor c2){
-		setMode(ModeDraw.MODE_2D, ModeColor.MODE_COLOR);
-		
-		glBegin(GL_LINES);
-		glColor4f(c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha());
-		glVertex2f(x1, y1);
-		glColor4f(c2.getRed(), c2.getGreen(), c2.getBlue(), c2.getAlpha());
-		glVertex2f(x2, y2);
-		glEnd();
-	}
-	
-	/*
 	public void drawLine(Point p1, Point p2, VectorColor c1, VectorColor c2){
 		setMode(ModeDraw.MODE_2D, ModeColor.MODE_COLOR);
 		
 		glBegin(GL_LINES);
 		glColor4f(c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha());
-		glVertex2f(x1, y1);
+		glVertex2f(p1.getX(), p1.getY());
 		glColor4f(c2.getRed(), c2.getGreen(), c2.getBlue(), c2.getAlpha());
-		glVertex2f(x2, y2);
+		glVertex2f(p2.getX(), p2.getY());
 		glEnd();
 	}
-	*/
 	
 	public void drawCube(float x, float y, float z, float width, Texture tex){
 		setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
@@ -436,16 +428,6 @@ public class Display {
 		return cam;
 	}
 	
-	private void updateCursor(){
-		DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
-        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
-		
-		glfwGetCursorPos(window, x, y);
-		
-		xCursor = x.get();
-		yCursor = y.get();
-	}
-	
 	public void setCursorLocked(boolean cursorLocked){
 		this.cursorLocked = cursorLocked;
 	
@@ -498,11 +480,11 @@ public class Display {
 		return yCursor;
 	}
 	
-	public double getXCursorChange(){
-		return xCursorChange;
+	public double getXCursorLast(){
+		return xCursorLast;
 	}
 	
-	public double getYCursorChange(){
-		return yCursorChange;
+	public double getYCursorLast(){
+		return yCursorLast;
 	}
 }

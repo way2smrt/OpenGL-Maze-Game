@@ -14,6 +14,8 @@ public class Mouse {
 	
 	private Display display;
 	
+	private float sensitivity3D = 0.5f;
+	
 	public void bind(Display display){
 		this.display = display;
 		
@@ -89,10 +91,43 @@ public class Mouse {
 	
 
 	public double getCursorRotXZChange(){
-		return display.getXCursorChange();
+		return getXCursorChange();
 	}
 	
 	public double getCursorRotYZChange(){
-		return display.getYCursorChange();
+		return getYCursorChange();
+	}
+	
+	public void setSensitivity3D(float sensitivity3D){
+		this.sensitivity3D = sensitivity3D;
+	}
+	
+	public float getSensitivity3D(){
+		return sensitivity3D;
+	}
+	
+	public double getXCursor(){
+		return display.getXCursor();
+	}
+	
+	public double getYCursor(){
+		return display.getYCursor();
+	}
+	
+	public double getXCursorLast(){
+		return display.getXCursorLast();
+	}
+	
+	public double getYCursorLast(){
+		return display.getYCursorLast();
+	}
+	
+	public float getXCursorChange(){
+		return (float)(display.getXCursor()-display.getXCursorLast());
+		
+	}
+	
+	public float getYCursorChange(){
+		return (float)(display.getYCursor()-display.getYCursorLast());
 	}
 }

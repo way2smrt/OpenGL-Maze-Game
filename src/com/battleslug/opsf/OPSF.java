@@ -8,6 +8,9 @@ import com.battleslug.flare.*;
 import com.battleslug.flare.world.*;
 import com.battleslug.flare.sentient.Sentient;
 import com.battleslug.flare.item.*;
+import com.battleslug.flare.item.Weapon.AmmoType;
+import com.battleslug.flare.item.Weapon.FireMode;
+import com.battleslug.flare.item.Weapon.ReloadMode;
 import com.battleslug.flare.GUI.*;
 import com.battleslug.glbase.*;
 import com.battleslug.glbase.geometry.*;
@@ -68,6 +71,8 @@ public class OPSF {
 		player.getPivot().setRotYZAxisLimits(0f, 180f);
 		player.getPivot().setYZAxisLimitMode(LimitMode.STOP);
 		
+		player.setWeaponInstance(new WeaponInstance(world, player.getObjectWorldData(), new Weapon("pew pew gun", "shoot bullets", Weapon.FireMode.Automatic, 0.05f, 8, Weapon.ReloadMode.Clip, 2f, Weapon.AmmoType.SMG, 64)));
+		
 		display.setPivotCam(player.getPivot());
 		
 		world = new World();
@@ -99,6 +104,7 @@ public class OPSF {
 		while(true){
 			keyboard.update();
 			mouse.update();
+			
 			Display.updateEvents();
 			
 			world.update(display.getTimePassed());
@@ -176,13 +182,6 @@ public class OPSF {
 				}
 			}
 				
-			//update camera
-			player.getPivot().setRotXZAxis(player.getPivot().getRotXZAxis()+(float)(display.getCursorRotXZAxisChange())*CURSOR_SPEED);
-			player.getPivot().setRotYZAxis(player.getPivot().getRotYZAxis()-(float)(display.getCursorRotYZAxisChange())*CURSOR_SPEED);
-			
-			//quick fox do a barrel roll
-			player.getPivot().setRotXYAxis(player.getPivot().getRotXYAxis()+(float)(display.getTimePassed()*180));
-			
 			display.setPivotCam(player.getPivot());
 			display.setCamLocation(player.getCamLocation());
 			
@@ -207,10 +206,10 @@ public class OPSF {
 	}
 	
 	private void drawCrosshair(int size, int spacing, VectorColor cInner, VectorColor cOuter){
-		display.drawLine((display.getWidth()/2)-size-spacing, (display.getHeight()/2), (display.getWidth()/2)-spacing, (display.getHeight()/2), cOuter, cInner);
-		display.drawLine((display.getWidth()/2), (display.getHeight()/2)-size-spacing, (display.getWidth()/2), (display.getHeight()/2)-spacing, cOuter, cInner);
-		display.drawLine((display.getWidth()/2)+spacing, (display.getHeight()/2), (display.getWidth()/2)+size+spacing, (display.getHeight()/2), cInner, cOuter);
-		display.drawLine((display.getWidth()/2), (display.getHeight()/2)+spacing, (display.getWidth()/2), (display.getHeight()/2)+size+spacing, cInner, cOuter);
+		display.drawLine(new Point((display.getWidth()/2)-size-spacing, (display.getHeight()/2)), new Point((display.getWidth()/2)-spacing, (display.getHeight()/2)), cOuter, cInner);
+		display.drawLine(new Point((display.getWidth()/2), (display.getHeight()/2)-size-spacing), new Point((display.getWidth()/2), (display.getHeight()/2)-spacing), cOuter, cInner);
+		display.drawLine(new Point((display.getWidth()/2)+spacing, (display.getHeight()/2)), new Point((display.getWidth()/2)+size+spacing, (display.getHeight()/2)), cInner, cOuter);
+		display.drawLine(new Point((display.getWidth()/2), (display.getHeight()/2)+spacing), new Point((display.getWidth()/2), (display.getHeight()/2)+size+spacing), cInner, cOuter);
 	}
 	
 	private void drawFloor(Texture texFloor){
