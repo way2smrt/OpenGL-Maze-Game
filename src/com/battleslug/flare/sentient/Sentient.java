@@ -235,6 +235,10 @@ public class Sentient {
 		if(hasMoved){
 			move(pivot.getRotXZAxis(), pivot.getRotXZAxis()+rotChange, timePassed);
 		}
+		
+		//update camera rotation
+		rotXZAxis +=(float)(display.getCursorRotXZAxisChange())*CURSOR_SPEED);
+		rotYZAxis -=(float)(display.getCursorRotYZAxisChange())*CURSOR_SPEED);
 	}
 	
 	private void move(float initialRot, float moveRot, double timePassed){

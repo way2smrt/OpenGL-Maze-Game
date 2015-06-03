@@ -32,7 +32,7 @@ public class Display {
 	private int width, height;
 	
 	private double xCursor, yCursor;
-	private double cursorRotXZAxisChange, cursorRotYZAxisChange;
+	private double xCursorChange, yCursorChange;
 	
 	private boolean fullscreen;
 	
@@ -179,14 +179,10 @@ public class Display {
 		glfwSwapBuffers(window);
 		
 		if (cursorLocked){
-			double xCursorOld = xCursor;
-			double yCursorOld = yCursor;
-			
 			updateCursor();
 			
-			cursorRotXZAxisChange = xCursor-xCursorOld;
-			cursorRotYZAxisChange = yCursor-yCursorOld;
-			
+			double xCursorOld = xCursor;
+			double yCursorOld = yCursor;
 			glfwSetCursorPos(window, width/2, height/2);
 			
 			updateCursor();
@@ -473,14 +469,6 @@ public class Display {
 		return height;
 	}
 	
-	public double getCursorRotXZAxisChange(){
-		return cursorRotXZAxisChange;
-	}
-	
-	public double getCursorRotYZAxisChange(){
-		return cursorRotYZAxisChange;
-	}
-	
 	public void setPivotCam(Pivot pivot){
 		pivotCam = pivot;
 	}
@@ -500,5 +488,21 @@ public class Display {
 	
 	public double getTime(){
 		return glfwGetTime();
+	}
+	
+	public double getXCursor(){
+		return xCursor;
+	}
+	
+	public double getYCursor(){
+		return yCursor;
+	}
+	
+	public double getXCursorChange(){
+		return xCursorChange;
+	}
+	
+	public double getYCursorChange(){
+		return yCursorChange;
 	}
 }

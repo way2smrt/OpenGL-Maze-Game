@@ -12,7 +12,11 @@ public class Mouse {
 	private boolean leftButton, rightButton = false;
 	private boolean leftButtonLast, rightButtonLast = false;
 	
+	private Display display;
+	
 	public void bind(Display display){
+		this.display = display;
+		
 		display.setMouseButtonCallback(new GLFWMouseButtonCallback(){
             @Override
             public void invoke(long window, int button, int action, int mods){
@@ -81,5 +85,14 @@ public class Mouse {
 	public void update(){
 		leftButtonLast = leftButton;
 		rightButtonLast = rightButton;
+	}
+	
+
+	public double getCursorRotXZChange(){
+		return display.getXCursorChange();
+	}
+	
+	public double getCursorRotYZChange(){
+		return display.getYCursorChange();
 	}
 }
