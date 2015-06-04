@@ -264,8 +264,6 @@ public class Sentient {
 		if(keyboard.wasPressed(GLFW_KEY_SPACE) && objectWorldData.getPoint().getY() == 0f){
 			objectWorldData.getSpeed().setYSpeed(0.5f);
 		}
-
-		eyeHeight = cam.getY()-objectWorldData.getPoint().getY();
 		
 		//update camera rotation with mouse input
 		pivot.setRotXZAxis(pivot.getRotXZAxis()+(float)(mouse.getXCursorChange()*mouse.getSensitivity3D()));
@@ -296,7 +294,7 @@ public class Sentient {
 		objectWorldData.getPoint().setY(objectWorldData.getPoint().getY()+objectWorldData.getSpeed().getYSpeed());
 		if(objectWorldData.getPoint().getY() < world.groundHeight){
 			objectWorldData.getPoint().setY(world.groundHeight);
-			objectWorldData.getSpeed().setYSpeed(0f);
+			objectWorldData.getSpeed().clearYSpeed();
 		}
 		
 		objectWorldData.getSpeed().clearXSpeed();
@@ -320,8 +318,7 @@ public class Sentient {
 		else {
 			moveCircle = new Circle(0, 0, (float)(speedStrafe*timePassed));
 		}
-		
-		System.out.println(objectWorldData.getSpeed().getXSpeed()+moveCircle.getX(moveRot));
+
 		objectWorldData.getSpeed().setXSpeed(objectWorldData.getSpeed().getXSpeed()+moveCircle.getX(moveRot));
 		objectWorldData.getSpeed().setZSpeed(objectWorldData.getSpeed().getZSpeed()+moveCircle.getY(moveRot));
 	}

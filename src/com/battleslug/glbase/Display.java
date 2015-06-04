@@ -66,6 +66,8 @@ public class Display {
 	private double timeLast = 0;
 	private double timePassed = 0;
 	
+	private Texture font;
+	
 	public Display(String title, int width, int height){
 		this(title, width, height, false);
 	}
@@ -88,7 +90,8 @@ public class Display {
 		else {
 			window = glfwCreateWindow(width, height, title, NULL, NULL);
 		}
-			
+		
+		font = new Texture("res/font/serif.png");
 			
 		if(window == NULL){
 			throw new RuntimeException("Failed to create the GLFW window");
@@ -373,6 +376,95 @@ public class Display {
 					glEnable(GL_TEXTURE_2D);
 					break;
 			}
+		}
+	}
+	
+	public void drawText(String text, float x, float y, float width){
+		setMode(ModeDraw.MODE_2D, ModeColor.MODE_TEXTURE);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		
+		
+	}
+	
+	public float getTextUCoord(char c){
+		final int FONT_IMAGE_COLUMNS = 16;
+		
+		if(c == 'a' || c == 'q' || c == 'A' || c == 'Q' || c == '!' || c == '1' ){
+			return 0;
+		}
+		else if(c == 'b' || c == 'r' || c == 'B' || c == 'R' || c == '@' || c == '2'){
+			return 1/FONT_IMAGE_COLUMNS;
+		}
+		else if(c == 'c' ||  c == 's' || c == 'C' || c == 'S' || c == '#' || c == '3'){
+			return 2/FONT_IMAGE_COLUMNS;
+		}
+		else if( c == 'd' || c == 't' ||  c == 'D' || c == 'T' || c == '$' || c == '4'){
+			return 3/FONT_IMAGE_COLUMNS;
+		}
+		else if( c == 'e' ||  c == 'u' ||  c == 'E' || c == 'U' || c == '%' || c == '5'){
+			return 4/FONT_IMAGE_COLUMNS;
+		}
+		else if(c == 'f' || c == 'v' || c == 'F' || c == 'V' || c == '^' || c == '6'){
+			return 5/FONT_IMAGE_COLUMNS;
+		}
+		else if(c == 'g' || c == 'w' ||  c == 'G' ||  c == 'W' || c == '&' ||  c == '7'){
+			return 6/FONT_IMAGE_COLUMNS;
+		}
+		else if(c == 'h' || c == 'x' ||  c == 'H' ||  c == 'X' || c == '*' ||  c == '8' ){
+			return 7/FONT_IMAGE_COLUMNS;
+		}
+		else if(c == 'i' || c == 'y' || c == 'I' || c == 'Y' || c == '(' || c == '9' ){
+			return 8/FONT_IMAGE_COLUMNS;
+		}
+		else if(  c == 'j' || c == 'z' || c == 'J' || c == 'Z' || c == ')' || c == '0' ){
+			return 9/FONT_IMAGE_COLUMNS;
+		}
+		else if(c == 'k' || c == '{' || c == 'K' || c == ';' || c == '-' || c == ',' ){
+			return 10/FONT_IMAGE_COLUMNS;
+		}
+		else if(c == 'l' || c == '}' || c == 'L' || c == ':' || c == '_' || c == '.' ){
+			return 11/FONT_IMAGE_COLUMNS;
+		}
+		else if(c == 'm' || c == '<' || c == 'M' || c == '\'' || c == '+' || c == '\\' ){
+			return 12/FONT_IMAGE_COLUMNS;
+		}
+		else if(c == 'n' || c == '>' || c == 'N' || c == '\"' || c == '=' || c == '|' ){
+			return 13/FONT_IMAGE_COLUMNS;
+		}
+		else if(c == 'o' || c == '[' || c == 'O' || c == '/' || c == ';' ||  c == '~' ){
+			return 14/FONT_IMAGE_COLUMNS;
+		}
+		else if(c == 'p' || c == ']' || c == 'P' || c == '?' || c == ';' || c == ' '){
+			return 15/FONT_IMAGE_COLUMNS;
+		}
+		else {
+			return 15/FONT_IMAGE_COLUMNS;
+		}
+	}
+	
+	public float getTextVCoord(char c){
+		final int FONT_IMAGE_ROWS = 6;
+		
+		if(c == 'a' || c == 'b' || c == 'c' || c == 'd' || c == 'e' || c == 'f' || c == 'g' || c == 'h' || c == 'i' || c == 'j' || c == 'k' || c == 'l' || c == 'm' || c == 'n' || c == 'o' || c == 'p'){
+			return 0;
+		}
+		else if(c == 'q' || c == 'r' || c == 's' || c == 't' || c == 'u' || c == 'v' || c == 'w' || c == 'x' || c == 'y' || c == 'z' || c == '{' || c == '}' || c == '<' || c == '>' || c == '[' || c == ']'){
+			return 1/FONT_IMAGE_ROWS;
+		}
+		else if(c == 'A' || c == 'B' || c == 'C' || c == 'D' || c == 'E' || c == 'F' || c == 'G' || c == 'H' || c == 'I' || c == 'J' || c == 'K' || c == 'L' || c == 'M' || c == 'N' || c == 'O' || c == 'P'){
+			return 2/FONT_IMAGE_ROWS;
+		}
+		else if(c == 'Q' || c == 'R' || c == 'S' || c == 'T' || c == 'U' || c == 'V' || c == 'W' || c == 'X' || c == 'Y' || c == 'Z' || c == ';' || c == ':' || c == '\'' || c == '\"' || c == '/' || c == '?'){
+			return 3/FONT_IMAGE_ROWS;
+		}
+		else if(c == '!' || c == '@' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '*' || c == '(' || c == ')' || c == '-' || c == '_' || c == '+' || c == '=' || c == ';' || c == ';'){
+			return 4/FONT_IMAGE_ROWS;
+		}
+		else if(c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9' || c == '0' || c == ',' || c == '.' || c == '\\' || c == '|' || c == '~' || c == ' '){
+			return 5/FONT_IMAGE_ROWS;
+		}
+		else {
+			return 5/FONT_IMAGE_ROWS;
 		}
 	}
 	
