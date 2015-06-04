@@ -31,7 +31,7 @@ public class Sentient {
 	protected ObjectWorldData objectWorldData;
 	
 	protected Point cam;
-	protected float eyeHeight;
+	private float eyeHeight;
 	
 	protected Pivot pivot;
 	
@@ -54,7 +54,7 @@ public class Sentient {
 		setSpeed(5, 2, 3);
 		
 		objectWorldData = new ObjectWorldData();
-		cam = new Point(objectWorldData.getPoint().getX(), objectWorldData.getPoint().getY()+eyeHeight, objectWorldData.getPoint().getZ());
+		cam = new Point(objectWorldData.getPoint().getX(), objectWorldData.getPoint().getY()+EYE_HEIGHT_STANDING, objectWorldData.getPoint().getZ());
 	
 		moveMode = MoveMode.Standing;
 	}
@@ -148,10 +148,6 @@ public class Sentient {
 		return speedStrafe;
 	}
 	
-	public void setHeight(float height){
-		this.eyeHeight = height;
-	}
-	
 	public void setCamLocation(Point cam){
 		this.cam = cam;
 	}
@@ -182,16 +178,74 @@ public class Sentient {
 	/**
 	 * Updates with player controls
 	 */
-	public void updateUserControlled(Keyboard keyboard, Mouse mouse, double timePassed){
+	public void updateUserControlled(Keyboard keyboard, Mouse mouse, double timePassed, double currTime){
 		float rotChange = 0;
 		boolean hasMoved = false;
 		
+		//update player eye height for body stance
+		if(keyboard.isDown(GLFW_KEY_LEFT_CONTROL)){
+			//crouching movement
+			moveMode = moveMode.Prone;
+			if(eyeHeight != EYE_HEIGHT_PRONE){
+				eyeHeight -= (float)(3.1f*timePassed);
+				if(eyeHeight < EYE_HEIGHT_PRONE){
+					eyeHeight = EYE_HEIGHT_PRONE;
+				}
+				setSpeed(0, 0, 0);
+			}
+			else {
+				setSpeed(0.7f, 0.2f, 0.5f);
+			}
+		}
+		else if(keyboard.isDown(GLFW_KEY_LEFT_SHIFT) && eyeHeight == EYE_HEIGHT_STANDING){
+			//running
+			moveMode = moveMode.Running;
+			setSpeed(15f, 2f, 5f);	
+		}
+		else {
+			//normal standing
+			moveMode = moveMode.Standing;
+			if(eyeHeight != EYE_HEIGHT_STANDING){
+				eyeHeight += (float)(1.7f*timePassed);
+				if(eyeHeight > EYE_HEIGHT_STANDING){
+					eyeHeight = EYE_HEIGHT_STANDING;
+				}
+				setSpeed(0, 0, 0);
+			}
+			else {
+				setSpeed(3, 1.5f, 2);
+			}
+		}
+		
 		if(keyboard.isDown(GLFW_KEY_W)){
 			hasMoved = true;
+			
+			if(keyboard.isDown(GLFW_KEY_A)){
+				rotChange = -45;
+				hasMoved = true;
+			}
+			else if(keyboard.isDown(GLFW_KEY_D)){
+				rotChange = 45;
+				hasMoved = true;
+			}
+			else {
+				//no change
+			}
 		}
-		if(keyboard.isDown(GLFW_KEY_S)){
-			rotChange = 180;
+		else if(keyboard.isDown(GLFW_KEY_S)){
 			hasMoved = true;
+			
+			if(keyboard.isDown(GLFW_KEY_A)){
+				rotChange = 225;
+				hasMoved = true;
+			}
+			else if(keyboard.isDown(GLFW_KEY_D)){
+				rotChange = -225;
+				hasMoved = true;
+			}
+			else {
+				rotChange = 180;
+			}
 		}
 		else if(keyboard.isDown(GLFW_KEY_A)){
 			rotChange = -90;
@@ -202,47 +256,57 @@ public class Sentient {
 			hasMoved = true;
 		}
 		
-		if(keyboard.isDown(GLFW_KEY_LEFT_CONTROL)){
-			//crouching movement
-			moveMode = moveMode.Prone;
-			if(getCamLocation().getY()-objectWorldData.getPoint().getY() != EYE_HEIGHT_PRONE){
-				getCamLocation().setY(getCamLocation().getY()-(float)(3.1f*timePassed)+objectWorldData.getPoint().getY());
-				if(getCamLocation().getY()-objectWorldData.getPoint().getY() < EYE_HEIGHT_PRONE){
-					getCamLocation().setY(EYE_HEIGHT_PRONE+objectWorldData.getPoint().getY());
-				}
-				setSpeed(0, 0, 0);
-			}
-			else {
-				setSpeed(0.7f, 0.2f, 0.5f);
-			}
-		}
-		else if(keyboard.isDown(GLFW_KEY_LEFT_SHIFT) && getCamLocation().getY() == EYE_HEIGHT_STANDING){
-			//running
-			moveMode = moveMode.Running;
-			setSpeed(6, 2f, 5);	
-		}
-		else {
-			//normal standing
-			moveMode = moveMode.Standing;
-			if(getCamLocation().getY()-objectWorldData.getPoint().getY() != EYE_HEIGHT_STANDING){
-				getCamLocation().setY(getCamLocation().getY()+(float)(1.7f*timePassed)+objectWorldData.getPoint().getY());
-				if(getCamLocation().getY()-objectWorldData.getPoint().getY() > EYE_HEIGHT_STANDING){
-					getCamLocation().setY(EYE_HEIGHT_STANDING+objectWorldData.getPoint().getY());
-				}
-				setSpeed(0, 0, 0);
-			}
-			else {
-				setSpeed(3, 1.5f, 2);
-			}
-		}
-		
 		if(hasMoved){
 			move(pivot.getRotXZAxis(), pivot.getRotXZAxis()+rotChange, timePassed);
 		}
 		
-		//update camera rotation
-		pivot.setRotXZAxis(pivot.getRotXZAxis()+(float)(mouse.getCursorRotXZChange()*mouse.getSensitivity3D()));
-		pivot.setRotYZAxis(pivot.getRotYZAxis()-(float)(mouse.getCursorRotYZChange()*mouse.getSensitivity3D()));
+		//check for jump
+		if(keyboard.wasPressed(GLFW_KEY_SPACE) && objectWorldData.getPoint().getY() == 0f){
+			objectWorldData.getSpeed().setYSpeed(0.5f);
+		}
+
+		eyeHeight = cam.getY()-objectWorldData.getPoint().getY();
+		
+		//update camera rotation with mouse input
+		pivot.setRotXZAxis(pivot.getRotXZAxis()+(float)(mouse.getXCursorChange()*mouse.getSensitivity3D()));
+		pivot.setRotYZAxis(pivot.getRotYZAxis()-(float)(mouse.getYCursorChange()*mouse.getSensitivity3D()));
+		
+		//check for reload
+		if(keyboard.wasPressed(GLFW_KEY_R)){
+			if(weaponInstance.getMode() == WeaponInstance.Mode.Ready){
+				weaponInstance.initReload(currTime);
+			}
+		}
+		
+		invokeGravity(timePassed);
+		
+		updateLocation();
+		updateLocationCam();
+	}
+	
+	private void invokeGravity(double timePassed){
+		//invoke gravity
+		objectWorldData.getSpeed().setYSpeed(objectWorldData.getSpeed().getYSpeed()-(float)(world.getGravity()*pow(timePassed, 2)));
+	}
+	
+	private void updateLocation(){
+		objectWorldData.getPoint().setX(objectWorldData.getPoint().getX()+objectWorldData.getSpeed().getXSpeed());	
+		objectWorldData.getPoint().setZ(objectWorldData.getPoint().getZ()+objectWorldData.getSpeed().getZSpeed());
+		
+		objectWorldData.getPoint().setY(objectWorldData.getPoint().getY()+objectWorldData.getSpeed().getYSpeed());
+		if(objectWorldData.getPoint().getY() < world.groundHeight){
+			objectWorldData.getPoint().setY(world.groundHeight);
+			objectWorldData.getSpeed().setYSpeed(0f);
+		}
+		
+		objectWorldData.getSpeed().clearXSpeed();
+		objectWorldData.getSpeed().clearZSpeed();
+	}
+	
+	private void updateLocationCam(){
+		cam.setX(objectWorldData.getPoint().getX());
+		cam.setY(objectWorldData.getPoint().getY()+eyeHeight);
+		cam.setZ(objectWorldData.getPoint().getZ());
 	}
 	
 	private void move(float initialRot, float moveRot, double timePassed){
@@ -250,15 +314,15 @@ public class Sentient {
 		if(moveRot == initialRot){
 			moveCircle = new Circle(0, 0, (float)(speedForward*timePassed));
 		}
-		else if(abs(initialRot-moveRot) <= 90 || abs(initialRot-moveRot) != 0){
-			moveCircle = new Circle(0, 0, (float)(speedStrafe*timePassed));
-		}
-		else {
+		else if(moveRot == initialRot+180 || moveRot == initialRot-180){
 			moveCircle = new Circle(0, 0, (float)(speedBackward*timePassed));
 		}
+		else {
+			moveCircle = new Circle(0, 0, (float)(speedStrafe*timePassed));
+		}
 		
-		objectWorldData.getPoint().setX(objectWorldData.getPoint().getX()+moveCircle.getY(moveRot));
-		objectWorldData.getPoint().setZ(objectWorldData.getPoint().getZ()+moveCircle.getX(moveRot));
-		cam.setY(objectWorldData.getPoint().getY()+eyeHeight);
+		System.out.println(objectWorldData.getSpeed().getXSpeed()+moveCircle.getX(moveRot));
+		objectWorldData.getSpeed().setXSpeed(objectWorldData.getSpeed().getXSpeed()+moveCircle.getX(moveRot));
+		objectWorldData.getSpeed().setZSpeed(objectWorldData.getSpeed().getZSpeed()+moveCircle.getY(moveRot));
 	}
 }

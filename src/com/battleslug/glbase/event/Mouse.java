@@ -20,26 +20,26 @@ public class Mouse {
 		this.display = display;
 		
 		display.setMouseButtonCallback(new GLFWMouseButtonCallback(){
-            @Override
-            public void invoke(long window, int button, int action, int mods){
-            	if(action == GLFW_PRESS){
-            		if(button == GLFW_MOUSE_BUTTON_LEFT){
-            			leftButton = true;
-            		}
-            		else if(button == GLFW_MOUSE_BUTTON_RIGHT){
-            			rightButton = true;
-            		}
-            	}
-            	else if(action == GLFW_RELEASE){
-            		if(button == GLFW_MOUSE_BUTTON_LEFT){
-            			leftButton = false;
-            		}
-            		else if(button == GLFW_MOUSE_BUTTON_RIGHT){
-            			rightButton = false;
-            		}
-            	}
-            }
-        });
+			@Override
+			public void invoke(long window, int button, int action, int mods){
+				if(action == GLFW_PRESS){
+					if(button == GLFW_MOUSE_BUTTON_LEFT){
+						leftButton = true;
+					}
+					else if(button == GLFW_MOUSE_BUTTON_RIGHT){
+						rightButton = true;
+					}
+				}
+				else if(action == GLFW_RELEASE){
+					if(button == GLFW_MOUSE_BUTTON_LEFT){
+						leftButton = false;
+					}
+					else if(button == GLFW_MOUSE_BUTTON_RIGHT){
+						rightButton = false;
+					}
+				}
+			}
+		});
 	}
 	
 	public boolean isDownLeftButton(){
@@ -87,15 +87,6 @@ public class Mouse {
 	public void update(){
 		leftButtonLast = leftButton;
 		rightButtonLast = rightButton;
-	}
-	
-
-	public double getCursorRotXZChange(){
-		return getXCursorChange();
-	}
-	
-	public double getCursorRotYZChange(){
-		return getYCursorChange();
 	}
 	
 	public void setSensitivity3D(float sensitivity3D){

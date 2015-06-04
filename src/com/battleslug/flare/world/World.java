@@ -10,6 +10,10 @@ public class World {
 	
 	private Bullet[] bullet;
 	
+	public float groundHeight = 0f;
+	
+	public float gravity = 9.81f;
+	
 	public World(){
 		bullet = new Bullet[0];
 	}
@@ -51,5 +55,13 @@ public class World {
 	
 	public void update(double timePassed){
 		updateBullets(timePassed);
+	}
+	
+	public void setGravity(float gravity){
+		this.gravity = gravity;
+	}
+	
+	public float getGravity(){
+		return gravity;
 	}
 }

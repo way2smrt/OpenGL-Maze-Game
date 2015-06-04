@@ -451,7 +451,7 @@ public class Display {
 		return height;
 	}
 	
-	public void setPivotCam(Pivot pivot){
+	public void setCamPivot(Pivot pivot){
 		pivotCam = pivot;
 	}
 	

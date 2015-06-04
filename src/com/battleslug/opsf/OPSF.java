@@ -23,7 +23,6 @@ import static java.lang.Math.*;
 
 public class OPSF {	
 	private final static float WORLD_FLOOR = 0.0f;
-	private final static float WORLD_GRAVITY = 9.81f;
 	
 	private static final String GAME_FOLDER = "game/OPSF";
 	
@@ -66,17 +65,18 @@ public class OPSF {
 		hud_bullet_rifle = new Texture("res/img/hud/bullet_rifle.png");
 		hud_bullet_shotgun = new Texture("res/img/hud/bullet_shotgun.png");
 		
+		world = new World();
+		world.bind(display);
+		
 		player = new Sentient(world, "Bob the test dummy", 125);
 		player.setPivot(new Pivot(0, 90, 0));
 		player.getPivot().setRotYZAxisLimits(0f, 180f);
 		player.getPivot().setYZAxisLimitMode(LimitMode.STOP);
 		
 		player.setWeaponInstance(new WeaponInstance(world, player.getObjectWorldData(), new Weapon("pew pew gun", "shoot bullets", Weapon.FireMode.Automatic, 0.05f, 8, Weapon.ReloadMode.Clip, 2f, Weapon.AmmoType.SMG, 64)));
+		player.setSpeed(10f, 1f, 3f);
 		
-		display.setPivotCam(player.getPivot());
-		
-		world = new World();
-		world.bind(display);
+		display.setCamPivot(player.getPivot());
 		
 		keyboard.bind(display);
 		mouse.bind(display);
@@ -171,29 +171,10 @@ public class OPSF {
 				display.drawQuadTextured2D(new QuadTextured2D(200, 200, 400, 0, imgDoge.getTexture(), null));
 			}
 
-			player.updateUserControlled(keyboard, mouse, display.getTimePassed());
-			
-			if(keyboard.wasPressed(GLFW_KEY_SPACE) && player.getObjectWorldData().getPoint().getY() == 0f){
-				player.getObjectWorldData().getSpeed().setYSpeed(0.5f);
-			}
-			if(keyboard.wasPressed(GLFW_KEY_R)){
-				if(player.getWeaponInstance().getMode() == WeaponInstance.Mode.Ready){
-					player.getWeaponInstance().initReload(display.getTime());
-				}
-			}
+			player.updateUserControlled(keyboard, mouse, display.getTimePassed(), display.getTime());
 				
-			display.setPivotCam(player.getPivot());
+			display.setCamPivot(player.getPivot());
 			display.setCamLocation(player.getCamLocation());
-			
-			//invoke gravity on player
-			player.getObjectWorldData().getPoint().setY(player.getObjectWorldData().getSpeed().getYSpeed()-(float)(WORLD_GRAVITY*pow(display.getTimePassed(), 2)));
-			
-			//update player location
-			player.getObjectWorldData().getPoint().setY(player.getObjectWorldData().getPoint().getY()+player.getObjectWorldData().getSpeed().getYSpeed());			
-			if(player.getObjectWorldData().getPoint().getY() < WORLD_FLOOR){
-				player.getObjectWorldData().getPoint().setY(WORLD_FLOOR);
-				player.getObjectWorldData().getSpeed().setYSpeed(0f);
-			}
 			
 			if(keyboard.isDown(GLFW_KEY_ESCAPE)){
 				display.kill();
@@ -201,7 +182,7 @@ public class OPSF {
 			
 			display.update();
 			display.clear();
-			display.updateTimer();			
+			display.updateTimer();
 		}
 	}
 	
@@ -213,7 +194,7 @@ public class OPSF {
 	}
 	
 	private void drawFloor(Texture texFloor){
-		display.drawQuadTextured3D(new QuadTextured3D(display.FAR, WORLD_FLOOR, display.FAR, display.FAR, WORLD_FLOOR, -display.FAR, -display.FAR, WORLD_FLOOR, -display.FAR, -display.FAR, WORLD_FLOOR, display.FAR, texFloor, null));
+		display.drawQuadTextured3D(new QuadTextured3D(100, WORLD_FLOOR, 100, 100, WORLD_FLOOR, -100, -100, WORLD_FLOOR, -100, -100, WORLD_FLOOR, 100, texFloor, null));
 	}
 	
 	public static void main(String[] args) {

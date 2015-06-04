@@ -54,6 +54,18 @@ public class Speed {
 		return speedLimit;
 	}
 	
+	public void clearXSpeed(){
+		xSpeed = 0f;
+	}
+	
+	public void clearYSpeed(){
+		ySpeed = 0f;
+	}
+	
+	public void clearZSpeed(){
+		zSpeed = 0f;
+	}
+	
 	public void setXSpeedMax(float xSpeedMax){
 		this.xSpeedMax = xSpeedMax;
 		
