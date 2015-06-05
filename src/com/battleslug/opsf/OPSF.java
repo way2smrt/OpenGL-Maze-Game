@@ -54,7 +54,7 @@ public class OPSF {
 		keyboard = new Keyboard();
 		mouse = new Mouse();
 		
-		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 1280, 1024, false);
+		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 900, 720, false);
 		display.create();
 		
 		display.setCursorLocked(true);
@@ -165,9 +165,13 @@ public class OPSF {
 			
 			world.draw();
 			
+			display.drawText("Do you see this text rendering??? :D 	", new Point(100, 100), 16*32, 16, 38);
+			
 			if(keyboard.isDown(GLFW_KEY_Z)){										
 				imgDoge.setLocal(imgDoge.getWidth()/2, imgDoge.getHeight()/2);
+				
 				display.drawQuadTextured2D(new QuadTextured2D(0, 0, 200, 200, imgDoge.getTexture(), null));
+				display.drawQuadTextured2D(new QuadTextured2D(200, 200, 400, 400, display.getTexFont(), null));
 				display.drawQuadTextured2D(new QuadTextured2D(200, 200, 400, 0, imgDoge.getTexture(), null));
 			}
 
@@ -179,8 +183,6 @@ public class OPSF {
 			if(keyboard.isDown(GLFW_KEY_ESCAPE)){
 				display.kill();
 			}
-			
-			display.drawText("Do you see this text rendering??? :D 	", 100, 100, 800, 16);
 			
 			display.update();
 			display.clear();
