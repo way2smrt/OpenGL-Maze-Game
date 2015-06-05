@@ -90,8 +90,6 @@ public class Display {
 		else {
 			window = glfwCreateWindow(width, height, title, NULL, NULL);
 		}
-		
-		font = new Texture("res/font/serif.png");
 			
 		if(window == NULL){
 			throw new RuntimeException("Failed to create the GLFW window");
@@ -112,6 +110,8 @@ public class Display {
  
 		GLContext.createFromCurrent();
 
+		font = new Texture("res/font/sans_serif.png");
+		
 		glViewport(0, 0, width, height);
 		glOrtho(0, width, height, 0, 1, -1);
 		
@@ -379,92 +379,130 @@ public class Display {
 		}
 	}
 	
-	public void drawText(String text, float x, float y, float width){
+	public void drawText(String text, float x, float y, float x2, float width){
+		font.bind();
+		
 		setMode(ModeDraw.MODE_2D, ModeColor.MODE_TEXTURE);
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glColor4f(1.0f, 1.0f, 1.0f, 1f);
 		
+		final float FONT_TEXT_HEIGHT_RATIO = (width/12f)/(width/38f); 
 		
+		final int FONT_CHAR_COLUMNS = 16;
+		final int FONT_CHAR_ROWS = 6;
+		
+		float drawX = x;
+		float drawY = y;
+		
+		char curr;
+		
+		for(int i = 0; i != text.length(); i++){
+			curr = text.charAt(i);
+			
+			if(drawX > x2){
+				drawY += width*FONT_TEXT_HEIGHT_RATIO;
+				drawX = x;
+			}
+			
+			glBegin(GL_QUADS);
+			
+			glTexCoord2f(getTextUCoord(curr), getTextVCoord(curr));
+			glVertex2f(drawX, drawY);
+
+			glTexCoord2f(getTextUCoord(curr), getTextVCoord(curr)+1f/FONT_CHAR_ROWS);
+			glVertex2f(drawX, drawY+(width*FONT_TEXT_HEIGHT_RATIO));
+
+			glTexCoord2f(getTextUCoord(curr)+1f/FONT_CHAR_COLUMNS, getTextVCoord(curr)+1f/FONT_CHAR_ROWS);
+			glVertex2f(drawX+width, drawY+(width*FONT_TEXT_HEIGHT_RATIO));
+			
+			glTexCoord2f(getTextUCoord(curr)+1f/FONT_CHAR_COLUMNS, getTextVCoord(curr));
+			glVertex2f(drawX+width, drawY);
+
+			glEnd();
+			
+			
+			drawX += width;
+		}
 	}
 	
-	public float getTextUCoord(char c){
-		final int FONT_IMAGE_COLUMNS = 16;
+	private float getTextUCoord(char c){
+		final int FONT_CHAR_COLUMNS = 16;
 		
 		if(c == 'a' || c == 'q' || c == 'A' || c == 'Q' || c == '!' || c == '1' ){
-			return 0;
+			return 0f;
 		}
 		else if(c == 'b' || c == 'r' || c == 'B' || c == 'R' || c == '@' || c == '2'){
-			return 1/FONT_IMAGE_COLUMNS;
+			return 1f/FONT_CHAR_COLUMNS;
 		}
 		else if(c == 'c' ||  c == 's' || c == 'C' || c == 'S' || c == '#' || c == '3'){
-			return 2/FONT_IMAGE_COLUMNS;
+			return 2f/FONT_CHAR_COLUMNS;
 		}
 		else if( c == 'd' || c == 't' ||  c == 'D' || c == 'T' || c == '$' || c == '4'){
-			return 3/FONT_IMAGE_COLUMNS;
+			return 3f/FONT_CHAR_COLUMNS;
 		}
 		else if( c == 'e' ||  c == 'u' ||  c == 'E' || c == 'U' || c == '%' || c == '5'){
-			return 4/FONT_IMAGE_COLUMNS;
+			return 4f/FONT_CHAR_COLUMNS;
 		}
 		else if(c == 'f' || c == 'v' || c == 'F' || c == 'V' || c == '^' || c == '6'){
-			return 5/FONT_IMAGE_COLUMNS;
+			return 5f/FONT_CHAR_COLUMNS;
 		}
 		else if(c == 'g' || c == 'w' ||  c == 'G' ||  c == 'W' || c == '&' ||  c == '7'){
-			return 6/FONT_IMAGE_COLUMNS;
+			return 6f/FONT_CHAR_COLUMNS;
 		}
 		else if(c == 'h' || c == 'x' ||  c == 'H' ||  c == 'X' || c == '*' ||  c == '8' ){
-			return 7/FONT_IMAGE_COLUMNS;
+			return 7f/FONT_CHAR_COLUMNS;
 		}
 		else if(c == 'i' || c == 'y' || c == 'I' || c == 'Y' || c == '(' || c == '9' ){
-			return 8/FONT_IMAGE_COLUMNS;
+			return 8f/FONT_CHAR_COLUMNS;
 		}
 		else if(  c == 'j' || c == 'z' || c == 'J' || c == 'Z' || c == ')' || c == '0' ){
-			return 9/FONT_IMAGE_COLUMNS;
+			return 9f/FONT_CHAR_COLUMNS;
 		}
 		else if(c == 'k' || c == '{' || c == 'K' || c == ';' || c == '-' || c == ',' ){
-			return 10/FONT_IMAGE_COLUMNS;
+			return 10f/FONT_CHAR_COLUMNS;
 		}
 		else if(c == 'l' || c == '}' || c == 'L' || c == ':' || c == '_' || c == '.' ){
-			return 11/FONT_IMAGE_COLUMNS;
+			return 11f/FONT_CHAR_COLUMNS;
 		}
 		else if(c == 'm' || c == '<' || c == 'M' || c == '\'' || c == '+' || c == '\\' ){
-			return 12/FONT_IMAGE_COLUMNS;
+			return 12f/FONT_CHAR_COLUMNS;
 		}
 		else if(c == 'n' || c == '>' || c == 'N' || c == '\"' || c == '=' || c == '|' ){
-			return 13/FONT_IMAGE_COLUMNS;
+			return 13f/FONT_CHAR_COLUMNS;
 		}
 		else if(c == 'o' || c == '[' || c == 'O' || c == '/' || c == ';' ||  c == '~' ){
-			return 14/FONT_IMAGE_COLUMNS;
+			return 14f/FONT_CHAR_COLUMNS;
 		}
 		else if(c == 'p' || c == ']' || c == 'P' || c == '?' || c == ';' || c == ' '){
-			return 15/FONT_IMAGE_COLUMNS;
+			return 15f/FONT_CHAR_COLUMNS;
 		}
 		else {
-			return 15/FONT_IMAGE_COLUMNS;
+			return 15f/FONT_CHAR_COLUMNS;
 		}
 	}
 	
-	public float getTextVCoord(char c){
-		final int FONT_IMAGE_ROWS = 6;
+	private float getTextVCoord(char c){
+		final int FONT_CHAR_ROWS = 6;
 		
 		if(c == 'a' || c == 'b' || c == 'c' || c == 'd' || c == 'e' || c == 'f' || c == 'g' || c == 'h' || c == 'i' || c == 'j' || c == 'k' || c == 'l' || c == 'm' || c == 'n' || c == 'o' || c == 'p'){
-			return 0;
+			return 0f;
 		}
 		else if(c == 'q' || c == 'r' || c == 's' || c == 't' || c == 'u' || c == 'v' || c == 'w' || c == 'x' || c == 'y' || c == 'z' || c == '{' || c == '}' || c == '<' || c == '>' || c == '[' || c == ']'){
-			return 1/FONT_IMAGE_ROWS;
+			return 1f/FONT_CHAR_ROWS;
 		}
 		else if(c == 'A' || c == 'B' || c == 'C' || c == 'D' || c == 'E' || c == 'F' || c == 'G' || c == 'H' || c == 'I' || c == 'J' || c == 'K' || c == 'L' || c == 'M' || c == 'N' || c == 'O' || c == 'P'){
-			return 2/FONT_IMAGE_ROWS;
+			return 2f/FONT_CHAR_ROWS;
 		}
 		else if(c == 'Q' || c == 'R' || c == 'S' || c == 'T' || c == 'U' || c == 'V' || c == 'W' || c == 'X' || c == 'Y' || c == 'Z' || c == ';' || c == ':' || c == '\'' || c == '\"' || c == '/' || c == '?'){
-			return 3/FONT_IMAGE_ROWS;
+			return 3f/FONT_CHAR_ROWS;
 		}
 		else if(c == '!' || c == '@' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '*' || c == '(' || c == ')' || c == '-' || c == '_' || c == '+' || c == '=' || c == ';' || c == ';'){
-			return 4/FONT_IMAGE_ROWS;
+			return 4f/FONT_CHAR_ROWS;
 		}
 		else if(c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9' || c == '0' || c == ',' || c == '.' || c == '\\' || c == '|' || c == '~' || c == ' '){
-			return 5/FONT_IMAGE_ROWS;
+			return 5f/FONT_CHAR_ROWS;
 		}
 		else {
-			return 5/FONT_IMAGE_ROWS;
+			return 5f/FONT_CHAR_ROWS;
 		}
 	}
 	

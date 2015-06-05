@@ -47,7 +47,7 @@ public class OPSF {
 	}
 	
 	public void init(){
-		if (glfwInit() != GL11.GL_TRUE){
+		if(glfwInit() != GL11.GL_TRUE){
 			throw new IllegalStateException("Unable to initialize GLFW");
 		}
 		
@@ -179,6 +179,8 @@ public class OPSF {
 			if(keyboard.isDown(GLFW_KEY_ESCAPE)){
 				display.kill();
 			}
+			
+			display.drawText("Do you see this text rendering??? :D 	", 100, 100, 800, 16);
 			
 			display.update();
 			display.clear();
