@@ -37,6 +37,8 @@ public class OPSF {
 	
 	private Texture texTest1, texGrass;
 	
+	private HUDBulletDisplay bulletDisplay;
+	
 	public OPSF(){
 		init();
 		play();
@@ -70,10 +72,13 @@ public class OPSF {
 		world.getWeaponSystem().add(new Weapon("UMP-48", "A powerful smg. Doensn't carry a lot of rounds though.", Weapon.Type.SMG, Weapon.FireMode.AUTO, 0.14f, 24, Weapon.ReloadMode.CLIP, 2.5f, Weapon.AmmoType.PISTOL, 16));
 		world.getWeaponSystem().add(new Weapon("HPP-7", "A powerful pistol capable of shooting deadly rounds.", Weapon.Type.PISTOL, Weapon.FireMode.SEMIAUTO, 0.3f, 27, Weapon.ReloadMode.CLIP, 2f, Weapon.AmmoType.PISTOL, 8));
 		world.getWeaponSystem().add(new Weapon("JAYKO", "A long range sniper rifle.", Weapon.Type.SNIPER_RIFLE, Weapon.FireMode.SEMIAUTO, 1.2f, 92, Weapon.ReloadMode.CLIP, 3f, Weapon.AmmoType.RIFLE, 6));
-		world.getWeaponSystem().add(new Weapon("KT-277", "A powerful assault rifle with a decent mag.", Weapon.Type.ASSAULT_RIFLE, Weapon.FireMode.SEMIAUTO, 0.25f, 22, Weapon.ReloadMode.CLIP, 3f, Weapon.AmmoType.RIFLE, 22));
+		world.getWeaponSystem().add(new Weapon("KT-277", "A powerful assault rifle with a decent mag.", Weapon.Type.ASSAULT_RIFLE, Weapon.FireMode.SEMIAUTO, 0.17f, 22, Weapon.ReloadMode.CLIP, 3f, Weapon.AmmoType.RIFLE, 22));
+		world.getWeaponSystem().add(new Weapon("Rattlesnake", "A high-capacity pistol, with a very fast fire rate.", Weapon.Type.PISTOL, Weapon.FireMode.SEMIAUTO, 0.06f, 7, Weapon.ReloadMode.CLIP, 1f, Weapon.AmmoType.PISTOL, 20));
+		world.getWeaponSystem().add(new Weapon("PNP12", "A powerful shotgun with a slow fire rate.", Weapon.Type.SHOTGUN, Weapon.FireMode.SEMIAUTO, 0.5f, 52, Weapon.ReloadMode.CHAMBER_FULL, 1.2f, Weapon.AmmoType.SHOTGUN, 6));
+		world.getWeaponSystem().add(new Weapon("x11", "A reliable rifle, very versatile.", Weapon.Type.RIFLE, Weapon.FireMode.SEMIAUTO, 0.7f, 62, Weapon.ReloadMode.CLIP, 3f, Weapon.AmmoType.RIFLE, 10));
 		
-		player.setWeaponInstance(new WeaponInstance(world, player.getObjectWorldData(), world.getWeaponSystem().getWeapon("HPP-7")));
 		player.setSpeed(10f, 1f, 3f);
+		player.setWeaponInstance(new WeaponInstance(world, player.getObjectWorldData(), world.getWeaponSystem().getWeapon(0)));
 		
 		display.setCamPivot(player.getPivot());
 		
@@ -92,10 +97,12 @@ public class OPSF {
 		Texture tex5 = new Texture(GAME_FOLDER+"/res/tex/stoneRoad1.png");
 		Texture tex6 = new Texture(GAME_FOLDER+"/res/tex/sandRocks2.png");
 		
+		int weapon = 0;
+		
 		float crossHairDist = 5;
 		final int CROSSHAIR_DIST_MAX = 25;
 			
-		HUDBulletDisplay bulletDisplay = new HUDBulletDisplay(new Point(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4), display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), player.getWeaponInstance().getWeapon().getAmmoTex(), new VectorColor(0.8f, 0.8f, 0.8f));
+		bulletDisplay = new HUDBulletDisplay(new Point(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4), display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), player.getWeaponInstance().getWeapon().getAmmoTex(), new VectorColor(0.8f, 0.8f, 0.8f));
 		bulletDisplay.bind(display);
 		
 		float cubeX = -40f;;
@@ -111,6 +118,25 @@ public class OPSF {
 			world.update(display.getTimePassed());
 			
 			bulletDisplay.draw();
+			
+			if(keyboard.wasPressed(GLFW_KEY_Q)){
+				if(weapon > 0){
+					weapon -= 1;
+					changeWeapon(weapon);
+				}
+				else {
+					weapon = 0;
+				}
+			}
+			else if(keyboard.wasPressed(GLFW_KEY_E)){
+				if(weapon < world.getWeaponSystem().getNumWeapons()-1){
+					weapon += 1;
+					changeWeapon(weapon);
+				}
+				else {
+					weapon = world.getWeaponSystem().getNumWeapons()-1;
+				}
+			}
 			
 			//draw cursor and shoot gun
 			if(player.getWeaponInstance().getMode() == WeaponInstance.Mode.Reload){
@@ -200,6 +226,13 @@ public class OPSF {
 			display.clear();
 			display.updateTimer();
 		}
+	}
+	
+	private void changeWeapon(int ID){
+		player.setWeaponInstance(new WeaponInstance(world, player.getObjectWorldData(), world.getWeaponSystem().getWeapon(ID)));
+		
+		bulletDisplay = new HUDBulletDisplay(new Point(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4), display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), player.getWeaponInstance().getWeapon().getAmmoTex(), new VectorColor(0.8f, 0.8f, 0.8f));
+		bulletDisplay.bind(display);
 	}
 	
 	private void drawCrosshair(int size, int spacing, VectorColor cInner, VectorColor cOuter){

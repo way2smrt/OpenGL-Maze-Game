@@ -36,7 +36,7 @@ public class WeaponSystem {
 	}
 	
 	public Weapon getWeapon(int ID){
-		if(ID >= 0 && ID <= weapon.length){
+		if(ID >= 0 && ID <= weapon.length-1){
 			return weapon[ID];
 		}
 		return null;
