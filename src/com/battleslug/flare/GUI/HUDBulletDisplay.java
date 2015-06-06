@@ -3,6 +3,7 @@ package com.battleslug.flare.GUI;
 import com.battleslug.flare.item.Weapon;
 import com.battleslug.flare.item.WeaponInstance;
 import com.battleslug.glbase.*;
+import com.battleslug.glbase.geometry.*;
 
 public class HUDBulletDisplay extends GUIObject {
 	private int bulletFiredX, bulletFiredY, bulletFiredRot = 0;
@@ -16,8 +17,10 @@ public class HUDBulletDisplay extends GUIObject {
 	
 	private Image bulletImg;
 	
-	public HUDBulletDisplay(int x, int y, int width, int height, WeaponInstance weaponInstance, Texture bulletTex){
-		super(x, y, width, height);
+	private VectorColor textBackColor;
+	
+	public HUDBulletDisplay(Point p, int width, int height, WeaponInstance weaponInstance, Texture bulletTex, VectorColor textBackColor){
+		super(p, width, height);
 		
 		this.weapon = weaponInstance;
 		this.bulletTex = bulletTex;
@@ -49,8 +52,8 @@ public class HUDBulletDisplay extends GUIObject {
 			}
 		}
 		
-		for(int cy = y; cy+bulletTex.getHeight() <= y+height && bulletCurr != 0; cy+=bulletTex.getHeight()){
-			for(int cx = x; cx+bulletTex.getWidth() <= x+width && bulletCurr != 0; cx+=bulletTex.getWidth()){
+		for(int cy = (int)(p.getY()); cy+bulletTex.getHeight() <= p.getY()+height && bulletCurr != 0; cy+=bulletTex.getHeight()){
+			for(int cx = (int)(p.getX()); cx+bulletTex.getWidth() <= p.getX()+width && bulletCurr != 0; cx+=bulletTex.getWidth()){
 				display.drawQuadTextured2D(new QuadTextured2D(cx, cy, cx+bulletTex.getWidth(), cy+bulletTex.getHeight(), bulletTex, null));
 				
 				if(bullets < bulletsLast && bulletCurr == 1){
@@ -70,5 +73,8 @@ public class HUDBulletDisplay extends GUIObject {
 				bulletCurr -= 1;
 			}
 		}
+		
+		display.setTextDrawOrigin(p);
+		display.drawText(new Integer(weapon.getBullets()).toString()+"/"+new Integer(weapon.getWeapon().getAmmoMax()).toString(), width, 16, 38, textBackColor);
 	}
 }

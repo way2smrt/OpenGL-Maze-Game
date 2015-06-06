@@ -1,15 +1,16 @@
 package com.battleslug.flare.GUI;
 
 import com.battleslug.glbase.*;
+import com.battleslug.glbase.geometry.*;
 
 public class GUIObject {
 	protected Display display;
 
-	protected int x, y, width, height; 
+	protected Point p;
+	protected int width, height; 
 	
-	public GUIObject(int x, int y, int width, int height){
-		this.x = x;
-		this.y = y;
+	public GUIObject(Point p, int width, int height){
+		this.p = p;
 		this.width = width;
 		this.height = height;
 	}
@@ -26,11 +27,7 @@ public class GUIObject {
 		return height;
 	}
 	
-	public int getX(){
-		return x;
-	}
-	
-	public int getY(){
-		return y;
+	public Point getPoint(){
+		return p;
 	}
 }

@@ -68,6 +68,12 @@ public class Display {
 	
 	private Texture font;
 	
+	public static final int DEF_CHAR_WIDTH = 16;
+	public static final int DEF_CHAR_HEIGHT = 38;
+	
+	private Point textDrawOrigin;
+	private Point textDrawLoc;
+	
 	public Display(String title, int width, int height){
 		this(title, width, height, false);
 	}
@@ -81,6 +87,9 @@ public class Display {
 		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
 		
 		cam = new Point(0, 0, 0);
+		
+		textDrawOrigin = new Point(0, 0);
+		textDrawLoc = new Point(0, 0);
 	}
 	
 	public void create() {
@@ -110,7 +119,7 @@ public class Display {
  
 		GLContext.createFromCurrent();
 
-		font = new Texture("res/font/sans_serif.png");
+		font = new Texture("res/font/sans_serif2.png");
 		
 		glViewport(0, 0, width, height);
 		glOrtho(0, width, height, 0, 1, -1);
@@ -379,10 +388,73 @@ public class Display {
 		}
 	}
 	
-	public void drawText(String text, Point p, float boundWidth, float charWidth, float charHeight){
+	public void setTextDrawOrigin(Point p){
+		textDrawOrigin = p;
+		textDrawLoc = new Point(p.getX(), p.getY());
+	}
+	
+	public void drawText(String text, float boundWidth, float charWidth, float charHeight, VectorColor backColor){
 		font.bind();
 		
-		setMode(ModeDraw.MODE_2D, ModeColor.MODE_TEXTURE);
+		final int FONT_CHAR_COLUMNS = 16;
+		final int FONT_CHAR_ROWS = 6;
+		
+		char curr;
+		
+		for(int i = 0; i != text.length(); i++){
+			curr = text.charAt(i);
+			
+			if(textDrawLoc.getX() > textDrawOrigin.getX()+boundWidth){
+				textDrawLoc.setY(textDrawLoc.getY()+charHeight);
+				textDrawLoc.setX(textDrawOrigin.getX());
+			}
+			
+			if(backColor != null){
+				//draw the background color
+				setMode(ModeDraw.MODE_2D, ModeColor.MODE_COLOR);
+				glColor4f(backColor.getRed(), backColor.getGreen(), backColor.getBlue(), backColor.getAlpha());
+				
+				glBegin(GL_QUADS);
+				
+				glVertex2f(textDrawLoc.getX(), textDrawLoc.getY());
+				glVertex2f(textDrawLoc.getX(), textDrawLoc.getY()+charHeight);
+				glVertex2f(textDrawLoc.getX()+charWidth, textDrawLoc.getY()+charHeight);
+				glVertex2f(textDrawLoc.getX()+charWidth, textDrawLoc.getY());
+
+				glEnd();
+			}
+			
+			//draw the character
+			setMode(ModeDraw.MODE_2D, ModeColor.MODE_TEXTURE);
+			glColor4f(1.0f, 1.0f, 1.0f, 1f);
+			
+			glBegin(GL_QUADS);
+			
+			glTexCoord2f(getTextUCoord(curr), getTextVCoord(curr));
+			glVertex2f(textDrawLoc.getX(), textDrawLoc.getY());
+
+			glTexCoord2f(getTextUCoord(curr), getTextVCoord(curr)+1f/FONT_CHAR_ROWS);
+			glVertex2f(textDrawLoc.getX(), textDrawLoc.getY()+charHeight);
+
+			glTexCoord2f(getTextUCoord(curr)+1f/FONT_CHAR_COLUMNS, getTextVCoord(curr)+1f/FONT_CHAR_ROWS);
+			glVertex2f(textDrawLoc.getX()+charWidth, textDrawLoc.getY()+charHeight);
+			
+			glTexCoord2f(getTextUCoord(curr)+1f/FONT_CHAR_COLUMNS, getTextVCoord(curr));
+			glVertex2f(textDrawLoc.getX()+charWidth, textDrawLoc.getY());
+
+			glEnd();
+
+			textDrawLoc.setX(textDrawLoc.getX()+charWidth);
+		}
+		
+		textDrawLoc.setY(textDrawLoc.getY()+charHeight);
+		textDrawLoc.setX(textDrawOrigin.getX());
+	}
+	
+	public void drawText3D(String text, Point p, float boundWidth, float charWidth, float charHeight, float rot){
+		font.bind();
+		
+		setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
 		glColor4f(1.0f, 1.0f, 1.0f, 1f);
 		
 		final int FONT_CHAR_COLUMNS = 16;
@@ -390,6 +462,9 @@ public class Display {
 		
 		float drawX = p.getX();
 		float drawY = p.getY();
+		float drawZ = p.getZ();
+		
+		Circle c= new Circle(0, 0, charWidth);
 		
 		char curr;
 		
@@ -397,26 +472,25 @@ public class Display {
 			curr = text.charAt(i);
 			
 			if(drawX > p.getX()+boundWidth){
-				drawY += charHeight;
+				drawY -= charHeight;
 				drawX = p.getX();
 			}
 			
 			glBegin(GL_QUADS);
 			
 			glTexCoord2f(getTextUCoord(curr), getTextVCoord(curr));
-			glVertex2f(drawX, drawY);
+			glVertex3f(drawX, drawY, drawZ);
 
 			glTexCoord2f(getTextUCoord(curr), getTextVCoord(curr)+1f/FONT_CHAR_ROWS);
-			glVertex2f(drawX, drawY+charHeight);
+			glVertex3f(drawX, drawY-charHeight, drawZ);
 
 			glTexCoord2f(getTextUCoord(curr)+1f/FONT_CHAR_COLUMNS, getTextVCoord(curr)+1f/FONT_CHAR_ROWS);
-			glVertex2f(drawX+charWidth, drawY+charHeight);
+			glVertex3f(drawX+c.getX(rot), drawY-charHeight, drawZ+c.getY(rot));
 			
 			glTexCoord2f(getTextUCoord(curr)+1f/FONT_CHAR_COLUMNS, getTextVCoord(curr));
-			glVertex2f(drawX+charWidth, drawY);
+			glVertex3f(drawX+c.getX(rot), drawY, drawZ);
 
 			glEnd();
-			
 			
 			drawX += charWidth;
 		}

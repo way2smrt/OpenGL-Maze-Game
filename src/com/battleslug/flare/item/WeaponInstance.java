@@ -71,7 +71,7 @@ public class WeaponInstance {
 	}
 	
 	public void updateReload(double currTime){
-		if(weapon.getReloadMode() == Weapon.ReloadMode.ChamberSingle){
+		if(weapon.getReloadMode() == Weapon.ReloadMode.CHAMBER_SINGLE){
 			if(reloadStartTime+weapon.getReloadDelay() <= currTime){
 				if(ammoCurr < weapon.getAmmoMax()){
 					ammoCurr += 1;
@@ -79,7 +79,7 @@ public class WeaponInstance {
 				mode = Mode.Ready;
 			}
 		}
-		else if(weapon.getReloadMode() == Weapon.ReloadMode.ChamberFull){			
+		else if(weapon.getReloadMode() == Weapon.ReloadMode.CHAMBER_FULL){			
 			int ammoReload = (int)((currTime-reloadStartTime)/weapon.getReloadDelay());
 			
 			if(ammoCurr+ammoReload < weapon.getAmmoMax()){
@@ -90,7 +90,7 @@ public class WeaponInstance {
 				mode = Mode.Ready;
 			}
 		}
-		else if(weapon.getReloadMode() == Weapon.ReloadMode.Clip){
+		else if(weapon.getReloadMode() == Weapon.ReloadMode.CLIP){
 			if(reloadStartTime+weapon.getReloadDelay() <= currTime){
 				ammoCurr = weapon.getAmmoMax();
 				mode = Mode.Ready;

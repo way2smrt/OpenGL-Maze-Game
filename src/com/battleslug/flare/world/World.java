@@ -3,6 +3,8 @@ package com.battleslug.flare.world;
 import com.battleslug.glbase.*;
 import com.battleslug.glbase.geometry.*;
 
+import com.battleslug.flare.item.*;
+
 import java.util.Arrays;
 
 public class World {	
@@ -14,8 +16,16 @@ public class World {
 	
 	public float gravity = 9.81f;
 	
+	public WeaponSystem weaponSystem;
+	
 	public World(){
 		bullet = new Bullet[0];
+		
+		weaponSystem = new WeaponSystem();
+	}
+	
+	public WeaponSystem getWeaponSystem(){
+		return weaponSystem;
 	}
 	
 	public void addBullet(Bullet bullet){

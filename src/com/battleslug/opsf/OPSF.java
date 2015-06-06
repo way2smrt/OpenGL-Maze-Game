@@ -8,9 +8,7 @@ import com.battleslug.flare.*;
 import com.battleslug.flare.world.*;
 import com.battleslug.flare.sentient.Sentient;
 import com.battleslug.flare.item.*;
-import com.battleslug.flare.item.Weapon.AmmoType;
-import com.battleslug.flare.item.Weapon.FireMode;
-import com.battleslug.flare.item.Weapon.ReloadMode;
+import com.battleslug.flare.item.Weapon.*;
 import com.battleslug.flare.GUI.*;
 import com.battleslug.glbase.*;
 import com.battleslug.glbase.geometry.*;
@@ -39,8 +37,6 @@ public class OPSF {
 	
 	private Texture texTest1, texGrass;
 	
-	private Texture hud_bullet_normal, hud_bullet_rifle, hud_bullet_shotgun;
-	
 	public OPSF(){
 		init();
 		play();
@@ -60,11 +56,7 @@ public class OPSF {
 		display.setCursorLocked(true);
 	}
 	
-	public void play(){
-		hud_bullet_normal = new Texture("res/img/hud/bullet_normal.png");
-		hud_bullet_rifle = new Texture("res/img/hud/bullet_rifle.png");
-		hud_bullet_shotgun = new Texture("res/img/hud/bullet_shotgun.png");
-		
+	public void play(){	
 		world = new World();
 		world.bind(display);
 		
@@ -73,7 +65,14 @@ public class OPSF {
 		player.getPivot().setRotYZAxisLimits(0f, 180f);
 		player.getPivot().setYZAxisLimitMode(LimitMode.STOP);
 		
-		player.setWeaponInstance(new WeaponInstance(world, player.getObjectWorldData(), new Weapon("pew pew gun", "shoot bullets", Weapon.FireMode.Automatic, 0.05f, 8, Weapon.ReloadMode.Clip, 2f, Weapon.AmmoType.SMG, 64)));
+		//add weapons
+		world.getWeaponSystem().add(new Weapon("A23", "A light smg, but with enough rounds and punch for good versatility.", Weapon.Type.SMG, Weapon.FireMode.AUTO, 0.1f, 12, Weapon.ReloadMode.CLIP, 2.5f, Weapon.AmmoType.PISTOL, 23));
+		world.getWeaponSystem().add(new Weapon("UMP-48", "A powerful smg. Doensn't carry a lot of rounds though.", Weapon.Type.SMG, Weapon.FireMode.AUTO, 0.14f, 24, Weapon.ReloadMode.CLIP, 2.5f, Weapon.AmmoType.PISTOL, 16));
+		world.getWeaponSystem().add(new Weapon("HPP-7", "A powerful pistol capable of shooting deadly rounds.", Weapon.Type.PISTOL, Weapon.FireMode.SEMIAUTO, 0.3f, 27, Weapon.ReloadMode.CLIP, 2f, Weapon.AmmoType.PISTOL, 8));
+		world.getWeaponSystem().add(new Weapon("JAYKO", "A long range sniper rifle.", Weapon.Type.SNIPER_RIFLE, Weapon.FireMode.SEMIAUTO, 1.2f, 92, Weapon.ReloadMode.CLIP, 3f, Weapon.AmmoType.RIFLE, 6));
+		world.getWeaponSystem().add(new Weapon("KT-277", "A powerful assault rifle with a decent mag.", Weapon.Type.ASSAULT_RIFLE, Weapon.FireMode.SEMIAUTO, 0.25f, 22, Weapon.ReloadMode.CLIP, 3f, Weapon.AmmoType.RIFLE, 22));
+		
+		player.setWeaponInstance(new WeaponInstance(world, player.getObjectWorldData(), world.getWeaponSystem().getWeapon("HPP-7")));
 		player.setSpeed(10f, 1f, 3f);
 		
 		display.setCamPivot(player.getPivot());
@@ -94,12 +93,14 @@ public class OPSF {
 		Texture tex6 = new Texture(GAME_FOLDER+"/res/tex/sandRocks2.png");
 		
 		float crossHairDist = 5;
-		final int CROSSHAIR_DIST_MAX = 30;
-		
-		HUDBulletDisplay bulletDisplay = new HUDBulletDisplay(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4, display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), hud_bullet_rifle);
+		final int CROSSHAIR_DIST_MAX = 25;
+			
+		HUDBulletDisplay bulletDisplay = new HUDBulletDisplay(new Point(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4), display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), player.getWeaponInstance().getWeapon().getAmmoTex(), new VectorColor(0.8f, 0.8f, 0.8f));
 		bulletDisplay.bind(display);
 		
 		float cubeX = -40f;;
+		
+		VectorColor HUDBackColor = new VectorColor(1.0f, 0.0f, 0.0f, 0.75f);
 		
 		while(true){
 			keyboard.update();
@@ -116,22 +117,26 @@ public class OPSF {
 				player.getWeaponInstance().updateReload(display.getTime());
 			}
 			
-			if(player.getWeaponInstance().getWeapon().getFireMode() == Weapon.FireMode.Semiautomatic && mouse.wasPressedLeftButton() && player.getWeaponInstance().canShoot(display.getTime())){
-				crossHairDist = 0;
+			if(player.getWeaponInstance().getWeapon().getFireMode() == Weapon.FireMode.SEMIAUTO && mouse.wasPressedLeftButton() && player.getWeaponInstance().canShoot(display.getTime())){
+				if(player.getWeaponInstance().hasBullets()){
+					crossHairDist = CROSSHAIR_DIST_MAX;
+				}
 				
 				player.getWeaponInstance().shoot(0, 0, 0, 0, display.getTime());
 			}
-			else if(player.getWeaponInstance().getWeapon().getFireMode() == Weapon.FireMode.Automatic && mouse.isDownLeftButton() && player.getWeaponInstance().canShoot(display.getTime())){
-				crossHairDist = 0;
+			else if(player.getWeaponInstance().getWeapon().getFireMode() == Weapon.FireMode.AUTO && mouse.isDownLeftButton() && player.getWeaponInstance().canShoot(display.getTime())){
+				if(player.getWeaponInstance().hasBullets()){
+					crossHairDist = CROSSHAIR_DIST_MAX;
+				}
 				
 				player.getWeaponInstance().shoot(0, 0, 0, 0, display.getTime());
 			}
 			else {
-				if(crossHairDist < CROSSHAIR_DIST_MAX){
-					crossHairDist += (float)(75*display.getTimePassed());
+				if(crossHairDist > 0){
+					crossHairDist -= (float)((CROSSHAIR_DIST_MAX/player.getWeaponInstance().getWeapon().getFireDelay())*display.getTimePassed());
 				}
-				if(crossHairDist > CROSSHAIR_DIST_MAX){
-					crossHairDist = CROSSHAIR_DIST_MAX;
+				if(crossHairDist < 0){
+					crossHairDist = 0;
 				}
 			}
 			
@@ -165,7 +170,14 @@ public class OPSF {
 			
 			world.draw();
 			
-			display.drawText("Do you see this text rendering??? :D 	", new Point(100, 100), 16*32, 16, 38);
+			display.setTextDrawOrigin(new Point(200, 200));
+			display.drawText("Do you see this text rendering??? :D  10/10", 16*32, 16, 38, null);
+			
+			//draw some hud stuff
+			display.setTextDrawOrigin(new Point(0, 0));
+			display.drawText("Weapon: "+player.getWeaponInstance().getWeapon().getName(), display.getWidth()/3, Display.DEF_CHAR_WIDTH, Display.DEF_CHAR_HEIGHT, HUDBackColor);
+			display.drawText("Weapon type: "+Weapon.getTypeString(player.getWeaponInstance().getWeapon().getType()), display.getWidth()/3, Display.DEF_CHAR_WIDTH, Display.DEF_CHAR_HEIGHT, HUDBackColor);
+			display.drawText(new Integer(player.getWeaponInstance().getBullets()).toString()+"/"+new Integer(player.getWeaponInstance().getWeapon().getAmmoMax()).toString(), display.getWidth()/3, Display.DEF_CHAR_WIDTH, Display.DEF_CHAR_HEIGHT, HUDBackColor);
 			
 			if(keyboard.isDown(GLFW_KEY_Z)){										
 				imgDoge.setLocal(imgDoge.getWidth()/2, imgDoge.getHeight()/2);
