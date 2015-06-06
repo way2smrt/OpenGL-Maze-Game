@@ -209,7 +209,7 @@ public class Display {
 	}
 	
 	public static void updateEvents(){
-		glfwPollEvents();
+		glfwWaitEvents();
 	}
 	
 	public void hide(){

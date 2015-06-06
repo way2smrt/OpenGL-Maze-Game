@@ -26,6 +26,8 @@ public class HUDBulletDisplay extends GUIObject {
 		this.bulletTex = bulletTex;
 		
 		bulletImg = new Image(bulletTex, bulletTex.getWidth(), bulletTex.getHeight(), bulletTex.getWidth()/2, bulletTex.getHeight()/2);
+		
+		this.textBackColor = textBackColor;
 	}
 	
 	public void draw(){

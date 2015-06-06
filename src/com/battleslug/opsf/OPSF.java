@@ -102,7 +102,7 @@ public class OPSF {
 		float crossHairDist = 5;
 		final int CROSSHAIR_DIST_MAX = 25;
 			
-		bulletDisplay = new HUDBulletDisplay(new Point(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4), display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), player.getWeaponInstance().getWeapon().getAmmoTex(), new VectorColor(0.8f, 0.8f, 0.8f));
+		bulletDisplay = new HUDBulletDisplay(new Point(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4), display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), player.getWeaponInstance().getWeapon().getAmmoTex(), new VectorColor(0.8f, 0.8f, 0.5f));
 		bulletDisplay.bind(display);
 		
 		float cubeX = -40f;;
