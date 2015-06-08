@@ -1,7 +1,7 @@
 #Operation Solar Fury
 
 ###About
-Operation Solar Fury is going to be a ~~2D, side scrolling~~ 3D(?) sci-fi shooter like game, built in Java with OpenGl/LWJGL3.
+Operation Solar Fury is going to be a ~~2D, side scrolling~~ 3D(?) ~~sci-fi shooter~~ maze exploration completion like game, built in Java with OpenGl/LWJGL3.
 
 I am going to be using Operation Solar Fury as my grade 11 programming summative.
 
