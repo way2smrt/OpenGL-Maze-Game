@@ -5,7 +5,7 @@ import com.battleslug.flare.world.*;
 import com.battleslug.glbase.geometry.*;
 import com.battleslug.glbase.*;
 
-public class Mock3DObject extends DrawObject {	
+public class Mock3DObject implements DrawObject {	
 	protected Texture tex;
 	
 	protected Pivot viewer;
@@ -13,8 +13,6 @@ public class Mock3DObject extends DrawObject {
 	protected float width, height;
 	
 	public Mock3DObject(Display display, Texture tex, float width, float height, Pivot viewer){
-		super(display);
-		
 		this.tex = tex;
 		
 		this.width = width;
@@ -23,8 +21,8 @@ public class Mock3DObject extends DrawObject {
 		this.viewer = viewer;
 	}
 	
-	@Override
-	public draw(){
+	public void draw(Display display){
+		//TODO implement drawing
 		display.drawQuadTextured3D(new QuadTextured3D());
 	}
 	

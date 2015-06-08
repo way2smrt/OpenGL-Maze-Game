@@ -25,6 +25,17 @@ public class ObjectWorldData {
 		this.pivot = pivot;
 	}
 	
+	public void setPoint(Point point){
+		this.point = point;
+	}
+	
+	public void setPivot(Pivot pivot){
+		this.pivot = pivot;
+	}
+	
+	public void setSpeed(Speed speed){
+		this.speed = speed;
+	}
 	
 	public Point getPoint(){
 		return point;

@@ -18,6 +18,7 @@ import org.lwjgl.BufferUtils;
 import com.battleslug.glbase.geometry.Circle;
 import com.battleslug.glbase.geometry.Pivot;
 import com.battleslug.glbase.geometry.Point;
+import com.battleslug.flare.world.*;
 
 import static java.lang.Math.*;
 
@@ -65,7 +66,7 @@ public class Display {
 	
 	private int aspectRatio;
 	
-	private Point cam;
+	private ObjectWorldData cam;
 	
 	private static final float NEAR = 0.01f;
 	public static final float FAR = 1000.0f;
@@ -75,8 +76,6 @@ public class Display {
 	public final float WIDTH_TEXTURE = 1.0f;
 	
 	private boolean cursorLocked;
-	
-	private Pivot pivotCam;
 	
 	private double timeLast = 0;
 	private double timePassed = 0;
@@ -101,7 +100,7 @@ public class Display {
 		
 		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
 		
-		cam = new Point(0, 0, 0);
+		cam = new ObjectWorldData();
 		
 		textDrawOrigin = new Point(0, 0);
 		textDrawLoc = new Point(0, 0);
@@ -230,7 +229,7 @@ public class Display {
 	}
 	
 	public static void updateEvents(){
-		glfwWaitEvents();
+		glfwPollEvents();
 	}
 	
 	public void hide(){
@@ -396,10 +395,10 @@ public class Display {
 					gluPerspective(FOV, aspectRatio, NEAR, FAR);
 					
 					//we have to add a small number to the circle radius to ensure we don't get zero
-					Circle cXZ = new Circle(0, 0, (float)(cos(toRadians(pivotCam.getRotYZAxis()-90)))+0.01f);
+					Circle cXZ = new Circle(0, 0, (float)(cos(toRadians(cam.getPivot().getRotYZAxis()-90)))+0.01f);
 					
 					//this shit is complicated - do not fiddle!
-					gluLookAt(cam.getX(), cam.getY(), cam.getZ(), cam.getX()+cXZ.getX(pivotCam.getRotXZAxis()), cam.getY()+(float)(sin(toRadians(pivotCam.getRotYZAxis()-90))), cam.getZ()+cXZ.getY(pivotCam.getRotXZAxis()), 0, 1, 0);
+					gluLookAt(cam.getPoint().getX(), cam.getPoint().getY(), cam.getPoint().getZ(), cam.getPoint().getX()+cXZ.getX(cam.getPivot().getRotXZAxis()), cam.getPoint().getY()+(float)(sin(toRadians(cam.getPivot().getRotYZAxis()-90))), cam.getPoint().getZ()+cXZ.getY(cam.getPivot().getRotXZAxis()), 0, 1, 0);
 					break;
 			}
 		}	
@@ -607,11 +606,11 @@ public class Display {
 		return window;
 	}
 	
-	public void setCamLocation(Point cam){	
+	public void setCamera(ObjectWorldData cam){	
 		this.cam = cam;
 	}
 	
-	public Point getCamLocation(){
+	public ObjectWorldData getCamLocation(){
 		return cam;
 	}
 	
@@ -636,14 +635,6 @@ public class Display {
 	
 	public int getHeight(){
 		return height;
-	}
-	
-	public void setCamPivot(Pivot pivot){
-		pivotCam = pivot;
-	}
-	
-	public Pivot getPivotCam(){
-		return pivotCam;
 	}
 	
 	public void updateTimer(){
