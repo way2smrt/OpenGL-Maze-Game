@@ -2,7 +2,8 @@ package com.battleslug.opsf;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.*;
+import org.lwjgl.openal.*;
 
 import com.battleslug.flare.*;
 import com.battleslug.flare.world.*;
@@ -38,6 +39,7 @@ public class OPSF {
 	private Texture texTest1, texGrass;
 	
 	private HUDBulletDisplay bulletDisplay;
+	private VectorColor bulletDisplayColorBack;
 	
 	public OPSF(){
 		init();
@@ -56,6 +58,8 @@ public class OPSF {
 		display.create();
 		
 		display.setCursorLocked(true);
+		
+		bulletDisplayColorBack = new VectorColor(0.4f, 0.4f, 0.4f, 0.75f);
 	}
 	
 	public void play(){	
@@ -68,16 +72,15 @@ public class OPSF {
 		player.getPivot().setYZAxisLimitMode(LimitMode.STOP);
 		
 		//add weapons
-		world.getWeaponSystem().add(new Weapon("A23", "A light smg, but with enough rounds and punch for good versatility.", Weapon.Type.SMG, Weapon.FireMode.AUTO, 0.1f, 12, Weapon.ReloadMode.CLIP, 2.5f, Weapon.AmmoType.PISTOL, 23));
-		world.getWeaponSystem().add(new Weapon("UMP-48", "A powerful smg. Doensn't carry a lot of rounds though.", Weapon.Type.SMG, Weapon.FireMode.AUTO, 0.14f, 24, Weapon.ReloadMode.CLIP, 2.5f, Weapon.AmmoType.PISTOL, 16));
-		world.getWeaponSystem().add(new Weapon("HPP-7", "A powerful pistol capable of shooting deadly rounds.", Weapon.Type.PISTOL, Weapon.FireMode.SEMIAUTO, 0.3f, 27, Weapon.ReloadMode.CLIP, 2f, Weapon.AmmoType.PISTOL, 8));
-		world.getWeaponSystem().add(new Weapon("JAYKO", "A long range sniper rifle.", Weapon.Type.SNIPER_RIFLE, Weapon.FireMode.SEMIAUTO, 1.2f, 92, Weapon.ReloadMode.CLIP, 3f, Weapon.AmmoType.RIFLE, 6));
-		world.getWeaponSystem().add(new Weapon("KT-277", "A powerful assault rifle with a decent mag.", Weapon.Type.ASSAULT_RIFLE, Weapon.FireMode.SEMIAUTO, 0.17f, 22, Weapon.ReloadMode.CLIP, 3f, Weapon.AmmoType.RIFLE, 22));
-		world.getWeaponSystem().add(new Weapon("Rattlesnake", "A high-capacity pistol, with a very fast fire rate.", Weapon.Type.PISTOL, Weapon.FireMode.SEMIAUTO, 0.06f, 7, Weapon.ReloadMode.CLIP, 1f, Weapon.AmmoType.PISTOL, 20));
-		world.getWeaponSystem().add(new Weapon("PNP12", "A powerful shotgun with a slow fire rate.", Weapon.Type.SHOTGUN, Weapon.FireMode.SEMIAUTO, 0.5f, 52, Weapon.ReloadMode.CHAMBER_FULL, 1.2f, Weapon.AmmoType.SHOTGUN, 6));
-		world.getWeaponSystem().add(new Weapon("x11", "A reliable rifle, very versatile.", Weapon.Type.RIFLE, Weapon.FireMode.SEMIAUTO, 0.7f, 62, Weapon.ReloadMode.CLIP, 3f, Weapon.AmmoType.RIFLE, 10));
+		world.getWeaponSystem().add(new Weapon("A23", "A lighter smg, but with enough rounds and punch for good versatility.", 0.75f, Weapon.Type.SMG, Weapon.FireMode.AUTO, 0.1f, 12, Weapon.ReloadMode.CLIP, 2.5f, Weapon.AmmoType.PISTOL, 23));
+		world.getWeaponSystem().add(new Weapon("UMP-48", "A powerful smg. Doensn't carry a lot of rounds though.", 0.55f, Weapon.Type.SMG, Weapon.FireMode.AUTO, 0.14f, 24, Weapon.ReloadMode.CLIP, 2.5f, Weapon.AmmoType.PISTOL, 16));
+		world.getWeaponSystem().add(new Weapon("HPP-7", "A powerful pistol capable of shooting deadly rounds.", 0.85f, Weapon.Type.PISTOL, Weapon.FireMode.SEMIAUTO, 0.3f, 27, Weapon.ReloadMode.CLIP, 2f, Weapon.AmmoType.PISTOL, 8));
+		world.getWeaponSystem().add(new Weapon("JAYKO", "A long range sniper rifle with quite a punch. Very bulky though.", 0.35f, Weapon.Type.SNIPER_RIFLE, Weapon.FireMode.SEMIAUTO, 1.2f, 92, Weapon.ReloadMode.CLIP, 3f, Weapon.AmmoType.RIFLE, 6));
+		world.getWeaponSystem().add(new Weapon("KT-277", "A powerful assault rifle with a decent mag.", 0.40f, Weapon.Type.ASSAULT_RIFLE, Weapon.FireMode.SEMIAUTO, 0.17f, 22, Weapon.ReloadMode.CLIP, 3f, Weapon.AmmoType.RIFLE, 22));
+		world.getWeaponSystem().add(new Weapon("Rattlesnake", "A lighweight, high-capacity pistol with a very fast fire rate. Lacks power however.", 0.95f, Weapon.Type.PISTOL, Weapon.FireMode.SEMIAUTO, 0.06f, 7, Weapon.ReloadMode.CLIP, 1f, Weapon.AmmoType.PISTOL, 20));
+		world.getWeaponSystem().add(new Weapon("PNP12", "A powerful shotgun with a slow fire rate.", 0.45f, Weapon.Type.SHOTGUN, Weapon.FireMode.SEMIAUTO, 0.5f, 52, Weapon.ReloadMode.CHAMBER_FULL, 1.2f, Weapon.AmmoType.SHOTGUN, 6));
+		world.getWeaponSystem().add(new Weapon("x11", "A reliable rifle, with a reduced weight.", 0.6f, Weapon.Type.RIFLE, Weapon.FireMode.SEMIAUTO, 0.7f, 62, Weapon.ReloadMode.CLIP, 3f, Weapon.AmmoType.RIFLE, 10));
 		
-		player.setSpeed(10f, 1f, 3f);
 		player.setWeaponInstance(new WeaponInstance(world, player.getObjectWorldData(), world.getWeaponSystem().getWeapon(0)));
 		
 		display.setCamPivot(player.getPivot());
@@ -102,12 +105,14 @@ public class OPSF {
 		float crossHairDist = 5;
 		final int CROSSHAIR_DIST_MAX = 25;
 			
-		bulletDisplay = new HUDBulletDisplay(new Point(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4), display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), player.getWeaponInstance().getWeapon().getAmmoTex(), new VectorColor(0.8f, 0.8f, 0.5f));
+		bulletDisplay = new HUDBulletDisplay(new Point(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4), display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), player.getWeaponInstance().getWeapon().getAmmoTex(), bulletDisplayColorBack);
 		bulletDisplay.bind(display);
 		
 		float cubeX = -40f;;
 		
 		VectorColor HUDBackColor = new VectorColor(1.0f, 0.0f, 0.0f, 0.75f);
+		
+		//Sound soundTest = new Sound("game/OPSF/res/sound/test_sound.wav");
 		
 		while(true){
 			keyboard.update();
@@ -186,6 +191,8 @@ public class OPSF {
 			display.drawCube(-3, 0.5f, -4, 1, tex4);
 			display.drawCube(0, 0.5f, 0, 1, imgDoge.getTexture());
 			
+			//soundTest.play();
+			
 			display.drawCube(cubeX, 5, 0, 5, tex5);
 			cubeX += (float)(2f*display.getTimePassed());
 			
@@ -231,7 +238,7 @@ public class OPSF {
 	private void changeWeapon(int ID){
 		player.setWeaponInstance(new WeaponInstance(world, player.getObjectWorldData(), world.getWeaponSystem().getWeapon(ID)));
 		
-		bulletDisplay = new HUDBulletDisplay(new Point(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4), display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), player.getWeaponInstance().getWeapon().getAmmoTex(), new VectorColor(0.8f, 0.8f, 0.8f));
+		bulletDisplay = new HUDBulletDisplay(new Point(display.getWidth()-display.getWidth()/2, display.getHeight()-display.getHeight()/4), display.getWidth()/2, display.getHeight()/4, player.getWeaponInstance(), player.getWeaponInstance().getWeapon().getAmmoTex(), bulletDisplayColorBack);
 		bulletDisplay.bind(display);
 	}
 	
@@ -247,6 +254,6 @@ public class OPSF {
 	}
 	
 	public static void main(String[] args) {
-        new OPSF();
-    }
+		new OPSF();
+	}
 }

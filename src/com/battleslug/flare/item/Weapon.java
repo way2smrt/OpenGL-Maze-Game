@@ -24,8 +24,8 @@ public class Weapon extends Item {
 	
 	public static Texture texAmmoPistol, texAmmoRifle, texAmmoShotgun;
 	
-	public Weapon(String name, String description, Type type, FireMode fireMode, float fireDelay, int damage, ReloadMode reloadMode, float reloadDelay, AmmoType ammoType, int ammoMax){
-		super(name, description);
+	public Weapon(String name, String description, Float speedMultiplier, Type type, FireMode fireMode, float fireDelay, int damage, ReloadMode reloadMode, float reloadDelay, AmmoType ammoType, int ammoMax){
+		super(name, description, speedMultiplier);
 		
 		this.type = type;
 		this.fireMode = fireMode;

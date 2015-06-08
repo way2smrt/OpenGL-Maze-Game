@@ -1,16 +1,26 @@
 package com.battleslug.flare.item;
 
 public class Item {
-	private String name;
-	private String description;
+	protected String name;
+	protected String description;
+	protected float speedMultiplier;
 	
-	public Item(String _name, String _description){
-		name = _name;
-		description = _description;
+	public Item(String name){
+		this(name, "", 1.0f);
 	}
 	
-	public void setDescription(String _description){
-		description = _description;
+	public Item(String name, String description){
+		this(name, description, 1.0f);
+	}
+	
+	public Item(String name, String description, Float speedMultiplier){
+		this.name = name;
+		this.description = description;
+		this.speedMultiplier = speedMultiplier;
+	}
+	
+	public void setDescription(String description){
+		this.description = description;
 	}
 	
 	public String getName(){
@@ -19,5 +29,9 @@ public class Item {
 	
 	public String getDescription(){
 		return description;
+	}
+	
+	public Float getSpeedMultiplier(){
+		return speedMultiplier;
 	}
 }

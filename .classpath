@@ -12,6 +12,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="jar/PNGDecoder.jar"/>
-	<classpathentry kind="lib" path="jar/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="jar/lwjgl_util.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Operation Solar Fury/ntv"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

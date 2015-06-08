@@ -1,6 +1,7 @@
 package com.battleslug.glbase;
 
 import org.lwjgl.glfw.*;
+import org.lwjgl.openal.*;
 import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
@@ -14,16 +15,30 @@ import static org.lwjgl.util.glu.GLU.*;
 
 import org.lwjgl.BufferUtils;
 
+import com.battleslug.glbase.geometry.Circle;
 import com.battleslug.glbase.geometry.Pivot;
 import com.battleslug.glbase.geometry.Point;
 
 import static java.lang.Math.*;
+
+import java.io.IOException;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
+import org.lwjgl.util.WaveData;
 
 public class Display {	
 	private GLFWKeyCallback keyCallback;
 	private GLFWErrorCallback errorCallback;
 	private GLFWMouseButtonCallback mouseCallback;
 
+	GLContext glContext;
+	ALContext alContext;
+	ALDevice alDevice;
+	
 	private long window;
 	
 	public static int texWidth = 32;
@@ -117,7 +132,13 @@ public class Display {
 		//v-sync
 		glfwSwapInterval(1);
  
-		GLContext.createFromCurrent();
+		//create our opengl (graphics) context
+		glContext = GLContext.createFromCurrent();
+		
+		//create our openal (sound) context
+		alContext = ALContext.create();
+		alDevice = alContext.getDevice();
+		alContext.makeCurrent();
 
 		font = new Texture("res/font/sans_serif2.png");
 		
@@ -344,9 +365,18 @@ public class Display {
 
 	public void kill(){
 		glfwDestroyWindow(window);
+		
+		//release our contexts and devices
+		glContext.destroy();
+		alContext.destroy();
+		alDevice.destroy();
+		
+		//release our callbacks
 		keyCallback.release();
-		glfwTerminate();
 		errorCallback.release();
+		
+		glfwTerminate();
+		
 		System.exit(0);
 	}
 
@@ -449,51 +479,6 @@ public class Display {
 		
 		textDrawLoc.setY(textDrawLoc.getY()+charHeight);
 		textDrawLoc.setX(textDrawOrigin.getX());
-	}
-	
-	public void drawText3D(String text, Point p, float boundWidth, float charWidth, float charHeight, float rot){
-		font.bind();
-		
-		setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
-		glColor4f(1.0f, 1.0f, 1.0f, 1f);
-		
-		final int FONT_CHAR_COLUMNS = 16;
-		final int FONT_CHAR_ROWS = 6;
-		
-		float drawX = p.getX();
-		float drawY = p.getY();
-		float drawZ = p.getZ();
-		
-		Circle c= new Circle(0, 0, charWidth);
-		
-		char curr;
-		
-		for(int i = 0; i != text.length(); i++){
-			curr = text.charAt(i);
-			
-			if(drawX > p.getX()+boundWidth){
-				drawY -= charHeight;
-				drawX = p.getX();
-			}
-			
-			glBegin(GL_QUADS);
-			
-			glTexCoord2f(getTextUCoord(curr), getTextVCoord(curr));
-			glVertex3f(drawX, drawY, drawZ);
-
-			glTexCoord2f(getTextUCoord(curr), getTextVCoord(curr)+1f/FONT_CHAR_ROWS);
-			glVertex3f(drawX, drawY-charHeight, drawZ);
-
-			glTexCoord2f(getTextUCoord(curr)+1f/FONT_CHAR_COLUMNS, getTextVCoord(curr)+1f/FONT_CHAR_ROWS);
-			glVertex3f(drawX+c.getX(rot), drawY-charHeight, drawZ+c.getY(rot));
-			
-			glTexCoord2f(getTextUCoord(curr)+1f/FONT_CHAR_COLUMNS, getTextVCoord(curr));
-			glVertex3f(drawX+c.getX(rot), drawY, drawZ);
-
-			glEnd();
-			
-			drawX += charWidth;
-		}
 	}
 	
 	private float getTextUCoord(char c){

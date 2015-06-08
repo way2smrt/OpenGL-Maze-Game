@@ -4,7 +4,6 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import com.battleslug.flare.item.*;
 import com.battleslug.flare.world.*;
-import com.battleslug.glbase.Circle;
 import com.battleslug.glbase.Texture;
 import com.battleslug.glbase.event.Keyboard;
 import com.battleslug.glbase.event.Mouse;
@@ -200,7 +199,7 @@ public class Sentient {
 		else if(keyboard.isDown(GLFW_KEY_LEFT_SHIFT) && eyeHeight == EYE_HEIGHT_STANDING){
 			//running
 			moveMode = moveMode.Running;
-			setSpeed(15f, 2f, 5f);	
+			setSpeed(7f, 2f, 5f);	
 		}
 		else {
 			//normal standing
@@ -213,7 +212,7 @@ public class Sentient {
 				setSpeed(0, 0, 0);
 			}
 			else {
-				setSpeed(3, 1.5f, 2);
+				setSpeed(4, 1.5f, 3);
 			}
 		}
 		
@@ -310,13 +309,13 @@ public class Sentient {
 	private void move(float initialRot, float moveRot, double timePassed){
 		Circle moveCircle;
 		if(moveRot == initialRot){
-			moveCircle = new Circle(0, 0, (float)(speedForward*timePassed));
+			moveCircle = new Circle(0, 0, (float)(speedForward*timePassed*weaponInstance.getWeapon().getSpeedMultiplier()));
 		}
 		else if(moveRot == initialRot+180 || moveRot == initialRot-180){
-			moveCircle = new Circle(0, 0, (float)(speedBackward*timePassed));
+			moveCircle = new Circle(0, 0, (float)(speedBackward*timePassed*weaponInstance.getWeapon().getSpeedMultiplier()));
 		}
 		else {
-			moveCircle = new Circle(0, 0, (float)(speedStrafe*timePassed));
+			moveCircle = new Circle(0, 0, (float)(speedStrafe*timePassed*weaponInstance.getWeapon().getSpeedMultiplier()));
 		}
 
 		objectWorldData.getSpeed().setXSpeed(objectWorldData.getSpeed().getXSpeed()+moveCircle.getX(moveRot));

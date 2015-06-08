@@ -4,6 +4,7 @@ import com.battleslug.glbase.*;
 import com.battleslug.glbase.geometry.*;
 
 import com.battleslug.flare.item.*;
+import com.battleslug.flare.sound.*;
 
 import java.util.Arrays;
 
@@ -17,6 +18,7 @@ public class World {
 	public float gravity = 9.81f;
 	
 	public WeaponSystem weaponSystem;
+	public SoundSystem soundSystem;
 	
 	public World(){
 		bullet = new Bullet[0];
