@@ -8,6 +8,8 @@ import org.lwjgl.openal.*;
 import com.battleslug.flare.*;
 import com.battleslug.flare.world.*;
 import com.battleslug.flare.sentient.Player;
+import com.battleslug.flare.object.*;
+
 import com.battleslug.glbase.*;
 import com.battleslug.glbase.geometry.*;
 import com.battleslug.glbase.geometry.Pivot.LimitMode;
@@ -74,10 +76,12 @@ public class OPSF {
 		Texture tex4 = new Texture(GAME_FOLDER+"/res/tex/bark1.png");
 		Texture tex5 = new Texture(GAME_FOLDER+"/res/tex/stoneRoad1.png");
 		Texture tex6 = new Texture(GAME_FOLDER+"/res/tex/sandRocks2.png");
+		Texture texTree = new Texture(GAME_FOLDER+"/res/tex/testTree1.png");
 		
-		float crossHairDist = 5;
-		final int CROSSHAIR_DIST_MAX = 25;
-		
+		final int CROSSHAIR_DIST_MIN = 5;
+		final int CROSSHAIR_DIST_MAX = 35;
+		float crossHairDist = CROSSHAIR_DIST_MIN;
+	
 		float cubeX = -40f;
 		
 		VectorColor HUDBackColor = new VectorColor(1.0f, 0.0f, 0.0f, 0.75f);
@@ -90,6 +94,8 @@ public class OPSF {
 		VectorColor colorGreen = new VectorColor(0f, 1f, 0f);
 		VectorColor colorRedDark = new VectorColor(1f, 0f, 0.5f);
 		
+		Mock3DObject tree = new Mock3DObject(3, 7, texTree, new Point(0, 0, 0), player.getObjectWorldData().getPivot());
+		
 		while(true){
 			keyboard.update();
 			mouse.update();
@@ -100,9 +106,20 @@ public class OPSF {
 			
 			Point pO = new Point(0, 0, 0);
 			
+			//make cursor move on click
+			if(mouse.wasPressedLeftButton()){
+				crossHairDist = CROSSHAIR_DIST_MAX;
+			}
+			else if(crossHairDist > CROSSHAIR_DIST_MIN){
+				crossHairDist -= (float)(display.getTimePassed()*50);
+			}
+			else {
+				crossHairDist = CROSSHAIR_DIST_MIN;
+			}
+			
 			//draw the crosshair
-			drawCrosshair(9, (int)(crossHairDist), new VectorColor(0f, 0f, 0f), colorRedDark);
-			drawCrosshair(7, 5, colorRedDark, new VectorColor(0f, 0f, 0f));
+			drawCrosshair(5, (int)(crossHairDist), colorBlack, colorBlack);
+			drawCrosshair(7, 3, colorWhite, colorWhite);
 			
 			display.drawCube(3, 0.5f, 5, 1, tex1);
 			display.drawCube(3, 1.5f, 5, 1, tex2);
@@ -111,6 +128,9 @@ public class OPSF {
 			display.drawCube(3, 0.5f, -1, 1, tex3);
 			display.drawCube(-3, 0.5f, -4, 1, tex4);
 			display.drawCube(0, 0.5f, 0, 1, imgDoge.getTexture());
+			
+			tree.update(player.getObjectWorldData().getPivot());
+			tree.draw(display);
 			
 			//soundTest.play();
 			
@@ -126,6 +146,7 @@ public class OPSF {
 			
 			display.setTextDrawOrigin(new Point(0, 0));
 			display.drawText("Alpha 0.0.0", display.getWidth()/3, Display.DEF_CHAR_WIDTH, Display.DEF_CHAR_HEIGHT, HUDBackColor);
+			display.drawText("8=========D", display.getWidth()/3, Display.DEF_CHAR_WIDTH, Display.DEF_CHAR_HEIGHT, HUDBackColor);
 			
 			if(keyboard.isDown(GLFW_KEY_Z)){										
 				imgDoge.setLocal(imgDoge.getWidth()/2, imgDoge.getHeight()/2);
@@ -157,7 +178,7 @@ public class OPSF {
 	}
 	
 	private void drawFloor(Texture texFloor){
-		display.drawQuadTextured3D(new QuadTextured3D(100, WORLD_FLOOR, 100, 100, WORLD_FLOOR, -100, -100, WORLD_FLOOR, -100, -100, WORLD_FLOOR, 100, texFloor, null));
+		display.drawQuadTextured3D(new QuadTextured3D(100, WORLD_FLOOR, 100, 100, WORLD_FLOOR, -100, -100, WORLD_FLOOR, -100, -100, WORLD_FLOOR, 100, texFloor, null), 0.15f);
 	}
 	
 	public static void main(String[] args) {

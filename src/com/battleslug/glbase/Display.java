@@ -267,12 +267,12 @@ public class Display {
 		
 		float widthHalf = width/2;
 		
-        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z+widthHalf, x+widthHalf, y+widthHalf, z+widthHalf, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y-widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x+widthHalf, y-widthHalf, z-widthHalf, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z+widthHalf, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x+widthHalf, y+widthHalf, z-widthHalf, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(x-widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, tex, null));
-        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z-widthHalf, x+widthHalf, y+widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z-widthHalf, tex, null));
+        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z+widthHalf, x+widthHalf, y+widthHalf, z+widthHalf, tex, null), 0.20f);
+        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y-widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x+widthHalf, y-widthHalf, z-widthHalf, tex, null), 0.20f);
+        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z+widthHalf, tex, null), 0.20f);
+        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x+widthHalf, y+widthHalf, z-widthHalf, tex, null), 0.20f);
+        drawQuadTextured3D(new QuadTextured3D(x-widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, tex, null), 0.20f);
+        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z-widthHalf, x+widthHalf, y+widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z-widthHalf, tex, null), 0.20f);
 	}
 
 	public void drawQuadTextured2D(QuadTextured2D quad){
@@ -307,16 +307,23 @@ public class Display {
 		glEnd();
 	}
 	
-	public void drawQuadTextured3D(QuadTextured3D quad){
+	public void drawQuadTextured3D(QuadTextured3D quad, float scaling){
 		quad.getTexture().bind();
-		
-		float TEXTURE_SCALING = 0.12f;
 		
 		float u = 0f;
 		float v = 0f;
 		
-		float u2 = TEXTURE_SCALING*Point.getDistance(new Point(quad.getX3(), quad.getY3(), quad.getZ3()), new Point(quad.getX4(), quad.getY4(), quad.getZ4()));
-		float v2 = TEXTURE_SCALING*Point.getDistance(new Point(quad.getX1(), quad.getY1(), quad.getZ1()), new Point(quad.getX2(), quad.getY2(), quad.getZ2()));
+		float u2;
+		float v2;
+		
+		if(scaling != 0){
+			u2 = scaling*Point.getDistance(new Point(quad.getX3(), quad.getY3(), quad.getZ3()), new Point(quad.getX4(), quad.getY4(), quad.getZ4()));
+			v2 = scaling*Point.getDistance(new Point(quad.getX1(), quad.getY1(), quad.getZ1()), new Point(quad.getX2(), quad.getY2(), quad.getZ2()));
+		}
+		else {
+			u2 = 1;
+			v2 = 1;
+		}
 		
 		if(quad.getColor() == null){
 			setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
