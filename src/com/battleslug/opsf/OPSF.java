@@ -48,7 +48,7 @@ public class OPSF {
 		keyboard = new Keyboard();
 		mouse = new Mouse();
 		
-		display = new Display("Operation Solar Fury (Alpha 0.0.0)", 900, 720, false);
+		display = new Display("Operation Solar Fury", 900, 720, false);
 		display.create();
 		
 		display.setCursorLocked(true);
@@ -74,8 +74,6 @@ public class OPSF {
 		Texture tex4 = new Texture(GAME_FOLDER+"/res/tex/bark1.png");
 		Texture tex5 = new Texture(GAME_FOLDER+"/res/tex/stoneRoad1.png");
 		Texture tex6 = new Texture(GAME_FOLDER+"/res/tex/sandRocks2.png");
-		
-		int weapon = 0;
 		
 		float crossHairDist = 5;
 		final int CROSSHAIR_DIST_MAX = 25;
@@ -126,11 +124,8 @@ public class OPSF {
 			
 			world.draw();
 			
-			display.setTextDrawOrigin(new Point(200, 200));
-			display.drawText("Do you see this text rendering??? :D  10/10", 16*32, 16, 38, null);
-			
 			display.setTextDrawOrigin(new Point(0, 0));
-			display.drawText("Test text", display.getWidth()/3, Display.DEF_CHAR_WIDTH, Display.DEF_CHAR_HEIGHT, HUDBackColor);
+			display.drawText("Alpha 0.0.0", display.getWidth()/3, Display.DEF_CHAR_WIDTH, Display.DEF_CHAR_HEIGHT, HUDBackColor);
 			
 			if(keyboard.isDown(GLFW_KEY_Z)){										
 				imgDoge.setLocal(imgDoge.getWidth()/2, imgDoge.getHeight()/2);

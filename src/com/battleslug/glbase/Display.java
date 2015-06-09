@@ -139,7 +139,7 @@ public class Display {
 		alDevice = alContext.getDevice();
 		alContext.makeCurrent();
 
-		font = new Texture("res/font/sans_serif2.png");
+		font = new Texture("res/font/sans_serif.png");
 		
 		glViewport(0, 0, width, height);
 		glOrtho(0, width, height, 0, 1, -1);
