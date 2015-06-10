@@ -246,16 +246,16 @@ public class Player implements Sentient {
 	private void move(float initialRot, float moveRot, double timePassed){
 		Circle moveCircle;
 		if(moveRot == initialRot){
-			moveCircle = new Circle(0, 0, (float)(speedForward*timePassed));
+			moveCircle = new Circle((float)(speedForward*timePassed));
 		}
 		else if(moveRot == initialRot+180 || moveRot == initialRot-180){
-			moveCircle = new Circle(0, 0, (float)(speedBackward*timePassed));
+			moveCircle = new Circle((float)(speedBackward*timePassed));
 		}
 		else {
-			moveCircle = new Circle(0, 0, (float)(speedStrafe*timePassed));
+			moveCircle = new Circle((float)(speedStrafe*timePassed));
 		}
 
-		objectWorldData.getSpeed().setXSpeed(objectWorldData.getSpeed().getXSpeed()+moveCircle.getX(moveRot));
-		objectWorldData.getSpeed().setZSpeed(objectWorldData.getSpeed().getZSpeed()+moveCircle.getY(moveRot));
+		objectWorldData.getSpeed().setXSpeed(objectWorldData.getSpeed().getXSpeed()+moveCircle.getA(moveRot));
+		objectWorldData.getSpeed().setZSpeed(objectWorldData.getSpeed().getZSpeed()+moveCircle.getB(moveRot));
 	}
 }

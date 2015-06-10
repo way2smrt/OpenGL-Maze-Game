@@ -4,16 +4,14 @@ import static java.lang.Math.*;
 
 public class Circle {
 	private float r;
-	private float xLocal, yLocal;
 	
 	public final static float DEGREES = 360;
 	
-	public Circle(float xLocal, float yLocal, float radius){
-		this.xLocal = xLocal;
-		this.yLocal = yLocal;
-		
-		//TODO fix x + y local, its kinda broken
-		
+	public Circle(float pointA, float pointB){
+		this((float)(sqrt(pow(pointA, 2f)+pow(pointB, 2f))));;
+	}
+	
+	public Circle(float radius){
 		r = radius;
 	}
 	
@@ -25,22 +23,23 @@ public class Circle {
 		 * Then use SOH to find angle.
 		 * We have to be careful to remember the grid system OpenGl uses..
 		 */
-		if (xLocal >= this.xLocal && yLocal < this.yLocal){
+		if (xLocal >= 0 && yLocal < 0){
 			rotation = 0;
-			rotation += toRadians(asin((xLocal-this.xLocal)/r));
+			rotation += toRadians(asin((xLocal-0)/r));
 		}
-		else if(xLocal >= this.xLocal && yLocal >= this.yLocal){
+		else if(xLocal >= 0 && yLocal >= 0){
 			rotation = 90;
-			rotation += toRadians(asin((yLocal-this.yLocal)/r));
+			rotation += toRadians(asin((yLocal-0)/r));
 		}
-		else if(xLocal < this.xLocal && yLocal >= this.yLocal){
+		else if(xLocal < 0 && yLocal >= 0){
 			rotation = 180;
-			rotation += toRadians(asin((this.xLocal-xLocal)/r));
+			rotation += toRadians(asin((0-xLocal)/r));
 		}
-		else if(xLocal < this.xLocal && yLocal < this.yLocal){
+		else if(xLocal < 0 && yLocal < 0){
 			rotation = 270;
-			rotation += toRadians(asin((this.yLocal-yLocal)/r));
+			rotation += toRadians(asin((0-yLocal)/r));
 		}
+		
 		//TODO for some reason rotation is off by 45 degrees. Figure out why and fix if needed.
 		rotation -= 45;
 		
@@ -55,11 +54,11 @@ public class Circle {
 		return r;
 	}
 	
-	public float getX(float degrees){
-		return new Double(yLocal+(r*cos(toRadians(degrees)))).floatValue();
+	public float getA(float degrees){
+		return new Double(r*cos(toRadians(degrees))).floatValue();
 	}
 	
-	public float getY(float degrees){
-		return new Double(xLocal+(r*sin(toRadians(degrees)))).floatValue();
+	public float getB(float degrees){
+		return new Double(r*sin(toRadians(degrees))).floatValue();
 	}
 }

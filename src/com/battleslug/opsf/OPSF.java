@@ -94,7 +94,7 @@ public class OPSF {
 		VectorColor colorGreen = new VectorColor(0f, 1f, 0f);
 		VectorColor colorRedDark = new VectorColor(1f, 0f, 0.5f);
 		
-		Mock3DObject tree = new Mock3DObject(3, 7, texTree, new Point(0, 0, 0), player.getObjectWorldData().getPivot());
+		Mock3DObject tree = new Mock3DObject(3, 7, texTree, new Point(0, 0, 0), player.getObjectWorldData().getPoint());
 		
 		while(true){
 			keyboard.update();
@@ -129,7 +129,7 @@ public class OPSF {
 			display.drawCube(-3, 0.5f, -4, 1, tex4);
 			display.drawCube(0, 0.5f, 0, 1, imgDoge.getTexture());
 			
-			tree.update(player.getObjectWorldData().getPivot());
+			tree.update(player.getObjectWorldData().getPoint());
 			tree.draw(display);
 			
 			//soundTest.play();

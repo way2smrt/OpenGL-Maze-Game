@@ -402,10 +402,10 @@ public class Display {
 					gluPerspective(FOV, aspectRatio, NEAR, FAR);
 					
 					//we have to add a small number to the circle radius to ensure we don't get zero
-					Circle cXZ = new Circle(0, 0, (float)(cos(toRadians(cam.getPivot().getRotYZAxis()-90)))+0.01f);
+					Circle cXZ = new Circle((float)(cos(toRadians(cam.getPivot().getRotYZAxis()-90)))+0.01f);
 					
 					//this shit is complicated - do not fiddle!
-					gluLookAt(cam.getPoint().getX(), cam.getPoint().getY(), cam.getPoint().getZ(), cam.getPoint().getX()+cXZ.getX(cam.getPivot().getRotXZAxis()), cam.getPoint().getY()+(float)(sin(toRadians(cam.getPivot().getRotYZAxis()-90))), cam.getPoint().getZ()+cXZ.getY(cam.getPivot().getRotXZAxis()), 0, 1, 0);
+					gluLookAt(cam.getPoint().getX(), cam.getPoint().getY(), cam.getPoint().getZ(), cam.getPoint().getX()+cXZ.getA(cam.getPivot().getRotXZAxis()), cam.getPoint().getY()+(float)(sin(toRadians(cam.getPivot().getRotYZAxis()-90))), cam.getPoint().getZ()+cXZ.getB(cam.getPivot().getRotXZAxis()), 0, 1, 0);
 					break;
 			}
 		}	

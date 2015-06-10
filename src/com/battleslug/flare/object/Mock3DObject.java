@@ -6,12 +6,12 @@ import com.battleslug.glbase.*;
 public class Mock3DObject implements DrawObject {	
 	protected Texture tex;
 	
-	protected Pivot viewer;
+	protected Point viewer;
 	protected Point p;
 	
 	protected float width, height;
 	
-	public Mock3DObject(float width, float height, Texture tex, Point p, Pivot viewer){
+	public Mock3DObject(float width, float height, Texture tex, Point p, Point viewer){
 		this.tex = tex;
 		
 		this.width = width;
@@ -22,29 +22,27 @@ public class Mock3DObject implements DrawObject {
 	}
 	
 	public void draw(Display display){
-		//TODO implement drawing
-		float rot = viewer.getRotXZAxis()+180;
+		Circle c = new Circle(p.getX()-viewer.getX(), p.getZ()-viewer.getZ());
+		Circle c2 = new Circle(width);
 		
-		Circle c = new Circle(0, 0, width/2);
+		float rot = c.getRotation(p.getX()-viewer.getX(), p.getZ()-viewer.getZ());
 		
-		float x1 = p.getX()+c.getY(rot);
-		float z1 = p.getZ()+c.getX(rot);
-		float x2 = p.getX()+c.getY(rot+180);
-		float z2 = p.getZ()+c.getX(rot+180);
+		System.out.println(c.getRadius());
+		System.out.println(rot);
+		
+		float x1 = p.getX()+c2.getB(rot);
+		float z1 = p.getZ()+c2.getA(rot);
+		float x2 = p.getX()+c2.getB(rot+180);
+		float z2 = p.getZ()+c2.getA(rot+180);
 				
-		
 		display.drawQuadTextured3D(new QuadTextured3D(x1, p.getY()+height, z1, x1, p.getY(), z1, x2, p.getY(), z2, x2, p.getY()+height, z2, tex, null), 0);
 	}
 	
-	public void update(Pivot viewer){
+	public void update(Point viewer){
 		this.viewer = viewer;
 	}
 	
-	public void setViewer(Pivot viewer){
-		this.viewer = viewer;
-	}
-	
-	public Pivot getViewer(){
+	public Point getViewer(){
 		return viewer;
 	}
 	
