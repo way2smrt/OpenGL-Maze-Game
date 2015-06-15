@@ -1,4 +1,4 @@
-package com.battleslug.flare.object;
+package com.battleslug.maze.object;
 
 import com.battleslug.glbase.geometry.*;
 import com.battleslug.glbase.*;

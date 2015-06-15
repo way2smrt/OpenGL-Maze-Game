@@ -26,7 +26,7 @@ public class Texture {
 	public static final int REPEAT = GL_REPEAT;
 
 	public Texture(String file) {
-		this(file, GL_NEAREST, GL_REPEAT);
+		this(file, GL_LINEAR, GL_REPEAT);
 	}
 
 	public Texture(String file, int filt, int wrap) {

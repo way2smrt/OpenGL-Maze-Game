@@ -16,20 +16,10 @@ import static org.lwjgl.util.glu.GLU.*;
 import org.lwjgl.BufferUtils;
 
 import com.battleslug.glbase.geometry.Circle;
-import com.battleslug.glbase.geometry.Pivot;
 import com.battleslug.glbase.geometry.Point;
-import com.battleslug.flare.world.*;
+import com.battleslug.maze.world.*;
 
 import static java.lang.Math.*;
-
-import java.io.IOException;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.AL10;
-import org.lwjgl.util.WaveData;
 
 public class Display {	
 	private GLFWKeyCallback keyCallback;
@@ -69,9 +59,9 @@ public class Display {
 	private ObjectWorldData cam;
 	
 	private static final float NEAR = 0.01f;
-	public static final float FAR = 1000.0f;
+	public static final float FAR = 10000f;
 	
-	public static final float FOV = 45f;
+	public static final float FOV = 75f;
 	
 	public final float WIDTH_TEXTURE = 1.0f;
 	
@@ -87,6 +77,8 @@ public class Display {
 	
 	private Point textDrawOrigin;
 	private Point textDrawLoc;
+	
+	public enum FrontFace{CW, CCW};
 	
 	public Display(String title, int width, int height){
 		this(title, width, height, false);
@@ -167,7 +159,7 @@ public class Display {
 			}
 		});
 		
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -180,7 +172,8 @@ public class Display {
 		glEnable(GL_DEPTH_TEST);
 		glClearDepth(FAR);
 		glDepthFunc(GL_LEQUAL);
-
+		glEnable(GL_COLOR);
+		
 		glLoadIdentity();
 		
 		aspectRatio = width/height;
@@ -220,7 +213,7 @@ public class Display {
 
 	private void updateCursor(){
 		DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
-        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+		DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
 		
 		glfwGetCursorPos(window, x, y);
 		
@@ -267,12 +260,12 @@ public class Display {
 		
 		float widthHalf = width/2;
 		
-        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z+widthHalf, x+widthHalf, y+widthHalf, z+widthHalf, tex, null), 0.20f);
-        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y-widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x+widthHalf, y-widthHalf, z-widthHalf, tex, null), 0.20f);
-        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z+widthHalf, tex, null), 0.20f);
-        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x+widthHalf, y+widthHalf, z-widthHalf, tex, null), 0.20f);
-        drawQuadTextured3D(new QuadTextured3D(x-widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, tex, null), 0.20f);
-        drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z-widthHalf, x+widthHalf, y+widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z-widthHalf, tex, null), 0.20f);
+		drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z+widthHalf, x+widthHalf, y+widthHalf, z+widthHalf, tex, null), 0.20f);
+		drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y-widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x+widthHalf, y-widthHalf, z-widthHalf, tex, null), 0.20f);
+		drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z+widthHalf, tex, null), 0.20f);
+		drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x+widthHalf, y+widthHalf, z-widthHalf, tex, null), 0.20f);
+		drawQuadTextured3D(new QuadTextured3D(x-widthHalf, y+widthHalf, z+widthHalf, x-widthHalf, y+widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z-widthHalf, x-widthHalf, y-widthHalf, z+widthHalf, tex, null), 0.20f);
+		drawQuadTextured3D(new QuadTextured3D(x+widthHalf, y+widthHalf, z-widthHalf, x+widthHalf, y+widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z+widthHalf, x+widthHalf, y-widthHalf, z-widthHalf, tex, null), 0.20f);
 	}
 
 	public void drawQuadTextured2D(QuadTextured2D quad){
@@ -305,6 +298,51 @@ public class Display {
 		glTexCoord2f(u2, v);
 		glVertex2f(quad.getX4(), quad.getY4());
 		glEnd();
+	}
+	
+	public void drawQuadTextured3DUV(FrontFace ff, Point[] p, Point[] uv, Texture tex, VectorColor c){
+		if(ff == FrontFace.CW){
+			glFrontFace(GL_CW);
+		}
+		else {
+			glFrontFace(GL_CCW);
+		}
+		
+		//ensure arrays have 4 points
+		if(p.length == 4 && uv.length == 4){
+			tex.bind();
+			
+			if(c == null){
+				setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
+				glColor4f(1f, 1f, 1f, 1f);
+			}
+			else {
+				setMode(ModeDraw.MODE_3D, ModeColor.MODE_COLOR);
+				glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+			}
+			
+			glBegin(GL_QUADS);
+			
+			glTexCoord2f(uv[0].getX(), uv[0].getY());
+			glVertex3f(p[0].getX(), p[0].getY(), p[0].getZ());
+			
+			glTexCoord2f(uv[1].getX(), uv[1].getY());
+			glVertex3f(p[1].getX(), p[1].getY(), p[1].getZ());
+
+			glTexCoord2f(uv[2].getX(), uv[2].getY());
+			glVertex3f(p[2].getX(), p[2].getY(), p[2].getZ());
+
+			glTexCoord2f(uv[3].getX(), uv[3].getY());
+			glVertex3f(p[3].getX(), p[3].getY(), p[3].getZ());
+			
+			glEnd();
+		}
+		
+		//change front face back to normal
+		glFrontFace(GL_CCW);
+		
+		//change color back
+		glColor4f(1.0f,1.0f,1.0f,1.0f);
 	}
 	
 	public void drawQuadTextured3D(QuadTextured3D quad, float scaling){
@@ -348,6 +386,7 @@ public class Display {
 		
 		glTexCoord2f(u2, v);
 		glVertex3f(quad.getX4(), quad.getY4(), quad.getZ4());
+		
 		glEnd();
 	}
 	

@@ -1,4 +1,4 @@
-package com.battleslug.flare.object;
+package com.battleslug.maze.object;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

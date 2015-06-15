@@ -1,4 +1,4 @@
-package com.battleslug.flare.object;
+package com.battleslug.maze.object;
 
 public class MaterialSystem {
 	private Material[] material;

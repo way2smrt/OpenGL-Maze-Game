@@ -1,6 +1,6 @@
-package com.battleslug.flare.sentient;
+package com.battleslug.maze.sentient;
 
-import com.battleslug.flare.world.*;
+import com.battleslug.maze.world.*;
 
 public interface Sentient {
 	void think(double timePassed);

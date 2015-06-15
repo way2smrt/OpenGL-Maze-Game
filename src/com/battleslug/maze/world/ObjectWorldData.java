@@ -1,4 +1,4 @@
-package com.battleslug.flare.world;
+package com.battleslug.maze.world;
 
 import com.battleslug.glbase.geometry.*;
 

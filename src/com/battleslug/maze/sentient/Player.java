@@ -1,16 +1,13 @@
-package com.battleslug.flare.sentient;
+package com.battleslug.maze.sentient;
 
 import static org.lwjgl.glfw.GLFW.*;
-import javafx.scene.Camera;
 
-import com.battleslug.flare.world.*;
 import com.battleslug.glbase.Texture;
 import com.battleslug.glbase.event.Keyboard;
 import com.battleslug.glbase.event.Mouse;
 import com.battleslug.glbase.geometry.*;
 import com.battleslug.glbase.geometry.Pivot.LimitMode;
-
-import static java.lang.Math.*;
+import com.battleslug.maze.world.*;
 
 public class Player implements Sentient {
 	private String name;
@@ -212,15 +209,8 @@ public class Player implements Sentient {
 		objectWorldData.getPivot().setRotXZAxis(objectWorldData.getPivot().getRotXZAxis()+(float)(mouse.getXCursorChange()*mouse.getSensitivity3D()));
 		objectWorldData.getPivot().setRotYZAxis(objectWorldData.getPivot().getRotYZAxis()-(float)(mouse.getYCursorChange()*mouse.getSensitivity3D()));
 		
-		invokeGravity(timePassed);
-		
 		updateLocation();
 		updateCamera();
-	}
-	
-	private void invokeGravity(double timePassed){
-		//invoke gravity
-		objectWorldData.getSpeed().setYSpeed(objectWorldData.getSpeed().getYSpeed()-(float)(world.getGravity()*pow(timePassed, 2)));
 	}
 	
 	private void updateLocation(){
