@@ -126,11 +126,7 @@ public class Display {
 		//create our opengl (graphics) context
 		glContext = GLContext.createFromCurrent();
 		
-		//create our openal (sound) context
-		alContext = ALContext.create();
-		alDevice = alContext.getDevice();
-		alContext.makeCurrent();
-
+		//load our font image
 		font = new Texture("res/font/sans_serif.png");
 		
 		glViewport(0, 0, width, height);

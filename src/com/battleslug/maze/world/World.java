@@ -52,11 +52,11 @@ public class World {
 		return false;
 	}
 	
-	private boolean hasNeighbours(Point p){
-		Point up = new Point(p.getX(), p.getZ()+1);
-		Point down = new Point(p.getX(), p.getZ()-1);
-		Point left = new Point(p.getX()-1, p.getZ());
-		Point right = new Point(p.getX()+1, p.getZ());
+	private boolean hasUnvisitedNeighbours(Point p){
+		Point up = new Point(p.getX(), p.getY()+1);
+		Point down = new Point(p.getX(), p.getY()-1);
+		Point left = new Point(p.getX()-1, p.getY());
+		Point right = new Point(p.getX()+1, p.getY());
 		
 		if(canMoveTo(up)){
 			return true;
@@ -81,19 +81,31 @@ public class World {
 		Point p = null;
 		
 		if(move == 0){
-			p = new Point(currP.getX(), currP.getZ()+1);
+			p = new Point(currP.getX(), currP.getY()+1);
 		}
 		if(move == 1){
-			p = new Point(currP.getX(), currP.getZ()-1);
+			p = new Point(currP.getX(), currP.getY()-1);
 		}
 		if(move == 2){
-			p = new Point(currP.getX()+1, currP.getZ());
+			p = new Point(currP.getX()+1, currP.getY());
 		}
 		if(move == 3){
-			p = new Point(currP.getX()-1, currP.getZ());
+			p = new Point(currP.getX()-1, currP.getY());
 		}
 		
 		return p;
+	}
+	
+	private void outputCellsUnvisited(){
+		for(int x = 0; x != mazeWidth; x++){
+			for(int y = 0; y != mazeWidth; y++){
+				if(!visited[x][y]){
+					System.out.println("UNVISITED CELL");
+					System.out.println(x+1);
+					System.out.println(y+1);
+				}
+			}
+		}
 	}
 	
 	private void generateMaze(){
@@ -106,11 +118,11 @@ public class World {
 		Stack<Point> s = new Stack<Point>();
 		
 		//mark it as visited and push it to the stack
-		visited[new Float(currP.getX()).intValue()][new Float(currP.getZ()).intValue()] = true;
+		visited[(int)(currP.getX()-1)][(int)(currP.getY()-1)] = true;
 		s.push(currP);
 		
-		while(!isUnvisitedCells()){
-			if(hasNeighbours(currP)){
+		while(isUnvisitedCells()){
+			if(hasUnvisitedNeighbours(currP)){
 				Point move = getRandMove(currP);
 				
 				while(!canMoveTo(move)){
@@ -121,33 +133,34 @@ public class World {
 				
 				//right move
 				if(currP.getX() < move.getX()){
-					maze[(int)(currP.getX()-1)][(int)(currP.getZ()-1)].setRight(false);
-					maze[(int)(move.getX()-1)][(int)(move.getZ()-1)].setLeft(false);
+					maze[(int)(currP.getX()-1)][(int)(currP.getY()-1)].setRight(false);
+					maze[(int)(move.getX()-1)][(int)(move.getY()-1)].setLeft(false);
 				}
 				//left move
 				else if(currP.getX() > move.getX()){
-					maze[(int)(currP.getX()-1)][(int)(currP.getZ()-1)].setLeft(false);
-					maze[(int)(move.getX()-1)][(int)(move.getZ()-1)].setRight(false);
+					maze[(int)(currP.getX()-1)][(int)(currP.getY()-1)].setLeft(false);
+					maze[(int)(move.getX()-1)][(int)(move.getY()-1)].setRight(false);
 				}
 				//up move
-				else if(currP.getZ() < move.getZ()){
-					maze[(int)(currP.getX()-1)][(int)(currP.getZ()-1)].setUp(false);
-					maze[(int)(move.getX()-1)][(int)(move.getZ()-1)].setDown(false);
+				else if(currP.getY() < move.getY()){
+					maze[(int)(currP.getX()-1)][(int)(currP.getY()-1)].setUp(false);
+					maze[(int)(move.getX()-1)][(int)(move.getY()-1)].setDown(false);
 				}
 				//down move
-				else if(currP.getZ() > move.getZ()){
-					maze[(int)(currP.getX()-1)][(int)(currP.getZ()-1)].setDown(false);
-					maze[(int)(move.getX()-1)][(int)(move.getZ()-1)].setUp(false);
+				else if(currP.getY() > move.getY()){
+					maze[(int)(currP.getX()-1)][(int)(currP.getY()-1)].setDown(false);
+					maze[(int)(move.getX()-1)][(int)(move.getY()-1)].setUp(false);
 				}
+				
 				currP = move;
 			}
 			else if(!s.isEmpty()){
 				currP = s.pop();
-				visited[(int)(currP.getX()-1)][(int)(currP.getZ()-1)] = true;
+				visited[(int)(currP.getX()-1)][(int)(currP.getY()-1)] = true;
 			}
 			else {
 				currP = getRandCell();
-				visited[(int)(currP.getX()-1)][(int)(currP.getZ()-1)] = true;
+				visited[(int)(currP.getX()-1)][(int)(currP.getY()-1)] = true;
 			}
 			
 			if(r.nextInt(BRANCH_CHANCE) == 0){
@@ -155,63 +168,65 @@ public class World {
 				
 				int rBranch = r.nextInt(4);
 				if(rBranch == 0){
-					move = new Point(currP.getX(), currP.getZ()+1);
+					move = new Point(currP.getX(), currP.getY()+1);
 				}
 				else if(rBranch == 1){
-					move = new Point(currP.getX(), currP.getZ()-1);
+					move = new Point(currP.getX(), currP.getY()-1);
 				}
 				else if(rBranch == 2){
-					move = new Point(currP.getX()+1, currP.getZ());
+					move = new Point(currP.getX()+1, currP.getY());
 				
 				}
 				else if(rBranch == 3){
-					move = new Point(currP.getX()-1, currP.getZ());
+					move = new Point(currP.getX()-1, currP.getY());
 				}
 				
 				while(!cellExists(move)){
 					rBranch = r.nextInt(4);
 					if(rBranch == 0){
-						move = new Point(currP.getX(), currP.getZ()+1);
+						move = new Point(currP.getX(), currP.getY()+1);
 					}
 					else if(rBranch == 1){
-						move = new Point(currP.getX(), currP.getZ()-1);
+						move = new Point(currP.getX(), currP.getY()-1);
 					}
 					else if(rBranch == 2){
-						move = new Point(currP.getX()+1, currP.getZ());
+						move = new Point(currP.getX()+1, currP.getY());
 					
 					}
 					else if(rBranch == 3){
-						move = new Point(currP.getX()-1, currP.getZ());
+						move = new Point(currP.getX()-1, currP.getY());
 					}
 				}
 				
 				//right move
 				if(currP.getX() < move.getX()){
-					maze[(int)(currP.getX()-1)][(int)(currP.getZ()-1)].setRight(false);
-					maze[(int)(move.getX()-1)][(int)(move.getZ()-1)].setLeft(false);
+					maze[(int)(currP.getX()-1)][(int)(currP.getY()-1)].setRight(false);
+					maze[(int)(move.getX()-1)][(int)(move.getY()-1)].setLeft(false);
 				}
 				//left move
 				else if(currP.getX() > move.getX()){
-					maze[(int)(currP.getX()-1)][(int)(currP.getZ()-1)].setLeft(false);
-					maze[(int)(move.getX()-1)][(int)(move.getZ()-1)].setRight(false);
+					maze[(int)(currP.getX()-1)][(int)(currP.getY()-1)].setLeft(false);
+					maze[(int)(move.getX()-1)][(int)(move.getY()-1)].setRight(false);
 				}
 				//up move
-				else if(currP.getZ() < move.getZ()){
-					maze[(int)(currP.getX()-1)][(int)(currP.getZ()-1)].setUp(false);
-					maze[(int)(move.getX()-1)][(int)(move.getZ()-1)].setDown(false);
+				else if(currP.getY() < move.getY()){
+					maze[(int)(currP.getX()-1)][(int)(currP.getY()-1)].setUp(false);
+					maze[(int)(move.getX()-1)][(int)(move.getY()-1)].setDown(false);
 				}
 				//down move
-				else if(currP.getZ() > move.getZ()){
-					maze[(int)(currP.getX()-1)][(int)(currP.getZ()-1)].setDown(false);
-					maze[(int)(move.getX()-1)][(int)(move.getZ()-1)].setUp(false);
+				else if(currP.getY() > move.getY()){
+					maze[(int)(currP.getX()-1)][(int)(currP.getY()-1)].setDown(false);
+					maze[(int)(move.getX()-1)][(int)(move.getY()-1)].setUp(false);
 				}
 			}
+			
+			outputCellsUnvisited();
 		}
 	}
 	
 	private boolean cellExists(Point p){
 		if(p.getX() > 0 && p.getX() <= mazeWidth){
-			if(p.getZ() > 0 && p.getZ() <= mazeWidth){
+			if(p.getY() > 0 && p.getY() <= mazeWidth){
 				return true;
 			}
 		}
@@ -220,8 +235,8 @@ public class World {
 	
 	private boolean canMoveTo(Point p){
 		if(p.getX() > 0 && p.getX() <= mazeWidth){
-			if(p.getZ() > 0 && p.getZ() <= mazeWidth){
-				return !visited[new Float(p.getX()-1).intValue()][new Float(p.getZ()-1).intValue()];
+			if(p.getY() > 0 && p.getY() <= mazeWidth){
+				return !visited[(int)(p.getX()-1)][(int)(p.getY()-1)];
 			}
 		}
 		return false;
@@ -231,7 +246,7 @@ public class World {
 		Random r = new Random();
 		Point p = new Point(r.nextInt(mazeWidth), r.nextInt(mazeWidth));
 		
-		while(visited[(int)(p.getX())][(int)(p.getZ())]){
+		while(visited[(int)(p.getX())][(int)(p.getY())]){
 			p = new Point(r.nextInt(mazeWidth), r.nextInt(mazeWidth));
 		}
 		
@@ -253,21 +268,21 @@ public class World {
 					float y = 0;
 					float z = cz*cellWidth;
 					
-					if(maze[cx][cz].getUp()){
-						//top wall
-						display.drawQuadTextured3DUV(Display.FrontFace.CW, new Point[]{new Point(x, y+h, z), new Point(x, y, z), new Point(x, y, z+d), new Point(x, y+h, z+d)}, new Point[]{new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 0)}, wallTex, null);
-					}
-					if(maze[cx][cz].getDown()){
-						//bottom wall
+					if(maze[cx][cz].getRight()){
+						//right wall
 						display.drawQuadTextured3DUV(Display.FrontFace.CW, new Point[]{new Point(x+d, y+h, z+d), new Point(x+d, y, z+d), new Point(x+d, y, z), new Point(x+d, y+h, z)}, new Point[]{new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 0)}, wallTex, null);
 					}
 					if(maze[cx][cz].getLeft()){
 						//left wall
-						display.drawQuadTextured3DUV(Display.FrontFace.CW, new Point[]{new Point(x, y+h, z+d), new Point(x, y, z+d), new Point(x+d, y, z+d), new Point(x+d, y+h, z+d)}, new Point[]{new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 0)}, wallTex, null);
+						display.drawQuadTextured3DUV(Display.FrontFace.CW, new Point[]{new Point(x, y+h, z), new Point(x, y, z), new Point(x, y, z+d), new Point(x, y+h, z+d)}, new Point[]{new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 0)}, wallTex, null);
 					}
-					if(maze[cx][cz].getRight()){
-						//right wall
+					if(maze[cx][cz].getDown()){
+						//bottom wall
 						display.drawQuadTextured3DUV(Display.FrontFace.CW, new Point[]{new Point(x+d, y+h, z), new Point(x+d, y, z), new Point(x, y, z), new Point(x, y+h, z)}, new Point[]{new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 0)}, wallTex, null);
+					}
+					if(maze[cx][cz].getUp()){
+						//top wall
+						display.drawQuadTextured3DUV(Display.FrontFace.CW, new Point[]{new Point(x, y+h, z+d), new Point(x, y, z+d), new Point(x+d, y, z+d), new Point(x+d, y+h, z+d)}, new Point[]{new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 0)}, wallTex, null);
 					}
 				}
 			}
