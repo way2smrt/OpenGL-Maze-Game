@@ -74,7 +74,7 @@ public class Game {
 		mouse.bind(display);
 		
 		//put player at maze start
-				spawnPlayer();
+		spawnPlayer();
 	}
 	
 	public void play(){	
@@ -101,6 +101,25 @@ public class Game {
 			display.drawText("Please type your name: ", 640, 16, 24, colorPurple);
 			display.drawText(playerName, 640, 16, 24, colorGreen);
 			
+			world.draw();
+			
+			//set display camera to player's
+			player.thinkMouseOnly();
+			
+			display.setCamera(player.getCamera());
+			
+			//check for game kill
+			if(keyboard.isDown(GLFW_KEY_ESCAPE)){
+				display.kill();
+			}
+			
+			//delete character in player name
+			if(keyboard.wasPressed(GLFW_KEY_BACKSPACE)){
+				if(playerName.length() > 0){
+					playerName = playerName.substring(0, playerName.length()-1);
+				}	
+			}
+			
 			display.update();
 			display.clear();
 			
@@ -108,8 +127,6 @@ public class Game {
 				playerName += display.getChar();
 			}
 		}
-		
-		System.out.println("AYY LMAO");
 			
 		//play game
 		while(true){
@@ -221,9 +238,7 @@ public class Game {
 		player.getObjectWorldData().getPoint().setZ(0+world.getCellWidth()/2);
 	}
 	
-	private void loadTextures(){
-		texDoge = new Texture("res/tex/misc/doge.png");
-		
+	private void loadTextures(){		
 		texGround = new Texture[8];
 		texGround[0] = new Texture("res/tex/material/rocks2.png");
 		texGround[1] = new Texture("res/tex/material/sand1.png");
@@ -332,7 +347,9 @@ public class Game {
 			e.printStackTrace();
 		}
 		finally {
-			out.close();
+			if(out != null){
+				out.close();
+			}	
 		}
 	}
 	

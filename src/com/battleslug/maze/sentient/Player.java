@@ -217,6 +217,15 @@ public class Player implements Sentient {
 		updateCamera();
 	}
 	
+	public void thinkMouseOnly(){
+		//update camera rotation with mouse input
+		objectWorldData.getPivot().setRotXZAxis(objectWorldData.getPivot().getRotXZAxis()+(float)(mouse.getXCursorChange()*mouse.getSensitivity3D()));
+		objectWorldData.getPivot().setRotYZAxis(objectWorldData.getPivot().getRotYZAxis()-(float)(mouse.getYCursorChange()*mouse.getSensitivity3D()));
+		
+		updateLocation();
+		updateCamera();
+	}
+	
 	private void updateLocation(){
 		//check to make sure we can move there, then move
 		if(world.canMoveTo(new Point(objectWorldData.getPoint().getX(), objectWorldData.getPoint().getZ()), new Point(objectWorldData.getPoint().getX()+objectWorldData.getSpeed().getXSpeed(), objectWorldData.getPoint().getZ()+objectWorldData.getSpeed().getZSpeed()))){

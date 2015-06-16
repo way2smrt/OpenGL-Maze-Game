@@ -3,6 +3,7 @@ package com.battleslug.glbase;
 import org.lwjgl.glfw.*;
 import org.lwjgl.openal.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.system.libffi.ClosureError;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -145,7 +146,7 @@ public class Display {
 		
 		charInput = new Vector<Character>();
 		
-		//characer callback
+		//character callback
 		glfwSetCharCallback(window, new GLFWCharCallback(){
 			@Override
 			public void invoke(long window, int charValue){
@@ -237,7 +238,12 @@ public class Display {
 	}
 	
 	public static void updateEvents(){
-		glfwPollEvents();
+		try {
+			glfwPollEvents();
+		}
+		catch(ClosureError e){
+			//stop glfwPollEvents() from crashing program due to updating garbage collected callbacks
+		}
 	}
 	
 	public void hide(){
