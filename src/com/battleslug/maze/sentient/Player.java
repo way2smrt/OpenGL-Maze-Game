@@ -104,6 +104,10 @@ public class Player implements Sentient {
 		return speedStrafe;
 	}
 	
+	public void bindWorld(World world){
+		this.world = world;
+	}
+	
 	public void setCamera(ObjectWorldData cam){
 		this.cam = cam;
 	}
@@ -214,8 +218,11 @@ public class Player implements Sentient {
 	}
 	
 	private void updateLocation(){
-		objectWorldData.getPoint().setX(objectWorldData.getPoint().getX()+objectWorldData.getSpeed().getXSpeed());	
-		objectWorldData.getPoint().setZ(objectWorldData.getPoint().getZ()+objectWorldData.getSpeed().getZSpeed());
+		//check to make sure we can move there, then move
+		if(world.canMoveTo(new Point(objectWorldData.getPoint().getX(), objectWorldData.getPoint().getZ()), new Point(objectWorldData.getPoint().getX()+objectWorldData.getSpeed().getXSpeed(), objectWorldData.getPoint().getZ()+objectWorldData.getSpeed().getZSpeed()))){
+			objectWorldData.getPoint().setX(objectWorldData.getPoint().getX()+objectWorldData.getSpeed().getXSpeed());	
+			objectWorldData.getPoint().setZ(objectWorldData.getPoint().getZ()+objectWorldData.getSpeed().getZSpeed());
+		}
 		
 		objectWorldData.getPoint().setY(objectWorldData.getPoint().getY()+objectWorldData.getSpeed().getYSpeed());
 		if(objectWorldData.getPoint().getY() < world.groundHeight){

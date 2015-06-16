@@ -4,8 +4,10 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.openal.*;
 import org.lwjgl.opengl.*;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
+import java.util.Vector;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -27,8 +29,6 @@ public class Display {
 	private GLFWMouseButtonCallback mouseCallback;
 
 	GLContext glContext;
-	ALContext alContext;
-	ALDevice alDevice;
 	
 	private long window;
 	
@@ -77,6 +77,8 @@ public class Display {
 	
 	private Point textDrawOrigin;
 	private Point textDrawLoc;
+	
+	private Vector<Character> charInput;
 	
 	public enum FrontFace{CW, CCW};
 	
@@ -138,6 +140,23 @@ public class Display {
 			public void invoke(long window, int width, int height){
 				glViewport(0, 0, width, height);
 				glfwPollEvents();
+			}
+		});
+		
+		charInput = new Vector<Character>();
+		
+		//characer callback
+		glfwSetCharCallback(window, new GLFWCharCallback(){
+			@Override
+			public void invoke(long window, int charValue){
+				byte b[] = {(byte)(charValue)};
+				
+				try {
+					charInput.add(new String(b, "UTF-8").charAt(0));
+				}
+				catch(UnsupportedEncodingException e){
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -306,11 +325,16 @@ public class Display {
 		
 		//ensure arrays have 4 points
 		if(p.length == 4 && uv.length == 4){
-			tex.bind();
 			
-			if(c == null){
+			if(c == null && tex != null){
+				tex.bind();
 				setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
 				glColor4f(1f, 1f, 1f, 1f);
+			}
+			else if(c != null && tex != null){
+				tex.bind();
+				setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
+				glColor4f(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 			}
 			else {
 				setMode(ModeDraw.MODE_3D, ModeColor.MODE_COLOR);
@@ -342,8 +366,6 @@ public class Display {
 	}
 	
 	public void drawQuadTextured3D(QuadTextured3D quad, float scaling){
-		quad.getTexture().bind();
-		
 		float u = 0f;
 		float v = 0f;
 		
@@ -359,13 +381,22 @@ public class Display {
 			v2 = 1;
 		}
 		
-		if(quad.getColor() == null){
+		if(quad.getColor() == null && quad.getTexture() != null){
+			quad.getTexture().bind();
 			setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
 			glColor4f(1f, 1f, 1f, 1f);
 		}
-		else {
+		else if(quad.getColor() != null && quad.getTexture() != null){
+			quad.getTexture().bind();
+			setMode(ModeDraw.MODE_3D, ModeColor.MODE_TEXTURE);
+			glColor4f(quad.getColor().getRed(), quad.getColor().getGreen(), quad.getColor().getBlue(), quad.getColor().getAlpha());
+		}
+		else if(quad.getColor() != null && quad.getTexture() == null){
 			setMode(ModeDraw.MODE_3D, ModeColor.MODE_COLOR);
 			glColor4f(quad.getColor().getRed(), quad.getColor().getGreen(), quad.getColor().getBlue(), quad.getColor().getAlpha());
+		}
+		else {
+			//do nothing
 		}
 		
 		glBegin(GL_QUADS);
@@ -409,8 +440,6 @@ public class Display {
 		
 		//release our contexts and devices
 		glContext.destroy();
-		alContext.destroy();
-		alDevice.destroy();
 		
 		//release our callbacks
 		keyCallback.release();
@@ -710,5 +739,21 @@ public class Display {
 	
 	public Texture getTexFont(){
 		return font;
+	}
+	
+	public void flushInput(){
+		charInput.clear();
+	}
+	
+	public boolean hasUnreadInput(){
+		return !charInput.isEmpty();
+	}
+	
+	public char getChar(){
+		if(!charInput.isEmpty()){
+			return charInput.remove(0).charValue();
+		}
+		
+		return new Character(' ');
 	}
 }
