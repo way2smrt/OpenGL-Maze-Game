@@ -6,9 +6,7 @@ This is the shitty culmination of my grade 11 programming summative going out of
 The end result is a buggy 3D maze game, written in Java.
 
 ###Features
--Bugs
-
--Random maze generation
-
--More bugs
+- Bugs
+- Random maze generation
+- More bugs
 
