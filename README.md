@@ -7,6 +7,8 @@ The end result is a buggy 3D maze game, written in Java.
 
 ###Features
 -Bugs
+
 -Random maze generation
+
 -More bugs
 
