@@ -1,4 +1,4 @@
-#Operation Solar Fury
+#Maze Game
 
 ###About
 This is the shitty culmination of my grade 11 programming summative going out of scope.
