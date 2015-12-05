@@ -1,12 +1,12 @@
 #Operation Solar Fury
 
 ###About
-Operation Solar Fury is going to be a ~~2D, side scrolling~~ 3D(?) ~~sci-fi shooter~~ maze exploration completion like game, built in Java with OpenGl/LWJGL3.
+This is the shitty culmination of my grade 11 programming summative going out of scope.
 
-I am going to be using Operation Solar Fury as my grade 11 programming summative.
+The end result is a buggy 3D maze game.
 
-###Current Progress
-Currently there are no releases. I am not the fastest programmer, and I am still working on the framework and engine as of now. I remain confident that there will be a release soon in the future however.
+###Features
+-Bugs
+-Random maze generation
+-More bugs
 
-###Contact me
-Send any feedback to opsf.game@gmail.com
